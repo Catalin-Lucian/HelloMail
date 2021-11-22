@@ -6,7 +6,7 @@ from module.gmailApiService import GoogleApi
 API_NAME = 'gmail'
 API_VERSION = 'v1'
 SCOPES = ['https://mail.google.com/']
-CLIENT_FILE = 'credentials.json'
+CLIENT_FILE = 'token/credentials.json'
 
 
 class HelloMail(QMainWindow, Ui_MainWindow):
@@ -14,6 +14,8 @@ class HelloMail(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.googleApi = GoogleApi(CLIENT_FILE, API_NAME, API_VERSION, SCOPES, 'x')
         self.setupUi(self)
+
+
 
 
 if __name__ == '__main__':
