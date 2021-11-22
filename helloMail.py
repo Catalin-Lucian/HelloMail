@@ -9,6 +9,8 @@ SCOPES = ['https://mail.google.com/']
 CLIENT_FILE = 'token/credentials.json'
 
 
+
+
 class HelloMail(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -32,9 +34,8 @@ class HelloMail(QMainWindow, Ui_MainWindow):
         </body></html>
         """
 
-        self.emailContentTextBrowser.setHtml(html)
-        self.emailContentTextBrowser.setOpenExternalLinks(True)
         self.emailContentWebEngine.setHtml(html)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
