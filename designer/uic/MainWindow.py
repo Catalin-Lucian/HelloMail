@@ -17,11 +17,14 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
-        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.emailContentWebEngine = QtWebEngineWidgets.QWebEngineView(self.centralwidget)
+        self.emailContentWebEngine.setGeometry(QtCore.QRect(9, 9, 782, 251))
+        self.emailContentWebEngine.setStyleSheet("border: 1px solid ;\n"
+"border-color:rgb(0, 0, 0)")
+        self.emailContentWebEngine.setObjectName("emailContentWebEngine")
         self.emailContentTextBrowser = QtWidgets.QTextBrowser(self.centralwidget)
+        self.emailContentTextBrowser.setGeometry(QtCore.QRect(10, 270, 781, 321))
         self.emailContentTextBrowser.setObjectName("emailContentTextBrowser")
-        self.horizontalLayout.addWidget(self.emailContentTextBrowser)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -30,3 +33,4 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+from PyQt5 import QtWebEngineWidgets

@@ -14,13 +14,39 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QTextBrowser" name="emailContentTextBrowser"/>
-    </item>
-   </layout>
+   <widget class="QWebEngineView" name="emailContentWebEngine" native="true">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>9</y>
+      <width>782</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid ;
+border-color:rgb(0, 0, 0)</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="emailContentTextBrowser">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>270</y>
+      <width>781</width>
+      <height>321</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header>qwebengineview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
