@@ -1,0 +1,7 @@
+
+*.xml
+token/token.pickle
+.idea/misc.xml
+designer/uic/__pycache__/MainWindow.cpython-39.pyc
+module/__pycache__/gmailApiService.cpython-39.pyc
+.idea/misc.xml
