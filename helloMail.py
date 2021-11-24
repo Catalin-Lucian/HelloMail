@@ -1,7 +1,7 @@
 import sys
-from designer.uic.MainWindow import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from module.gmailApiService import GoogleApi
+from designer.uic.CustomMainWindow import CustomMainWindow
 
 API_NAME = 'gmail'
 API_VERSION = 'v1'
@@ -9,9 +9,7 @@ SCOPES = ['https://mail.google.com/']
 CLIENT_FILE = 'token/credentials.json'
 
 
-
-
-class HelloMail(QMainWindow, Ui_MainWindow):
+class HelloMail(QMainWindow, CustomMainWindow):
     def __init__(self):
         super().__init__()
         self.googleApi = GoogleApi(CLIENT_FILE, API_NAME, API_VERSION, SCOPES, 'x')

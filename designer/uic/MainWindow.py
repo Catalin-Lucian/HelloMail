@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\Catalin\Desktop\HelloMail\designer\ui\MainWindow.ui'
+# Form implementation generated from reading ui file 'd:\Anul_4\PIU\HelloMail\designer\ui\MainWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -14,18 +14,19 @@ from PyQt5 import QtWebEngineWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(1303, 789)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setObjectName("verticalLayout")
         self.emailContentWebEngine = QtWebEngineWidgets.QWebEngineView(self.centralwidget)
+        self.emailContentWebEngine.setGeometry(QtCore.QRect(280, 130, 782, 651))
         self.emailContentWebEngine.setStyleSheet("QWebEngineView{\n"
-"                                border: 1px solid ;\n"
-"                                border-color:rgb(0, 0, 0)\n"
-"                                }")
+"                        border: 1px solid ;\n"
+"                        border-color:rgb(0, 0, 0)\n"
+"                        }")
         self.emailContentWebEngine.setObjectName("emailContentWebEngine")
-        self.verticalLayout.addWidget(self.emailContentWebEngine)
+        self.testPushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.testPushButton.setGeometry(QtCore.QRect(40, 30, 93, 28))
+        self.testPushButton.setObjectName("testPushButton")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -34,4 +35,5 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.testPushButton.setText(_translate("MainWindow", "PushButton"))
 
