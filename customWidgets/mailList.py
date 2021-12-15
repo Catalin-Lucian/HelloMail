@@ -42,11 +42,13 @@ class MailList(QtWidgets.QScrollArea):
         self.setWidget(self.scrollAreaWidgetContents)
 
     def addMailItem(self, mailData):
+        self.verticalLayout.removeItem(self.spacerItem)
 
         mailItem = MailItem(self.scrollAreaWidgetContents, mailData)
         mailItem.clicked.connect(self.mailClicked)
-        self.verticalLayout.addWidget(mailItem, self.verticalLayout.count()+1, Qt.AlignHCenter)
+        self.verticalLayout.addWidget(mailItem, 0, Qt.AlignHCenter)
 
+        self.verticalLayout.addSpacerItem(self.spacerItem)
 
     def removeMailItem(self, mailItem):
         self.verticalLayout.removeWidget(mailItem)
