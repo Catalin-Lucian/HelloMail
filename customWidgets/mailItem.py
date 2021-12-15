@@ -7,7 +7,6 @@ class MailItem(QtWidgets.QFrame):
 
     def __init__(self, container, mailData):
         super(MailItem, self).__init__(container)
-
         self.mailData = mailData
 
         self.setupUi()
