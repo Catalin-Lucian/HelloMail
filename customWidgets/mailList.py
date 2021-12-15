@@ -8,29 +8,14 @@ class MailList(QtWidgets.QScrollArea):
     def __init__(self, container):
         super(MailList, self).__init__(container)
 
-        self.scrollArea = QtWidgets.QScrollArea(container)
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.verticalLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
+        self.spacerItem = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.selectedMailItem = None
 
         self.setupUi()
 
     def setupUi(self):
-        self.scrollArea.setEnabled(True)
-        self.scrollArea.setGeometry(QtCore.QRect(254, 139, 422, 762))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
-        self.scrollArea.setSizePolicy(sizePolicy)
-        self.scrollArea.setMinimumSize(QtCore.QSize(422, 762))
-        self.scrollArea.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.scrollArea.setLineWidth(0)
-        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scrollArea.setWidgetResizable(False)
-        self.scrollArea.setAlignment(Qt.AlignCenter)
-
         self.setEnabled(True)
         self.setGeometry(QtCore.QRect(254, 139, 422, 762))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -52,10 +37,16 @@ class MailList(QtWidgets.QScrollArea):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(10)
 
+        self.verticalLayout.addSpacerItem(self.spacerItem)
+
+        self.setWidget(self.scrollAreaWidgetContents)
+
     def addMailItem(self, mailData):
+
         mailItem = MailItem(self.scrollAreaWidgetContents, mailData)
         mailItem.clicked.connect(self.mailClicked)
-        self.verticalLayout.addWidget(mailItem, 0, Qt.AlignHCenter)
+        self.verticalLayout.addWidget(mailItem, self.verticalLayout.count()+1, Qt.AlignHCenter)
+
 
     def removeMailItem(self, mailItem):
         self.verticalLayout.removeWidget(mailItem)

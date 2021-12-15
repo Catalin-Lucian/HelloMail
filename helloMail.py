@@ -13,7 +13,7 @@ from customWidgets.mailList import MailList
 
 class HelloMail(QMainWindow):
 
-    def __init__(self, ):
+    def __init__(self):
         super(HelloMail, self).__init__()
 
         # self.googleApi = GoogleApi(CLIENT_FILE, API_NAME, API_VERSION, SCOPES, 'x')
@@ -25,7 +25,6 @@ class HelloMail(QMainWindow):
         self.addMailItems()
 
     def setupUi(self):
-        self.setObjectName("MainWindow")
         self.setWindowTitle("HelloMail")
         self.resize(1440, 900)
         self.setMinimumSize(QtCore.QSize(1440, 900))
@@ -36,6 +35,27 @@ class HelloMail(QMainWindow):
         self.mailList.addMailItem("helo")
         self.mailList.addMailItem("sup")
         self.mailList.addMailItem("cio")
+        # self.mailList.addMailItem("helo")
+        # self.mailList.addMailItem("sup")
+        # self.mailList.addMailItem("cio")
+        # self.mailList.addMailItem("helo")
+        # self.mailList.addMailItem("sup")
+        # self.mailList.addMailItem("cio")
+        # self.mailList.addMailItem("helo")
+        # self.mailList.addMailItem("sup")
+        # self.mailList.addMailItem("cio")
+        # self.mailList.addMailItem("helo")
+        # self.mailList.addMailItem("sup")
+        # self.mailList.addMailItem("cio")
+        # self.mailList.addMailItem("helo")
+        # self.mailList.addMailItem("sup")
+        # self.mailList.addMailItem("cio")
+        # self.mailList.addMailItem("helo")
+        # self.mailList.addMailItem("sup")
+        # self.mailList.addMailItem("cio")
+        # self.mailList.addMailItem("helo")
+        # self.mailList.addMailItem("sup")
+        # self.mailList.addMailItem("cio")
 
 
 if __name__ == '__main__':
