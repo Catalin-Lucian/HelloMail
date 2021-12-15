@@ -18,7 +18,9 @@ class MailItem(QtWidgets.QFrame):
         self.subjectLabel = QLabel(self)
         self.senderNameLabel = QLabel(self)
         self.dateTimeLabel = QLabel(self)
-        self.starIcon = IconCheckButton(self, "star_unselected.svg", "star_selected.svg")
+        self.starIcon = IconCheckButton(self, "star_unselected.svg", "star_selected.svg", "star_hover.svg")
+
+        self.active = True
 
         self.setupUi()
         self.translate()
@@ -86,6 +88,7 @@ class MailItem(QtWidgets.QFrame):
             self.clicked.emit(self)
 
     def select(self):
+        self.active = True
         self.setMinimumSize(QtCore.QSize(431, 80))
         self.setStyleSheet(
             "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), "
@@ -93,8 +96,25 @@ class MailItem(QtWidgets.QFrame):
             "border-radius:10px;")
 
     def deselect(self):
+        self.active = False
         self.setMinimumSize(QtCore.QSize(393, 80))
         self.setStyleSheet(
             "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), "
             "stop:1 rgba(34, 38, 49, 255));\n "
             "border-radius:10px;")
+
+    def enterEvent(self, e: QtCore.QEvent) -> None:
+        if not self.active:
+            self.setStyleSheet(
+                "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), "
+                "stop:1 rgba(34, 38, 49, 255));\n "
+                "border-radius:10px;")
+        super(MailItem, self).enterEvent(e)
+
+    def leaveEvent(self, e: QtCore.QEvent) -> None:
+        if not self.active:
+            self.setStyleSheet(
+                "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), "
+                "stop:1 rgba(34, 38, 49, 255));\n "
+                "border-radius:10px;")
+        super(MailItem, self).enterEvent(e)

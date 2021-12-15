@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFrame
-from PyQt5.QtCore import QRect, pyqtSignal, Qt
+from PyQt5.QtCore import QRect, pyqtSignal, Qt, QEvent
 from PyQt5.QtGui import QMouseEvent
 
 
@@ -37,4 +37,18 @@ class SelectButton(QFrame):
                            "border-radius: 10px;")
         self.checkedFlag = False
         self.checked.emit(self.checkedFlag)
+
+    def enterEvent(self, e: QEvent) -> None:
+        if not self.checkedFlag:
+            self.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
+                               "border: 2px solid rgb(48, 229, 132);\n"
+                               "border-radius: 10px;")
+        super(SelectButton, self).enterEvent(e)
+
+    def leaveEvent(self, e: QEvent) -> None:
+        if not self.checkedFlag:
+            self.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
+                               "border: 2px solid rgb(199, 199, 199);\n"
+                               "border-radius: 10px;")
+        super(SelectButton, self).leaveEvent(e)
 
