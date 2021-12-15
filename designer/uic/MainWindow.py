@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\Anul_4\PIU\HelloMail\designer\ui\MainWindow.ui'
+# Form implementation generated from reading ui file 'd:\an4\PIU\TEST\mainWindow (1).ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -9,31 +9,133 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5 import QtWebEngineWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1303, 789)
+        MainWindow.resize(1680, 1000)
+        MainWindow.setStyleSheet("background-color: rgb(24, 29, 35);")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.emailContentWebEngine = QtWebEngineWidgets.QWebEngineView(self.centralwidget)
-        self.emailContentWebEngine.setGeometry(QtCore.QRect(280, 130, 782, 651))
-        self.emailContentWebEngine.setStyleSheet("QWebEngineView{\n"
-"                        border: 1px solid ;\n"
-"                        border-color:rgb(0, 0, 0)\n"
-"                        }")
-        self.emailContentWebEngine.setObjectName("emailContentWebEngine")
-        self.testPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.testPushButton.setGeometry(QtCore.QRect(40, 30, 93, 28))
-        self.testPushButton.setObjectName("testPushButton")
+        self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
+        self.scrollArea.setEnabled(True)
+        self.scrollArea.setGeometry(QtCore.QRect(254, 139, 422, 861))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
+        self.scrollArea.setSizePolicy(sizePolicy)
+        self.scrollArea.setMinimumSize(QtCore.QSize(422, 861))
+        self.scrollArea.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.scrollArea.setLineWidth(0)
+        self.scrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setWidgetResizable(False)
+        self.scrollArea.setAlignment(QtCore.Qt.AlignCenter)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 422, 911))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinAndMaxSize)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(10)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.frame = QtWidgets.QFrame(self.scrollAreaWidgetContents)
+        self.frame.setEnabled(True)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
+        self.frame.setSizePolicy(sizePolicy)
+        self.frame.setMinimumSize(QtCore.QSize(393, 80))
+        self.frame.setMaximumSize(QtCore.QSize(393, 100))
+        self.frame.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), stop:1 rgba(34, 38, 49, 255));\n"
+"border-radius:10px;\n"
+"")
+        self.frame.setObjectName("frame")
+        self.button_f = QtWidgets.QPushButton(self.frame)
+        self.button_f.setGeometry(QtCore.QRect(0, 0, 393, 80))
+        self.button_f.setMinimumSize(QtCore.QSize(393, 80))
+        self.button_f.setMaximumSize(QtCore.QSize(393, 80))
+        self.button_f.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), stop:1 rgba(34, 38, 49, 255));\n"
+"border-radius:10px;")
+        self.button_f.setObjectName("button_f")
+        self.verticalLayout.addWidget(self.frame, 0, QtCore.Qt.AlignHCenter)
+        self.frame_3 = QtWidgets.QFrame(self.scrollAreaWidgetContents)
+        self.frame_3.setEnabled(True)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
+        self.frame_3.setSizePolicy(sizePolicy)
+        self.frame_3.setMinimumSize(QtCore.QSize(393, 80))
+        self.frame_3.setMaximumSize(QtCore.QSize(393, 100))
+        self.frame_3.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), stop:1 rgba(34, 38, 49, 255));\n"
+"border-radius:10px;")
+        self.frame_3.setObjectName("frame_3")
+        self.button_f3 = QtWidgets.QPushButton(self.frame_3)
+        self.button_f3.setGeometry(QtCore.QRect(0, 0, 393, 80))
+        self.button_f3.setMinimumSize(QtCore.QSize(393, 80))
+        self.button_f3.setMaximumSize(QtCore.QSize(393, 80))
+        self.button_f3.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), stop:1 rgba(34, 38, 49, 255));\n"
+"border-radius:10px;")
+        self.button_f3.setObjectName("button_f3")
+        self.verticalLayout.addWidget(self.frame_3, 0, QtCore.Qt.AlignHCenter)
+        self.frame_4 = QtWidgets.QFrame(self.scrollAreaWidgetContents)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frame_4.sizePolicy().hasHeightForWidth())
+        self.frame_4.setSizePolicy(sizePolicy)
+        self.frame_4.setMinimumSize(QtCore.QSize(393, 80))
+        self.frame_4.setMaximumSize(QtCore.QSize(393, 100))
+        self.frame_4.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), stop:1 rgba(34, 38, 49, 255));\n"
+"border-radius:10px;")
+        self.frame_4.setObjectName("frame_4")
+        self.button_f4 = QtWidgets.QPushButton(self.frame_4)
+        self.button_f4.setGeometry(QtCore.QRect(0, 0, 393, 80))
+        self.button_f4.setMinimumSize(QtCore.QSize(393, 80))
+        self.button_f4.setMaximumSize(QtCore.QSize(393, 80))
+        self.button_f4.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), stop:1 rgba(34, 38, 49, 255));\n"
+"border-radius:10px;")
+        self.button_f4.setObjectName("button_f4")
+        self.verticalLayout.addWidget(self.frame_4, 0, QtCore.Qt.AlignHCenter)
+        self.frame_2 = QtWidgets.QFrame(self.scrollAreaWidgetContents)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
+        self.frame_2.setSizePolicy(sizePolicy)
+        self.frame_2.setMinimumSize(QtCore.QSize(431, 90))
+        self.frame_2.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), stop:1 rgba(59, 67, 80, 255));\n"
+"border-radius:10px;")
+        self.frame_2.setObjectName("frame_2")
+        self.button_f2 = QtWidgets.QPushButton(self.frame_2)
+        self.button_f2.setGeometry(QtCore.QRect(20, 0, 393, 80))
+        self.button_f2.setMinimumSize(QtCore.QSize(393, 80))
+        self.button_f2.setMaximumSize(QtCore.QSize(393, 80))
+        self.button_f2.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), stop:1 rgba(34, 38, 49, 255));\n"
+"border-radius:10px;")
+        self.button_f2.setObjectName("button_f2")
+        self.verticalLayout.addWidget(self.frame_2)
+        spacerItem = QtWidgets.QSpacerItem(20, 538, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.widget = QtWidgets.QWidget(self.centralwidget)
+        self.widget.setGeometry(QtCore.QRect(675, 87, 960, 875))
+        self.widget.setStyleSheet("background-color: rgb(59, 67, 80);")
+        self.widget.setObjectName("widget")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
+
+        self.button_f2.hide()
+        self.hideButton = self.button_f2
+        self.selected = self.frame_2
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.testPushButton.setText(_translate("MainWindow", "PushButton"))
-
