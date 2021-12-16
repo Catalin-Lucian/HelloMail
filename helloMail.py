@@ -1,6 +1,8 @@
 import sys
+
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 # from module.gmailApiService import GoogleApi
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
@@ -16,7 +18,7 @@ class HelloMail(QMainWindow):
 
     def __init__(self):
         super(HelloMail, self).__init__()
-
+        self.hasFirstResize = False
         # self.googleApi = GoogleApi(CLIENT_FILE, API_NAME, API_VERSION, SCOPES, 'x')
 
         self.centralWidget = QtWidgets.QWidget(self)
@@ -39,6 +41,20 @@ class HelloMail(QMainWindow):
                                      "stop:0.4 rgba(24, 29, 35, 255), stop:1 rgba(255, 255, 255, 0));")
         self.mailCover.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.mailCover.setFrameShadow(QtWidgets.QFrame.Raised)
+
+    def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
+        if self.hasFirstResize:
+            difH = e.size().height()-e.oldSize().height()
+            difW = e.size().width()-e.oldSize().width()
+            self.mailList.resizeContent(QSize(difW, difH))
+            super(HelloMail, self).resizeEvent(e)
+
+        if not self.hasFirstResize:
+            self.hasFirstResize = True
+
+
+
+
 
     def addMailItems(self):
         self.mailList.addMailItem("helo")

@@ -20,7 +20,7 @@ class MailItem(QtWidgets.QFrame):
         self.dateTimeLabel = QLabel(self)
         self.starIcon = IconCheckButton(self, "star_unselected.svg", "star_selected.svg", "star_hover.svg")
 
-        self.active = True
+        self.active = False
 
         self.setupUi()
         self.translate()
@@ -87,6 +87,8 @@ class MailItem(QtWidgets.QFrame):
         if e.button() == Qt.LeftButton:
             self.clicked.emit(self)
 
+
+
     def select(self):
         self.active = True
         self.setMinimumSize(QtCore.QSize(431, 80))
@@ -106,8 +108,8 @@ class MailItem(QtWidgets.QFrame):
     def enterEvent(self, e: QtCore.QEvent) -> None:
         if not self.active:
             self.setStyleSheet(
-                "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), "
-                "stop:1 rgba(34, 38, 49, 255));\n "
+                "background-color: qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(54, 45, 66, "
+                "255), stop:1 rgba(24, 33, 60, 255)); "
                 "border-radius:10px;")
         super(MailItem, self).enterEvent(e)
 

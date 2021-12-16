@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QSize
+from PyQt5.QtGui import QResizeEvent
 from PyQt5.QtWidgets import QLayout
 from customWidgets.mailItem import MailItem
 
@@ -63,3 +64,10 @@ class MailList(QtWidgets.QScrollArea):
         mailItem.select()
         self.selectedMailItem = mailItem
         self.mailItemChange.emit(mailItem)
+
+    def resizeContent(self, e: QSize) -> None:
+        self.resize(QSize(422, self.size().height()+e.height()))
+        self.scrollAreaWidgetContents.resize(QSize(422, self.scrollAreaWidgetContents.size().height()+e.height()))
+        print(self.size().height())
+        print(e.height())
+
