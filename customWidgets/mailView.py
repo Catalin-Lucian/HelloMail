@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QFrame
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
@@ -22,6 +23,11 @@ class MailView(QFrame):
                                            "border:10px solid black;"
                                            "border-radius:10px};\n")
         self.mailContentView.page().setBackgroundColor(Qt.transparent)
+        # font = QFont()
+        # font.setFamily("Calibri")
+        # font.setPointSize(50)
+        # self.mailContentView.setFont(font)
+
         html = """
                <html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>AntenaPlay</title><meta name="description" content=""></head><body style="margin: 0;">
                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #141414; margin: 0 auto; width: 550px; padding: 0 100px 100px; color: #888; font-size: 18px; line-height: 1.44; font-weight: 300;">
@@ -42,4 +48,8 @@ class MailView(QFrame):
     def setMailContentView(self, mailDataContent):
         self.mailContentView.setHtml(mailDataContent)
         self.mailContentView.page().setBackgroundColor(Qt.transparent)
-        self.mailContentView.showMinimized()
+
+    def resizeContent(self, e: QSize):
+        self.resize(QSize(self.size().width()+e.width(), self.size().height()+e.height()))
+        self.mailContentView.resize(self.mailContentView.size().width()+e.width(),
+                                    self.mailContentView.size().height()+e.height())

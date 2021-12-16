@@ -109,6 +109,7 @@ class GoogleApi:
 
     def search_messages(self, query):
         result = self.service.users().messages().list(userId='me', q=query).execute()
+        print(result)
         messages = []
         if 'messages' in result:
             messages.extend(result['messages'])
@@ -242,3 +243,12 @@ class GoogleApi:
                 os.mkdir(folder_name)
         self.parse_parts(parts, folder_name, message)
         print("=" * 50)
+
+    def getAllLabels(self):
+        return self.service.users().labels().list(userId="me").execute()
+
+    def getEmailByTag(self, tags):
+        return self.service.users().messages().list(userId="me", labelIds=tags).execute()
+
+    def test(self):
+        print(self.getEmailByTag("[INBOX]"))

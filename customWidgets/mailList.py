@@ -15,7 +15,9 @@ class MailList(QtWidgets.QScrollArea):
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.verticalLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.spacerItem = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+
         self.selectedMailItem = None
+        self.checkedMails = []
 
         self.setupUi()
 
@@ -28,6 +30,7 @@ class MailList(QtWidgets.QScrollArea):
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
         self.setMinimumSize(QtCore.QSize(422, 741))
+        self.setMaximumSize(QtCore.QSize(422, 16777215))
         self.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.setLineWidth(0)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -49,7 +52,8 @@ class MailList(QtWidgets.QScrollArea):
         self.verticalLayout.removeItem(self.spacerItem)
 
         mailItem = MailItem(self.scrollAreaWidgetContents, mailData)
-        mailItem.clicked.connect(lambda itm: self.mailClicked(itm))
+        mailItem.clicked.connect(lambda itm: self.onMailClicked(itm))
+        mailItem.checked.connect(lambda ch: self.onMailChecked(ch, mailItem))
         self.verticalLayout.addWidget(mailItem, 0, Qt.AlignHCenter)
 
         self.verticalLayout.addSpacerItem(self.spacerItem)
@@ -58,12 +62,20 @@ class MailList(QtWidgets.QScrollArea):
         self.verticalLayout.removeWidget(mailItem)
 
     @QtCore.pyqtSlot()
-    def mailClicked(self, mailItem):
+    def onMailClicked(self, mailItem):
         if self.selectedMailItem:
             self.selectedMailItem.deselect()
         mailItem.select()
         self.selectedMailItem = mailItem
         self.mailItemChange.emit(mailItem)
+
+    @QtCore.pyqtSlot()
+    def onMailChecked(self, checked, mail):
+        if checked:
+            self.checkedMails.append(mail)
+        else:
+            self.checkedMails.remove(mail)
+
 
     def resizeContent(self, e: QSize) -> None:
         self.resize(QSize(422, self.size().height()+e.height()))
