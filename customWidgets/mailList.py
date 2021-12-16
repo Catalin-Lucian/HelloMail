@@ -1,10 +1,13 @@
-from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtCore import Qt
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QLayout
 from customWidgets.mailItem import MailItem
 
 
 class MailList(QtWidgets.QScrollArea):
+
+    mailItemChange = pyqtSignal(QtWidgets.QFrame)
+
     def __init__(self, container):
         super(MailList, self).__init__(container)
 
@@ -17,13 +20,13 @@ class MailList(QtWidgets.QScrollArea):
 
     def setupUi(self):
         self.setEnabled(True)
-        self.setGeometry(QtCore.QRect(254, 139, 422, 762))
+        self.setGeometry(QtCore.QRect(254, 139, 422, 741))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setMinimumSize(QtCore.QSize(422, 762))
+        self.setMinimumSize(QtCore.QSize(422, 741))
         self.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.setLineWidth(0)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -42,20 +45,21 @@ class MailList(QtWidgets.QScrollArea):
         self.setWidget(self.scrollAreaWidgetContents)
 
     def addMailItem(self, mailData):
+        self.verticalLayout.removeItem(self.spacerItem)
 
         mailItem = MailItem(self.scrollAreaWidgetContents, mailData)
-        mailItem.clicked.connect(self.mailClicked)
-        self.verticalLayout.addWidget(mailItem, self.verticalLayout.count()+1, Qt.AlignHCenter)
+        mailItem.clicked.connect(lambda itm: self.mailClicked(itm))
+        self.verticalLayout.addWidget(mailItem, 0, Qt.AlignHCenter)
 
+        self.verticalLayout.addSpacerItem(self.spacerItem)
 
     def removeMailItem(self, mailItem):
         self.verticalLayout.removeWidget(mailItem)
 
     @QtCore.pyqtSlot()
     def mailClicked(self, mailItem):
-        mailItem.select()
         if self.selectedMailItem:
             self.selectedMailItem.deselect()
+        mailItem.select()
         self.selectedMailItem = mailItem
-
-        print(mailItem.mailData)
+        self.mailItemChange.emit(mailItem)
