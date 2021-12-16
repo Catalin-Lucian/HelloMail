@@ -8,6 +8,7 @@ from customWidgets.iconCheckButton import IconCheckButton
 
 class MailItem(QtWidgets.QFrame):
     clicked = pyqtSignal(QtWidgets.QFrame)
+    checked = pyqtSignal(bool)
 
     def __init__(self, container, mailData):
         super(MailItem, self).__init__(container)
@@ -67,6 +68,8 @@ class MailItem(QtWidgets.QFrame):
         self.dateTimeLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
                                          "color:#FFFFFF")
 
+        self.selectButton.checked.connect(lambda ch: self.onSelectChecked(ch))
+
         self.starIcon.setGeometry(QtCore.QRect(370, 2, 20, 20))
         self.starIcon.checked.connect(lambda ch: self.onStarChecked(ch))
 
@@ -83,11 +86,13 @@ class MailItem(QtWidgets.QFrame):
     def onStarChecked(self, checked):
         print("star:" + str(checked))
 
+    @QtCore.pyqtSlot()
+    def onSelectChecked(self, checked):
+        self.checked.emit(checked)
+
     def mouseReleaseEvent(self, e: QtGui.QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
             self.clicked.emit(self)
-
-
 
     def select(self):
         self.active = True
