@@ -43,8 +43,16 @@ class HelloMail(QMainWindow):
         self.mailCover.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.mailCover.setFrameShadow(QtWidgets.QFrame.Raised)
 
+        self.mailList.mailItemChange.connect(lambda mail: self.onMailItemChange(mail))
+
+    @QtCore.pyqtSlot()
+    def onMailItemChange(self, mail):
+        self.mailView.setMailContentView(mail.mailData)
+
+
     def setupMail(self):
-        self.googleApi.test()
+        # self.googleApi.test()
+        pass
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -60,30 +68,11 @@ class HelloMail(QMainWindow):
             self.hasFirstResize = True
 
     def addMailItems(self):
-        self.mailList.addMailItem("helo")
-        self.mailList.addMailItem("sup")
-        self.mailList.addMailItem("cio")
-        self.mailList.addMailItem("helo")
-        self.mailList.addMailItem("sup")
-        self.mailList.addMailItem("cio")
-        self.mailList.addMailItem("helo")
-        self.mailList.addMailItem("sup")
-        self.mailList.addMailItem("cio")
-        self.mailList.addMailItem("helo")
-        self.mailList.addMailItem("sup")
-        self.mailList.addMailItem("cio")
-        self.mailList.addMailItem("helo")
-        self.mailList.addMailItem("sup")
-        self.mailList.addMailItem("cio")
-        self.mailList.addMailItem("helo")
-        self.mailList.addMailItem("sup")
-        self.mailList.addMailItem("cio")
-        self.mailList.addMailItem("helo")
-        self.mailList.addMailItem("sup")
-        self.mailList.addMailItem("cio")
-        self.mailList.addMailItem("helo")
-        self.mailList.addMailItem("sup")
-        self.mailList.addMailItem("cio")
+        mails = self.googleApi.getEmailByTag(["INBOX"])
+        for mail in mails:
+            self.mailList.addMailItem(mail)
+
+
 
 
 if __name__ == '__main__':

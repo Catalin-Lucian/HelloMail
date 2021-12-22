@@ -248,7 +248,70 @@ class GoogleApi:
         return self.service.users().labels().list(userId="me").execute()
 
     def getEmailByTag(self, tags):
-        return self.service.users().messages().list(userId="me", labelIds=tags).execute()
+        emails = self.service.users().messages().list(userId="me", labelIds=tags, maxResults="50").execute()
+        returnMails = []
+
+        for email in emails["messages"]:
+            mail = {}
+            fullEmail = self.service.users().messages().get(userId="me", id=email["id"], format='full').execute()
+            mail["id"] = fullEmail["id"]
+            mail["labelIds"] = fullEmail["labelIds"]
+            for header in fullEmail["payload"]["headers"]:
+                if header["name"] == "Date":
+                    mail["date"] = header["value"][:-9]
+                elif header["name"] == "Subject":
+                    mail["subject"] = header["value"]
+                elif header["name"] == "From":
+                    index = header["value"].index('<')
+                    mail["fromName"] = header["value"][:index]
+                    mail["fromEmail"] = header["value"][index:]
+
+            payload = fullEmail["payload"]
+            if payload:
+                parts = payload.get("parts")
+                if parts:
+                    content, attachment = self.getParts(parts)
+                    mail["content"] = content
+                    mail["attachment"] = attachment
+            returnMails.append(mail)
+        return returnMails
+
+    def getParts(self, parts):
+        content = ""
+        attachment = []
+        if parts:
+            for part in parts:
+                filename = part.get("filename")
+                mimeType = part.get("mimeType")
+                body = part.get("body")
+                data = body.get("data")
+                part_headers = part.get("headers")
+                if part.get("parts"):
+                    # recursively call this function when we see that a part
+                    # has parts inside
+                    rContent, rAttachment = self.getParts(part.get("parts"))
+                    content = content + rContent
+                    for rA in rAttachment:
+                        attachment.append(rA)
+
+                # if mimeType == "text/plain":
+                #     # if the email part is text plain
+                #     if data:
+                #         content += urlsafe_b64decode(data).decode()
+                elif mimeType == "text/html":
+                    # if the email part is an HTML content
+                    # save the HTML file and optionally open it in the browser
+                    content = content + (urlsafe_b64decode(data)).decode()
+                else:
+                    # attachment other than a plain text or HTML
+                    for part_header in part_headers:
+                        part_header_name = part_header.get("name")
+                        part_header_value = part_header.get("value")
+                        if part_header_name == "Content-Disposition":
+                            if "attachment" in part_header_value:
+                                # we get the attachment ID
+                                attachment.append({body.get("attachmentId"), filename})
+        return [content, attachment]
 
     def test(self):
-        print(self.getEmailByTag("[INBOX]"))
+        print(self.getEmailByTag(["INBOX"]))

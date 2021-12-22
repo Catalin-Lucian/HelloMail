@@ -21,6 +21,7 @@ class MailItem(QtWidgets.QFrame):
         self.dateTimeLabel = QLabel(self)
         self.starIcon = IconCheckButton(self, "star_unselected.svg", "star_selected.svg", "star_hover.svg")
 
+
         self.active = False
 
         self.setupUi()
@@ -42,10 +43,10 @@ class MailItem(QtWidgets.QFrame):
 
         self.avatarIcon.clicked.connect(lambda: self.onAvatarIconClick())
 
-        self.subjectLabel.setGeometry(QtCore.QRect(98, 12, 265, 21))
+        self.subjectLabel.setGeometry(QtCore.QRect(98, 13, 265, 22))
         font = QtGui.QFont()
         font.setFamily("Calibri")
-        font.setPointSize(18)
+        font.setPointSize(16)
         font.setBold(True)
         font.setWeight(75)
         self.subjectLabel.setFont(font)
@@ -55,12 +56,12 @@ class MailItem(QtWidgets.QFrame):
         self.senderNameLabel.setGeometry(QtCore.QRect(100, 50, 158, 16))
         font = QtGui.QFont()
         font.setFamily("Calibri")
-        font.setPointSize(14)
+        font.setPointSize(12)
         self.senderNameLabel.setFont(font)
         self.senderNameLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
                                            "color:#FFFFFF")
 
-        self.dateTimeLabel.setGeometry(QtCore.QRect(295, 65, 90, 8))
+        self.dateTimeLabel.setGeometry(QtCore.QRect(275, 60, 120, 8))
         font = QtGui.QFont()
         font.setFamily("Calibri")
         font.setPointSize(9)
@@ -74,9 +75,9 @@ class MailItem(QtWidgets.QFrame):
         self.starIcon.checked.connect(lambda ch: self.onStarChecked(ch))
 
     def translate(self):
-        self.subjectLabel.setText("Email Subject Details")
-        self.senderNameLabel.setText("Nume Prenume")
-        self.dateTimeLabel.setText("12/12/2021 12:40")
+        self.subjectLabel.setText(self.mailData["subject"])
+        self.senderNameLabel.setText(self.mailData["fromName"])
+        self.dateTimeLabel.setText(self.mailData["date"])
 
     @QtCore.pyqtSlot()
     def onAvatarIconClick(self):
