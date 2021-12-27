@@ -80,14 +80,14 @@ class MailItem(QtWidgets.QFrame):
         self.starIcon.checked.connect(lambda ch: self.onStarChecked(ch))
 
     def translate(self):
-        self.subjectLabel.setText(self.mailData["subject"])
-        self.senderNameLabel.setText(self.mailData["fromName"])
-        self.dateTimeLabel.setText(self.mailData["date"])
+        self.subjectLabel.setText(self.mailData.get('subject'))
+        self.senderNameLabel.setText(self.mailData.get('from').get('name'))
+        self.dateTimeLabel.setText(self.mailData.get('date'))
 
     @QtCore.pyqtSlot()
     def onAvatarIconClick(self):
         self.clicked.emit(self)
-        print(self.mailData["id"])
+        print(self.mailData.get("id"))
 
     @QtCore.pyqtSlot()
     def onStarChecked(self, checked):

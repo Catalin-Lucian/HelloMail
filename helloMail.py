@@ -49,7 +49,6 @@ class HelloMail(QMainWindow):
     def onMailItemChange(self, mail):
         self.mailView.setMailContentView(mail.mailData)
 
-
     def setupMail(self):
         # self.googleApi.test()
         pass
@@ -68,11 +67,9 @@ class HelloMail(QMainWindow):
             self.hasFirstResize = True
 
     def addMailItems(self):
-        mails = self.googleApi.getEmailByTag(["INBOX"])
+        mails = self.googleApi.getEmailsByTags(["INBOX"])
         for mail in mails:
             self.mailList.addMailItem(mail)
-
-
 
 
 if __name__ == '__main__':

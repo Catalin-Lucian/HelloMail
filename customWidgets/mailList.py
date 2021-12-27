@@ -6,7 +6,6 @@ from customWidgets.mailItem import MailItem
 
 
 class MailList(QtWidgets.QScrollArea):
-
     mailItemChange = pyqtSignal(QtWidgets.QFrame)
 
     def __init__(self, container):
@@ -76,10 +75,8 @@ class MailList(QtWidgets.QScrollArea):
         else:
             self.checkedMails.remove(mail)
 
-
     def resizeContent(self, e: QSize) -> None:
-        self.resize(QSize(422, self.size().height()+e.height()))
-        self.scrollAreaWidgetContents.resize(QSize(422, self.scrollAreaWidgetContents.size().height()+e.height()))
+        self.resize(QSize(422, self.size().height() + e.height()))
+        self.scrollAreaWidgetContents.resize(QSize(422, self.scrollAreaWidgetContents.size().height() + e.height()))
         print(self.size().height())
         print(e.height())
-
