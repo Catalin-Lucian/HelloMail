@@ -1,0 +1,92 @@
+from PyQt5.QtCore import QRect, QSize, Qt, QPoint
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QFrame, QLabel
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+
+from customWidgets.avatarIcon import AvatarIcon
+
+
+class MailView(QFrame):
+    def __init__(self, container):
+        super(MailView, self).__init__(container)
+        self.mailContentView = QWebEngineView(self)
+        self.avatarIcon = AvatarIcon(self)
+        self.senderNameLabel = QLabel(self)
+        self.senderEmailLabel = QLabel(self)
+        self.dateTimeLabel = QLabel(self)
+        self.subjectLabel = QLabel(self)
+
+        self.setupUi()
+
+    def setupUi(self):
+        self.setGeometry(QRect(675, 87, 745, 793))
+        self.setMinimumSize(QSize(745, 793))
+        self.setStyleSheet("background-color: rgb(59, 67, 80);border-radius:10px;")
+
+        self.mailContentView.setGeometry(QRect(20, 145, 705, 647))
+        self.mailContentView.setMinimumSize(QSize(705, 647))
+        self.mailContentView.setStyleSheet("QWebEngineView{\n"
+                                           "border-color:rgb(58, 110, 255)\n"
+                                           "border:10px solid black;"
+                                           "border-radius:10px};\n")
+        self.mailContentView.page().setBackgroundColor(Qt.transparent)
+
+        self.avatarIcon.setGeometry(QRect(30, 30, 50, 50))
+        self.avatarIcon.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                      "border: 0px solid rgb(199, 199, 199);\n"
+                                      "border-radius: 25px;")
+        self.avatarIcon.hide()
+
+        self.senderNameLabel.setGeometry(QRect(100, 20, 275, 30))
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(18)
+        font.setBold(True)
+        font.setWeight(75)
+        self.senderNameLabel.setFont(font)
+        self.senderNameLabel.setStyleSheet("color: rgb(255, 255, 255);")
+
+        self.senderEmailLabel.setGeometry(QRect(100, 50, 275, 30))
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.senderEmailLabel.setFont(font)
+        self.senderEmailLabel.setStyleSheet("color: rgb(255, 255, 255);")
+
+        self.dateTimeLabel.setGeometry(QRect(403, 35, 135, 20))
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(10)
+        self.dateTimeLabel.setFont(font)
+        self.dateTimeLabel.setStyleSheet("color: rgb(255, 255, 255);")
+
+        self.subjectLabel.setGeometry(QRect(20, 100, 705, 35))
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(18)
+        self.subjectLabel.setFont(font)
+        self.subjectLabel.setAlignment(Qt.AlignCenter)
+        self.subjectLabel.setStyleSheet("color: rgb(255, 255, 255);")
+        self.subjectLabel.setScaledContents(True)
+
+    def setMailContentView(self, mailData):
+        if mailData.get("content"):
+            self.mailContentView.setHtml(mailData["content"])
+        self.mailContentView.page().setBackgroundColor(Qt.transparent)
+        self.avatarIcon.setImage("https://lh3.googleusercontent.com/a-/AOh14GhZ69H4K_rvAjs0P7w-2LJnhujsrAqU0RzI7n-p")
+        self.avatarIcon.show()
+        self.senderNameLabel.setText(mailData["fromName"])
+        self.senderEmailLabel.setText(mailData["fromEmail"])
+        self.dateTimeLabel.setText(mailData["date"])
+        self.subjectLabel.setText(mailData["subject"])
+        # self.mailContentView.adjustSize()
+
+
+    def resizeContent(self, e: QSize):
+        self.resize(QSize(self.size().width() + e.width(), self.size().height() + e.height()))
+        self.mailContentView.resize(self.mailContentView.size().width() + e.width(),
+                                    self.mailContentView.size().height() + e.height())
+        self.dateTimeLabel.move(QPoint(self.dateTimeLabel.pos().x()+e.width(), self.dateTimeLabel.pos().y()))
+        self.subjectLabel.resize(QSize(self.subjectLabel.size().width()+e.width(), self.subjectLabel.size().height()))

@@ -52,7 +52,6 @@ class GoogleApi:
             self.service = build(self.API_SERVICE_NAME, self.API_VERSION, credentials=cred)
             print(self.API_SERVICE_NAME, self.API_VERSION, 'service created successfully')
 
-
         except Exception as e:
             print(e)
             print(f'Failed to create service instance for {self.API_SERVICE_NAME}')
@@ -109,6 +108,7 @@ class GoogleApi:
 
     def search_messages(self, query):
         result = self.service.users().messages().list(userId='me', q=query).execute()
+        print(result)
         messages = []
         if 'messages' in result:
             messages.extend(result['messages'])
@@ -242,3 +242,152 @@ class GoogleApi:
                 os.mkdir(folder_name)
         self.parse_parts(parts, folder_name, message)
         print("=" * 50)
+
+    def getAllLabels(self):
+        return self.service.users().labels().list(userId="me").execute()
+
+    def getEmailByTag(self, tags):
+        emails = self.service.users().messages().list(userId="me", labelIds=tags, maxResults="50").execute()
+        returnMails = []
+
+        for email in emails["messages"]:
+            mail = {}
+            fullEmail = self.service.users().messages().get(userId="me", id=email["id"], format='full').execute()
+            mail["id"] = fullEmail["id"]
+            mail["labelIds"] = fullEmail["labelIds"]
+            for header in fullEmail["payload"]["headers"]:
+                if header["name"] == "Date":
+                    mail["date"] = header["value"][:-9]
+                elif header["name"] == "Subject":
+                    mail["subject"] = header["value"]
+                elif header["name"] == "From":
+                    index = header["value"].index('<')
+                    mail["fromName"] = header["value"][:index]
+                    mail["fromEmail"] = header["value"][index:]
+
+            payload = fullEmail["payload"]
+            if payload:
+                parts = payload.get("parts")
+                if parts:
+                    content, attachment = self.getParts(parts)
+                    mail["content"] = content
+                    mail["attachment"] = attachment
+            returnMails.append(mail)
+        return returnMails
+
+    def getParts(self, parts):
+        content = ""
+        attachment = []
+        if parts:
+            for part in parts:
+                filename = part.get("filename")
+                mimeType = part.get("mimeType")
+                body = part.get("body")
+                data = body.get("data")
+                part_headers = part.get("headers")
+                if part.get("parts"):
+                    # recursively call this function when we see that a part
+                    # has parts inside
+                    rContent, rAttachment = self.getParts(part.get("parts"))
+                    content = content + rContent
+                    for rA in rAttachment:
+                        attachment.append(rA)
+
+                # if mimeType == "text/plain":
+                #     # if the email part is text plain
+                #     if data:
+                #         content += urlsafe_b64decode(data).decode()
+                elif mimeType == "text/html":
+                    # if the email part is an HTML content
+                    # save the HTML file and optionally open it in the browser
+                    content = content + (urlsafe_b64decode(data)).decode()
+                else:
+                    # attachment other than a plain text or HTML
+                    for part_header in part_headers:
+                        part_header_name = part_header.get("name")
+                        part_header_value = part_header.get("value")
+                        if part_header_name == "Content-Disposition":
+                            if "attachment" in part_header_value:
+                                # we get the attachment ID
+                                attachment.append({body.get("attachmentId"), filename})
+        return [content, attachment]
+
+    # ------------------------------------------------------------------------------------------
+    def downloadAttachment(self, attachment_id, message_id):
+        attachment = self.service.users().messages() \
+            .attachments().get(id=attachment_id, userId='me', messageId=message_id).execute()
+        data = attachment.get("data")
+        return urlsafe_b64decode(data)
+
+    def processParts(self, parts):
+        my_body = ""
+        my_attachments = []
+
+        if parts:
+            for part in parts:
+                filename = part.get("filename")
+                mimeType = part.get("mimeType")
+                body = part.get("body")
+                data = body.get("data")
+                part_headers = part.get("headers")
+                if part.get("parts"):
+                    _body, _attachments = self.processParts(part.get("parts"))
+                    my_body = my_body + _body
+                    for attachment in _attachments:
+                        my_attachments.append(attachment)
+                if mimeType == "text/html":
+                    body = body + urlsafe_b64decode(data)
+                else:
+                    for part_header in part_headers:
+                        part_header_name = part_header.get("name")
+                        part_header_value = part_header.get("value")
+                        if part_header_name == "Content-Disposition":
+                            if "attachment" in part_header_value:
+                                my_attachments.append({
+                                    'id': body.get("attachmentId"),
+                                    'name': filename
+                                })
+        return [my_body, my_attachments]
+
+    def processEmail(self, email):
+        resultEmail = {'id': email['id'], 'tags': email['labelIds']}
+        payload = email['payload']
+        mimeType = payload['mimeType']
+        headers = payload.get('headers')
+        parts = payload.get('parts')
+
+        if headers:
+            for header in headers:
+                name = header.get('name')
+                value = header.get('value')
+
+                if name.lower() == 'from':
+                    index = value.index('<')
+                    resultEmail['from'] = {
+                        'name': value[:index],
+                        'email': value[index + 1:-1]
+                    }
+                if name.lower() == "subject":
+                    resultEmail['subject'] = value
+                if name.lower() == "date":
+                    resultEmail['date'] = value[:-9]
+
+        if parts:
+            body, attachments = self.processParts(parts)
+            resultEmail['body'] = body
+            resultEmail['attachments'] = attachments
+        else:
+            resultEmail['body'] = payload.get('body').get('data')
+
+        return resultEmail
+
+    def getEmailsByTags(self, tags):
+        emails = self.service.users().messages().list(userId="me", labelIds=tags, maxResults="50").execute()
+        resultEmails = []
+        for email in emails['messages']:
+            email = self.service.users().messages().get(userId="me", id=email["id"], format='full').execute()
+            resultEmail = self.processEmail(email)
+            resultEmails.append(resultEmail)
+
+        return resultEmails
+
