@@ -1,9 +1,10 @@
-from PyQt5.QtWidgets import QFrame
+import requests
+from PyQt5.QtWidgets import QFrame, QLabel
 from PyQt5.QtCore import QRect, pyqtSignal, Qt
-from PyQt5.QtGui import QMouseEvent
+from PyQt5.QtGui import QMouseEvent, QImage, QPixmap, QBitmap
 
 
-class AvatarIcon(QFrame):
+class AvatarIcon(QLabel):
     clicked = pyqtSignal()
 
     def __init__(self, container):
@@ -23,5 +24,13 @@ class AvatarIcon(QFrame):
         if e.button() == Qt.LeftButton:
             self.clicked.emit()
 
-    def setImage(self):
-        pass
+    def setImage(self, imageUrl):
+        image = QImage()
+        # image.loadFromData(requests.get(imageUrl).content)
+        # pixMap = QPixmap(image)
+        # pixMap = pixMap.scaled(self.size().width(), self.size().height(), Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        # self.setImage(pixMap)
+        # self.setScaledContents(True)
+        # self.setStyleSheet(f"background-color: transparent;"
+        #                    "border: 0px solid rgb(199, 199, 199);"
+        #                    "border-radius: 20px;")

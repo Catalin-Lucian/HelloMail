@@ -1,9 +1,13 @@
+import hashlib
+import urllib
+
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QLabel
-from customWidgets.selectButton import SelectButton
+
 from customWidgets.avatarIcon import AvatarIcon
 from customWidgets.iconCheckButton import IconCheckButton
+from customWidgets.selectButton import SelectButton
 
 
 class MailItem(QtWidgets.QFrame):
@@ -20,7 +24,6 @@ class MailItem(QtWidgets.QFrame):
         self.senderNameLabel = QLabel(self)
         self.dateTimeLabel = QLabel(self)
         self.starIcon = IconCheckButton(self, "star_unselected.svg", "star_selected.svg", "star_hover.svg")
-
 
         self.active = False
 
@@ -39,9 +42,11 @@ class MailItem(QtWidgets.QFrame):
         self.setStyleSheet(
             "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), "
             "stop:1 rgba(34, 38, 49, 255));\n "
-            "border-radius:10px;")
+            "border-radius:10px;"
+        )
 
         self.avatarIcon.clicked.connect(lambda: self.onAvatarIconClick())
+        self.avatarIcon.setImage("https://lh3.googleusercontent.com/a-/AOh14GhZ69H4K_rvAjs0P7w-2LJnhujsrAqU0RzI7n-p")
 
         self.subjectLabel.setGeometry(QtCore.QRect(98, 13, 265, 22))
         font = QtGui.QFont()
@@ -82,6 +87,7 @@ class MailItem(QtWidgets.QFrame):
     @QtCore.pyqtSlot()
     def onAvatarIconClick(self):
         self.clicked.emit(self)
+        print(self.mailData["id"])
 
     @QtCore.pyqtSlot()
     def onStarChecked(self, checked):

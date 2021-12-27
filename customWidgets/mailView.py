@@ -75,11 +75,14 @@ class MailView(QFrame):
         if mailData.get("content"):
             self.mailContentView.setHtml(mailData["content"])
         self.mailContentView.page().setBackgroundColor(Qt.transparent)
+        self.avatarIcon.setImage("https://lh3.googleusercontent.com/a-/AOh14GhZ69H4K_rvAjs0P7w-2LJnhujsrAqU0RzI7n-p")
         self.avatarIcon.show()
         self.senderNameLabel.setText(mailData["fromName"])
         self.senderEmailLabel.setText(mailData["fromEmail"])
         self.dateTimeLabel.setText(mailData["date"])
         self.subjectLabel.setText(mailData["subject"])
+        # self.mailContentView.adjustSize()
+
 
     def resizeContent(self, e: QSize):
         self.resize(QSize(self.size().width() + e.width(), self.size().height() + e.height()))
