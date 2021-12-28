@@ -42,11 +42,7 @@ class HelloMail(QMainWindow):
         self.mailCover.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.mailCover.setFrameShadow(QtWidgets.QFrame.Raised)
 
-        self.mailList.mailItemChange.connect(lambda mail: self.mailView.setMailContentView(mail.mailData))
-
-    # @QtCore.pyqtSlot()
-    # def onMailItemChange(self, mail):
-    #     self.mailView.setMailContentView(mail.mailData)
+        self.mailList.mailItemChange.connect(lambda mailItem: self.onMailItemChange(mailItem))
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -62,16 +58,26 @@ class HelloMail(QMainWindow):
             self.hasFirstResize = True
 
     def addMailItemsOnStartUp(self):
-        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 10)
+        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 20)
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
-            mailItem.star_checked.connect(lambda ch, md: self.onMailItemStarChecked(ch, md))
+            mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
 
-    def onMailItemStarChecked(self, checked, mailData):
+    @QtCore.pyqtSlot()
+    def onMailItemStarChecked(self, checked, mailItem):
         if checked:
-            self.googleApi.modify_labels_to_email(mailData.get('id'), ["STARRED"], [])
+            self.googleApi.modify_labels_to_email(mailItem.mailData.get('id'), ['STARRED'], [])
+            mailItem.mailData['labelIds'].append('STARRED')
         else:
-            self.googleApi.modify_labels_to_email(mailData.get('id'), [], ["STARRED"])
+            self.googleApi.modify_labels_to_email(mailItem.mailData.get('id'), [], ['STARRED'])
+            mailItem.mailData['labelIds'].remove('STARRED')
+
+    @QtCore.pyqtSlot()
+    def onMailItemChange(self, mailItem):
+        self.mailView.setMailContentView(mailItem.mailData)
+        if 'UNREAD' in mailItem.mailData['labelIds']:
+            self.googleApi.modify_labels_to_email(mailItem.mailData.get('id'), [], ['UNREAD'])
+            mailItem.mailData['labelIds'].remove('UNREAD')
 
 
 if __name__ == '__main__':

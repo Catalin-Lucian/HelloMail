@@ -50,14 +50,13 @@ class MailList(QtWidgets.QScrollArea):
         self.verticalLayout.removeItem(self.spacerItem)
 
         mailItem = MailItem(self.scrollAreaWidgetContents, mailData)
-        mailItem.clicked.connect(lambda itm: self.onMailClicked(itm))
-        mailItem.select_checked.connect(lambda ch: self.onMailChecked(ch, mailItem))
+        mailItem.click_signal.connect(lambda itm: self.onMailClicked(itm))
+        mailItem.select_check_signal.connect(lambda ch: self.onMailChecked(ch, mailItem))
         # mailItem.star_checked.connect(lambda ch: self.onMailStartChecked(ch, mailItem))
         self.verticalLayout.addWidget(mailItem, 0, Qt.AlignHCenter)
         self.verticalLayout.addSpacerItem(self.spacerItem)
 
         return mailItem
-
 
     def removeMailItem(self, mailItem):
         self.verticalLayout.removeWidget(mailItem)
@@ -71,15 +70,11 @@ class MailList(QtWidgets.QScrollArea):
         self.mailItemChange.emit(mailItem)
 
     @QtCore.pyqtSlot()
-    def onMailChecked(self, checked, mail):
+    def onMailChecked(self, checked, mailItem):
         if checked:
-            self.selectedMails.append(mail)
+            self.selectedMails.append(mailItem)
         else:
-            self.selectedMails.remove(mail)
-
-    @QtCore.pyqtSlot()
-    def onMailStartChecked(self, checked, mail):
-        pass
+            self.selectedMails.remove(mailItem)
 
     def resizeContent(self, e: QSize) -> None:
         self.resize(QSize(422, self.size().height() + e.height()))
