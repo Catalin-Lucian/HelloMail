@@ -112,10 +112,7 @@ class MailItem(QtWidgets.QFrame):
     def deselect(self):
         self.active = False
         self.setMinimumSize(QtCore.QSize(393, 80))
-        if 'UNREAD' in self.mailData['labelIds']:
-            self.setUnreadStyle(True)
-        else:
-            self.setUnreadStyle(False)
+        self.setUnreadStyle(False)
 
     def setUnreadStyle(self, isUnread):
         if isUnread:
