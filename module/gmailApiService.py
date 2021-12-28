@@ -2,6 +2,7 @@ import os
 import pickle
 import sys
 # Gmail API utils
+from googleapiclient import errors
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -123,13 +124,13 @@ class GoogleApi:
         return self.service.users().labels().list(userId="me").execute()
 
     # ------------------------------------------------------------------------------------------
-    def downloadAttachment(self, attachment_id, message_id):
+    def download_attachment(self, attachment_id, message_id):
         attachment = self.service.users().messages() \
             .attachments().get(id=attachment_id, userId='me', messageId=message_id).execute()
         data = attachment.get("data")
         return urlsafe_b64decode(data)
 
-    def processParts(self, parts):
+    def process_parts(self, parts):
         my_body = ""
         my_attachments = []
 
@@ -141,7 +142,7 @@ class GoogleApi:
                 data = body.get("data")
                 part_headers = part.get("headers")
                 if part.get("parts"):
-                    _body, _attachments = self.processParts(part.get("parts"))
+                    _body, _attachments = self.process_parts(part.get("parts"))
                     my_body = my_body + _body
                     for attachment in _attachments:
                         my_attachments.append(attachment)
@@ -159,8 +160,9 @@ class GoogleApi:
                                 })
         return [my_body, my_attachments]
 
-    def processEmail(self, email):
-        resultEmail = {'id': email['id'], 'tags': email['labelIds']}
+    def process_email(self, email):
+        resultEmail = {'id': email['id'], 'labelIds': email['labelIds']}
+
         payload = email['payload']
         mimeType = payload['mimeType']
         headers = payload.get('headers')
@@ -183,7 +185,7 @@ class GoogleApi:
                     resultEmail['date'] = value[:-9]
 
         if parts:
-            body, attachments = self.processParts(parts)
+            body, attachments = self.process_parts(parts)
             resultEmail['body'] = body
             resultEmail['attachments'] = attachments
         else:
@@ -191,19 +193,36 @@ class GoogleApi:
 
         return resultEmail
 
-    def getEmailsByTags(self, tags):
-        emails = self.service.users().messages().list(userId="me", labelIds=tags, maxResults="50").execute()
+    def get_emails_by_tags(self, tags, maxResults):
+        emails = self.service.users().messages().list(userId="me", labelIds=tags, maxResults=maxResults).execute()
         resultEmails = []
         for email in emails['messages']:
             email = self.service.users().messages().get(userId="me", id=email["id"], format='full').execute()
-            resultEmail = self.processEmail(email)
+            resultEmail = self.process_email(email)
             resultEmails.append(resultEmail)
 
         return resultEmails
 
-    def getEmailById(self, email_id):
+    def get_email_by_id(self, email_id):
         email = self.service.users().messages().get(userId="me", id=email_id, format='full').execute()
-        resultEmail = self.processEmail(email)
+        resultEmail = self.process_email(email)
         return resultEmail
 
-    
+    def modify_labels_to_emails(self, emails_ids, add_labels_ids, remove_labels_ids):
+        try:
+            self.service.users().messages().batchModify(userId="me", body={
+                'ids': emails_ids,
+                'addLabelIds': add_labels_ids,
+                'removeLabelIds': remove_labels_ids
+            }).execute()
+        except Exception as error:
+            print(f"An error occurred: {error}")
+
+    def modify_labels_to_email(self, email_id, add_labels_ids, remove_labels_ids):
+        try:
+            self.service.users().messages().modify(userId="me", id=email_id, body={
+                'addLabelIds': add_labels_ids,
+                'removeLabelIds': remove_labels_ids
+            }).execute()
+        except Exception as error:
+            print(f"An error occurred: {error}")

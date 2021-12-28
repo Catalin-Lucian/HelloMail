@@ -12,7 +12,8 @@ from customWidgets.selectButton import SelectButton
 
 class MailItem(QtWidgets.QFrame):
     clicked = pyqtSignal(QtWidgets.QFrame)
-    checked = pyqtSignal(bool)
+    select_checked = pyqtSignal(bool)
+    star_checked = pyqtSignal(bool, dict)
 
     def __init__(self, container, mailData):
         super(MailItem, self).__init__(container)
@@ -26,7 +27,6 @@ class MailItem(QtWidgets.QFrame):
         self.starIcon = IconCheckButton(self, "star_unselected.svg", "star_selected.svg", "star_hover.svg")
 
         self.active = False
-
         self.setupUi()
         self.translate()
 
@@ -78,6 +78,8 @@ class MailItem(QtWidgets.QFrame):
 
         self.starIcon.setGeometry(QtCore.QRect(370, 2, 20, 20))
         self.starIcon.checked.connect(lambda ch: self.onStarChecked(ch))
+        if "STARRED" in self.mailData.get('labelIds'):
+            self.starIcon.check()
 
     def translate(self):
         self.subjectLabel.setText(self.mailData.get('subject'))
@@ -91,11 +93,11 @@ class MailItem(QtWidgets.QFrame):
 
     @QtCore.pyqtSlot()
     def onStarChecked(self, checked):
-        print("star:" + str(checked))
+        self.star_checked.emit(checked, self.mailData)
 
     @QtCore.pyqtSlot()
     def onSelectChecked(self, checked):
-        self.checked.emit(checked)
+        self.select_checked.emit(checked)
 
     def mouseReleaseEvent(self, e: QtGui.QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
@@ -132,3 +134,5 @@ class MailItem(QtWidgets.QFrame):
                 "stop:1 rgba(34, 38, 49, 255));\n "
                 "border-radius:10px;")
         super(MailItem, self).enterEvent(e)
+
+

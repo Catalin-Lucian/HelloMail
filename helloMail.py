@@ -27,8 +27,7 @@ class HelloMail(QMainWindow):
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
 
         self.setupUi()
-        self.addMailItems()
-        self.setupMail()
+        self.addMailItemsOnStartUp()
 
     def setupUi(self):
         self.setWindowTitle("HelloMail")
@@ -43,15 +42,11 @@ class HelloMail(QMainWindow):
         self.mailCover.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.mailCover.setFrameShadow(QtWidgets.QFrame.Raised)
 
-        self.mailList.mailItemChange.connect(lambda mail: self.onMailItemChange(mail))
+        self.mailList.mailItemChange.connect(lambda mail: self.mailView.setMailContentView(mail.mailData))
 
-    @QtCore.pyqtSlot()
-    def onMailItemChange(self, mail):
-        self.mailView.setMailContentView(mail.mailData)
-
-    def setupMail(self):
-        # self.googleApi.test()
-        pass
+    # @QtCore.pyqtSlot()
+    # def onMailItemChange(self, mail):
+    #     self.mailView.setMailContentView(mail.mailData)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -66,10 +61,17 @@ class HelloMail(QMainWindow):
         if not self.hasFirstResize:
             self.hasFirstResize = True
 
-    def addMailItems(self):
-        mails = self.googleApi.getEmailsByTags(["INBOX"])
-        for mail in mails:
-            self.mailList.addMailItem(mail)
+    def addMailItemsOnStartUp(self):
+        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 10)
+        for mail_data in mails_data:
+            mailItem = self.mailList.addMailItem(mail_data)
+            mailItem.star_checked.connect(lambda ch, md: self.onMailItemStarChecked(ch, md))
+
+    def onMailItemStarChecked(self, checked, mailData):
+        if checked:
+            self.googleApi.modify_labels_to_email(mailData.get('id'), ["STARRED"], [])
+        else:
+            self.googleApi.modify_labels_to_email(mailData.get('id'), [], ["STARRED"])
 
 
 if __name__ == '__main__':
