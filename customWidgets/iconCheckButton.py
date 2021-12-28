@@ -14,20 +14,27 @@ class IconCheckButton(QPushButton):
 
 
         self.active = False
+        self.themeStyle = None
         self.setupUi()
 
     def setupUi(self):
-        self.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
+        self.setStyleSheet(f"background-color: rgba(255, 255, 255, 0);")
         self.setText("")
         self.setIcon(self.unselectedIcon)
 
     def check(self):
         self.setIcon(self.selectedIcon)
         self.active = True
+        if self.themeStyle:
+            self.setStyleSheet(f"background-color:{self.themeStyle.get('checked').get('background-color')},"
+                               f"color:{self.themeStyle.get('checked').get('color')}")
 
     def uncheck(self):
         self.setIcon(self.unselectedIcon)
         self.active = False
+        if self.themeStyle:
+            self.setStyleSheet(f"background-color:{self.themeStyle.get('unchecked').get('background-color')},"
+                               f"color:{self.themeStyle.get('unchecked').get('color')}")
 
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
@@ -41,9 +48,19 @@ class IconCheckButton(QPushButton):
     def enterEvent(self, e: QEvent) -> None:
         if not self.active:
             self.setIcon(self.hoverIcon)
+            if self.themeStyle:
+                self.setStyleSheet(f"background-color:{self.themeStyle.get('checked').get('background-color')},"
+                                   f"color:{self.themeStyle.get('checked').get('color')}")
         super(IconCheckButton, self).enterEvent(e)
 
     def leaveEvent(self, e: QEvent) -> None:
         if not self.active:
             self.setIcon(self.unselectedIcon)
+            if self.themeStyle:
+                self.setStyleSheet(f"background-color:{self.themeStyle.get('unchecked').get('background-color')},"
+                                   f"color:{self.themeStyle.get('unchecked').get('color')}")
         super(IconCheckButton, self).enterEvent(e)
+
+    def setThemeStyle(self, themeStyle):
+        self.themeStyle = themeStyle
+
