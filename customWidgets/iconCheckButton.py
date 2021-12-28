@@ -12,6 +12,7 @@ class IconCheckButton(QPushButton):
         self.unselectedIcon = QIcon("customWidgets\icons\\" + iconUnselectedPath)
         self.hoverIcon = QIcon("customWidgets\icons\\" + iconHoverPath)
 
+
         self.active = False
         self.setupUi()
 

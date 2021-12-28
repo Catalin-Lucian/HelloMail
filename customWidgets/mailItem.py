@@ -57,7 +57,7 @@ class MailItem(QtWidgets.QFrame):
         font.setPointSize(12)
         self.senderNameLabel.setFont(font)
 
-        self.dateTimeLabel.setGeometry(QtCore.QRect(260, 60, 120, 10))
+        self.dateTimeLabel.setGeometry(QtCore.QRect(258, 60, 120, 10))
         font = QtGui.QFont()
         font.setFamily("Calibri")
         font.setPointSize(9)
