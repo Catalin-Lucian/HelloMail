@@ -5,7 +5,7 @@ from PyQt5.QtGui import QMouseEvent, QImage, QPixmap, QBitmap
 
 
 class AvatarIcon(QLabel):
-    clicked = pyqtSignal()
+    click_signal = pyqtSignal()
 
     def __init__(self, container):
         super(AvatarIcon, self).__init__(container)
@@ -22,7 +22,7 @@ class AvatarIcon(QLabel):
 
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
-            self.clicked.emit()
+            self.click_signal.emit()
 
     def setImage(self, imageUrl):
         image = QImage()

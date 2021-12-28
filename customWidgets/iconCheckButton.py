@@ -4,14 +4,14 @@ from PyQt5.QtGui import QMouseEvent, QIcon
 
 
 class IconCheckButton(QPushButton):
-
-    checked = pyqtSignal(bool)
+    check_signal = pyqtSignal(bool)
 
     def __init__(self, container, iconUnselectedPath, iconSelectedPath, iconHoverPath):
         super(IconCheckButton, self).__init__(container)
         self.selectedIcon = QIcon("customWidgets\icons\\" + iconSelectedPath)
         self.unselectedIcon = QIcon("customWidgets\icons\\" + iconUnselectedPath)
         self.hoverIcon = QIcon("customWidgets\icons\\" + iconHoverPath)
+
 
         self.active = False
         self.setupUi()
@@ -25,7 +25,6 @@ class IconCheckButton(QPushButton):
         self.setIcon(self.selectedIcon)
         self.active = True
 
-
     def uncheck(self):
         self.setIcon(self.unselectedIcon)
         self.active = False
@@ -37,7 +36,7 @@ class IconCheckButton(QPushButton):
             else:
                 self.check()
 
-            self.checked.emit(self.active)
+            self.check_signal.emit(self.active)
 
     def enterEvent(self, e: QEvent) -> None:
         if not self.active:
@@ -48,4 +47,3 @@ class IconCheckButton(QPushButton):
         if not self.active:
             self.setIcon(self.unselectedIcon)
         super(IconCheckButton, self).enterEvent(e)
-

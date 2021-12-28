@@ -2,6 +2,7 @@ import os
 import pickle
 import sys
 # Gmail API utils
+from googleapiclient import errors
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -119,207 +120,17 @@ class GoogleApi:
                 messages.extend(result['messages'])
         return messages
 
-    # utility functions
-    def get_size_format(self, b, factor=1024, suffix="B"):
-        """
-        Scale bytes to its proper byte format
-        e.g:
-            1253656 => '1.20MB'
-            1253656678 => '1.17GB'
-        """
-        for unit in ["", "K", "M", "G", "T", "P", "E", "Z"]:
-            if b < factor:
-                return f"{b:.2f}{unit}{suffix}"
-            b /= factor
-        return f"{b:.2f}Y{suffix}"
-
-    def clean(self, text):
-        # clean text for creating a folder
-        return "".join(c if c.isalnum() else "_" for c in text)
-
-    def parse_parts(self, parts, folder_name, message):
-        """
-        Utility function that parses the content of an email partition
-        """
-        if parts:
-            for part in parts:
-                filename = part.get("filename")
-                mimeType = part.get("mimeType")
-                body = part.get("body")
-                data = body.get("data")
-                file_size = body.get("size")
-                part_headers = part.get("headers")
-                if part.get("parts"):
-                    # recursively call this function when we see that a part
-                    # has parts inside
-                    self.parse_parts(part.get("parts"), folder_name, message)
-                if mimeType == "text/plain":
-                    # if the email part is text plain
-                    if data:
-                        text = urlsafe_b64decode(data).decode()
-                        print(text)
-                elif mimeType == "text/html":
-                    # if the email part is an HTML content
-                    # save the HTML file and optionally open it in the browser
-                    if not filename:
-                        filename = "index.html"
-                    filepath = os.path.join(folder_name, filename)
-                    print("Saving HTML to", filepath)
-                    with open(filepath, "wb") as f:
-                        f.write(urlsafe_b64decode(data))
-                else:
-                    # attachment other than a plain text or HTML
-                    for part_header in part_headers:
-                        part_header_name = part_header.get("name")
-                        part_header_value = part_header.get("value")
-                        if part_header_name == "Content-Disposition":
-                            if "attachment" in part_header_value:
-                                # we get the attachment ID
-                                # and make another request to get the attachment itself
-                                print("Saving the file:", filename, "size:", self.get_size_format(file_size))
-                                attachment_id = body.get("attachmentId")
-                                attachment = self.service.users().messages() \
-                                    .attachments().get(id=attachment_id, userId='me', messageId=message['id']).execute()
-                                data = attachment.get("data")
-                                filepath = os.path.join(folder_name, filename)
-                                if data:
-                                    with open(filepath, "wb") as f:
-                                        f.write(urlsafe_b64decode(data))
-
-    def read_message(self, message):
-        """
-        This function takes Gmail API `service` and the given `message_id` and does the following:
-            - Downloads the content of the email
-            - Prints email basic information (To, From, Subject & Date) and plain/text parts
-            - Creates a folder for each email based on the subject
-            - Downloads text/html content (if available) and saves it under the folder created as index.html
-            - Downloads any file that is attached to the email and saves it in the folder created
-        """
-        print(message["id"])
-        msg = self.service.users().messages().get(userId='me', id=message['id'], format='full').execute()
-        # parts can be the message body, or attachments
-        payload = msg['payload']
-        headers = payload.get("headers")
-        parts = payload.get("parts")
-        folder_name = "email"
-        has_subject = False
-        if headers:
-            # this section prints email basic info & creates a folder for the email
-            for header in headers:
-                name = header.get("name")
-                value = header.get("value")
-                if name.lower() == 'from':
-                    # we print the From address
-                    print("From:", value)
-                if name.lower() == "to":
-                    # we print the To address
-                    print("To:", value)
-                if name.lower() == "subject":
-                    # make our boolean True, the email has "subject"
-                    has_subject = True
-                    # make a directory with the name of the subject
-                    folder_name = self.clean(value)
-                    # we will also handle emails with the same subject name
-                    folder_counter = 0
-                    while os.path.isdir(folder_name):
-                        folder_counter += 1
-                        # we have the same folder name, add a number next to it
-                        if folder_name[-1].isdigit() and folder_name[-2] == "_":
-                            folder_name = f"{folder_name[:-2]}_{folder_counter}"
-                        elif folder_name[-2:].isdigit() and folder_name[-3] == "_":
-                            folder_name = f"{folder_name[:-3]}_{folder_counter}"
-                        else:
-                            folder_name = f"{folder_name}_{folder_counter}"
-                    os.mkdir(folder_name)
-                    print("Subject:", value)
-                if name.lower() == "date":
-                    # we print the date when the message was sent
-                    print("Date:", value)
-        if not has_subject:
-            # if the email does not have a subject, then make a folder with "email" name
-            # since folders are created based on subjects
-            if not os.path.isdir(folder_name):
-                os.mkdir(folder_name)
-        self.parse_parts(parts, folder_name, message)
-        print("=" * 50)
-
     def getAllLabels(self):
         return self.service.users().labels().list(userId="me").execute()
 
-    def getEmailByTag(self, tags):
-        emails = self.service.users().messages().list(userId="me", labelIds=tags, maxResults="50").execute()
-        returnMails = []
-
-        for email in emails["messages"]:
-            mail = {}
-            fullEmail = self.service.users().messages().get(userId="me", id=email["id"], format='full').execute()
-            mail["id"] = fullEmail["id"]
-            mail["labelIds"] = fullEmail["labelIds"]
-            for header in fullEmail["payload"]["headers"]:
-                if header["name"] == "Date":
-                    mail["date"] = header["value"][:-9]
-                elif header["name"] == "Subject":
-                    mail["subject"] = header["value"]
-                elif header["name"] == "From":
-                    index = header["value"].index('<')
-                    mail["fromName"] = header["value"][:index]
-                    mail["fromEmail"] = header["value"][index:]
-
-            payload = fullEmail["payload"]
-            if payload:
-                parts = payload.get("parts")
-                if parts:
-                    content, attachment = self.getParts(parts)
-                    mail["content"] = content
-                    mail["attachment"] = attachment
-            returnMails.append(mail)
-        return returnMails
-
-    def getParts(self, parts):
-        content = ""
-        attachment = []
-        if parts:
-            for part in parts:
-                filename = part.get("filename")
-                mimeType = part.get("mimeType")
-                body = part.get("body")
-                data = body.get("data")
-                part_headers = part.get("headers")
-                if part.get("parts"):
-                    # recursively call this function when we see that a part
-                    # has parts inside
-                    rContent, rAttachment = self.getParts(part.get("parts"))
-                    content = content + rContent
-                    for rA in rAttachment:
-                        attachment.append(rA)
-
-                # if mimeType == "text/plain":
-                #     # if the email part is text plain
-                #     if data:
-                #         content += urlsafe_b64decode(data).decode()
-                elif mimeType == "text/html":
-                    # if the email part is an HTML content
-                    # save the HTML file and optionally open it in the browser
-                    content = content + (urlsafe_b64decode(data)).decode()
-                else:
-                    # attachment other than a plain text or HTML
-                    for part_header in part_headers:
-                        part_header_name = part_header.get("name")
-                        part_header_value = part_header.get("value")
-                        if part_header_name == "Content-Disposition":
-                            if "attachment" in part_header_value:
-                                # we get the attachment ID
-                                attachment.append({body.get("attachmentId"), filename})
-        return [content, attachment]
-
     # ------------------------------------------------------------------------------------------
-    def downloadAttachment(self, attachment_id, message_id):
+    def download_attachment(self, attachment_id, message_id):
         attachment = self.service.users().messages() \
             .attachments().get(id=attachment_id, userId='me', messageId=message_id).execute()
         data = attachment.get("data")
         return urlsafe_b64decode(data)
 
-    def processParts(self, parts):
+    def process_parts(self, parts):
         my_body = ""
         my_attachments = []
 
@@ -331,12 +142,12 @@ class GoogleApi:
                 data = body.get("data")
                 part_headers = part.get("headers")
                 if part.get("parts"):
-                    _body, _attachments = self.processParts(part.get("parts"))
+                    _body, _attachments = self.process_parts(part.get("parts"))
                     my_body = my_body + _body
                     for attachment in _attachments:
                         my_attachments.append(attachment)
                 if mimeType == "text/html":
-                    body = body + urlsafe_b64decode(data)
+                    my_body = my_body + urlsafe_b64decode(data).decode()
                 else:
                     for part_header in part_headers:
                         part_header_name = part_header.get("name")
@@ -349,8 +160,9 @@ class GoogleApi:
                                 })
         return [my_body, my_attachments]
 
-    def processEmail(self, email):
-        resultEmail = {'id': email['id'], 'tags': email['labelIds']}
+    def process_email(self, email):
+        resultEmail = {'id': email['id'], 'labelIds': email['labelIds']}
+
         payload = email['payload']
         mimeType = payload['mimeType']
         headers = payload.get('headers')
@@ -373,21 +185,44 @@ class GoogleApi:
                     resultEmail['date'] = value[:-9]
 
         if parts:
-            body, attachments = self.processParts(parts)
+            body, attachments = self.process_parts(parts)
             resultEmail['body'] = body
             resultEmail['attachments'] = attachments
         else:
-            resultEmail['body'] = payload.get('body').get('data')
+            resultEmail['body'] = urlsafe_b64decode(payload.get('body').get('data')).decode()
 
         return resultEmail
 
-    def getEmailsByTags(self, tags):
-        emails = self.service.users().messages().list(userId="me", labelIds=tags, maxResults="50").execute()
+    def get_emails_by_tags(self, tags, maxResults):
+        emails = self.service.users().messages().list(userId="me", labelIds=tags, maxResults=maxResults).execute()
         resultEmails = []
         for email in emails['messages']:
             email = self.service.users().messages().get(userId="me", id=email["id"], format='full').execute()
-            resultEmail = self.processEmail(email)
+            resultEmail = self.process_email(email)
             resultEmails.append(resultEmail)
 
         return resultEmails
 
+    def get_email_by_id(self, email_id):
+        email = self.service.users().messages().get(userId="me", id=email_id, format='full').execute()
+        resultEmail = self.process_email(email)
+        return resultEmail
+
+    def modify_labels_to_emails(self, emails_ids, add_labels_ids, remove_labels_ids):
+        try:
+            self.service.users().messages().batchModify(userId="me", body={
+                'ids': emails_ids,
+                'addLabelIds': add_labels_ids,
+                'removeLabelIds': remove_labels_ids
+            }).execute()
+        except Exception as error:
+            print(f"An error occurred: {error}")
+
+    def modify_labels_to_email(self, email_id, add_labels_ids, remove_labels_ids):
+        try:
+            self.service.users().messages().modify(userId="me", id=email_id, body={
+                'addLabelIds': add_labels_ids,
+                'removeLabelIds': remove_labels_ids
+            }).execute()
+        except Exception as error:
+            print(f"An error occurred: {error}")
