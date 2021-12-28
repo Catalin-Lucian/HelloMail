@@ -1,10 +1,11 @@
-from PyQt5.QtWidgets import QFrame
+import requests
+from PyQt5.QtWidgets import QFrame, QLabel
 from PyQt5.QtCore import QRect, pyqtSignal, Qt
-from PyQt5.QtGui import QMouseEvent
+from PyQt5.QtGui import QMouseEvent, QImage, QPixmap, QBitmap
 
 
-class AvatarIcon(QFrame):
-    clicked = pyqtSignal()
+class AvatarIcon(QLabel):
+    click_signal = pyqtSignal()
 
     def __init__(self, container):
         super(AvatarIcon, self).__init__(container)
@@ -21,7 +22,15 @@ class AvatarIcon(QFrame):
 
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
-            self.clicked.emit()
+            self.click_signal.emit()
 
-    def setImage(self):
-        pass
+    def setImage(self, imageUrl):
+        image = QImage()
+        # image.loadFromData(requests.get(imageUrl).content)
+        # pixMap = QPixmap(image)
+        # pixMap = pixMap.scaled(self.size().width(), self.size().height(), Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        # self.setImage(pixMap)
+        # self.setScaledContents(True)
+        # self.setStyleSheet(f"background-color: transparent;"
+        #                    "border: 0px solid rgb(199, 199, 199);"
+        #                    "border-radius: 20px;")

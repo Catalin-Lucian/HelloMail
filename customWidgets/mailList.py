@@ -1,12 +1,10 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt, pyqtSignal, QSize
-from PyQt5.QtGui import QResizeEvent
 from PyQt5.QtWidgets import QLayout
 from customWidgets.mailItem import MailItem
 
 
 class MailList(QtWidgets.QScrollArea):
-
     mailItemChange = pyqtSignal(QtWidgets.QFrame)
 
     def __init__(self, container):
@@ -17,7 +15,7 @@ class MailList(QtWidgets.QScrollArea):
         self.spacerItem = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
 
         self.selectedMailItem = None
-        self.checkedMails = []
+        self.selectedMails = []
 
         self.setupUi()
 
@@ -52,11 +50,13 @@ class MailList(QtWidgets.QScrollArea):
         self.verticalLayout.removeItem(self.spacerItem)
 
         mailItem = MailItem(self.scrollAreaWidgetContents, mailData)
-        mailItem.clicked.connect(lambda itm: self.onMailClicked(itm))
-        mailItem.checked.connect(lambda ch: self.onMailChecked(ch, mailItem))
+        mailItem.click_signal.connect(lambda itm: self.onMailClicked(itm))
+        mailItem.select_check_signal.connect(lambda ch: self.onMailChecked(ch, mailItem))
+        # mailItem.star_checked.connect(lambda ch: self.onMailStartChecked(ch, mailItem))
         self.verticalLayout.addWidget(mailItem, 0, Qt.AlignHCenter)
-
         self.verticalLayout.addSpacerItem(self.spacerItem)
+
+        return mailItem
 
     def removeMailItem(self, mailItem):
         self.verticalLayout.removeWidget(mailItem)
@@ -70,16 +70,14 @@ class MailList(QtWidgets.QScrollArea):
         self.mailItemChange.emit(mailItem)
 
     @QtCore.pyqtSlot()
-    def onMailChecked(self, checked, mail):
+    def onMailChecked(self, checked, mailItem):
         if checked:
-            self.checkedMails.append(mail)
+            self.selectedMails.append(mailItem)
         else:
-            self.checkedMails.remove(mail)
-
+            self.selectedMails.remove(mailItem)
 
     def resizeContent(self, e: QSize) -> None:
-        self.resize(QSize(422, self.size().height()+e.height()))
-        self.scrollAreaWidgetContents.resize(QSize(422, self.scrollAreaWidgetContents.size().height()+e.height()))
+        self.resize(QSize(422, self.size().height() + e.height()))
+        self.scrollAreaWidgetContents.resize(QSize(422, self.scrollAreaWidgetContents.size().height() + e.height()))
         print(self.size().height())
         print(e.height())
-
