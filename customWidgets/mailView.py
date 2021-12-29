@@ -15,6 +15,7 @@ class MailView(QFrame):
         self.senderEmailLabel = QLabel(self)
         self.dateTimeLabel = QLabel(self)
         self.subjectLabel = QLabel(self)
+
         self.buttonsContainer = QFrame(self)
         self.forwardButton = IconClickButton(self.buttonsContainer, "forward_unselected.svg", "forward_hover.svg", "forward_hover.svg")
         self.replyButton = IconClickButton(self.buttonsContainer, "reply_unselected.svg", "reply_hover.svg","reply_hover.svg")
@@ -90,6 +91,7 @@ class MailView(QFrame):
         self.starButton.hide()
 
 
+
     def setMailContentView(self, mailData):
         if mailData.get('body'):
             self.mailContentView.setHtml(mailData.get('body'))
@@ -102,6 +104,7 @@ class MailView(QFrame):
         self.subjectLabel.setText(mailData.get('subject'))
         self.buttonsContainer.show()
         self.starButton.show()
+
         # self.mailContentView.adjustSize()
 
     def resizeContent(self, e: QSize):

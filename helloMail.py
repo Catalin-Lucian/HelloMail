@@ -1,11 +1,14 @@
 import sys
 
-from PyQt5.QtCore import QSize, QPoint
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtCore import QSize, QPoint, QRect, Qt
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame
 from PyQt5 import QtCore, QtWidgets, QtGui
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
+from customWidgets.settingsPanel import SettingsPanel
 from module.gmailApiService import GoogleApi
+from customWidgets.iconClickButton import IconClickButton
 
 API_NAME = 'gmail'
 API_VERSION = 'v1'
@@ -26,6 +29,7 @@ class HelloMail(QMainWindow):
         self.mailView = MailView(self.centralWidget)
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
 
+        self.settingsButton=SettingsPanel(self.centralWidget)
         self.setupUi()
         self.addMailItemsOnStartUp()
 
@@ -43,6 +47,14 @@ class HelloMail(QMainWindow):
         self.mailCover.setFrameShadow(QtWidgets.QFrame.Raised)
 
         self.mailList.mailItemChange.connect(lambda mailItem: self.onMailItemChange(mailItem))
+
+        self.settingsButton.setGeometry(QRect(1405, 384, 188, 59))
+        self.settingsButton.setStyleSheet("background-color: rgba(20, 107, 226, 1);"
+                                          "border-radius:10px;"
+                                          "text-align:left;"
+                                          "padding:10px;")
+        self.settingsButton.setWindowFlags(Qt.WindowStaysOnTopHint)
+
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:

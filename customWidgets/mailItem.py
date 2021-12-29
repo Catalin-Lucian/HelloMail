@@ -3,7 +3,7 @@ import urllib
 
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLabel, QFrame
 
 from customWidgets.avatarIcon import AvatarIcon
 from customWidgets.iconCheckButton import IconCheckButton
@@ -75,6 +75,7 @@ class MailItem(QtWidgets.QFrame):
             self.setUnreadStyle(True)
         else:
             self.setUnreadStyle(False)
+
 
     def translate(self):
         if self.mailData.get('subject'):
