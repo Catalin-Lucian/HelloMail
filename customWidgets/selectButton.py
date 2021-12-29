@@ -9,7 +9,8 @@ class SelectButton(QFrame):
     def __init__(self, container, settings=None):
         super(SelectButton, self).__init__(container)
         self.settings = settings
-        self.settings.subscribe(self)
+        if self.settings:
+            self.settings.subscribe(self)
 
         self.checkedFlag = False
         self.setupUi()
@@ -19,6 +20,7 @@ class SelectButton(QFrame):
         self.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
                            "border: 2px solid rgb(199, 199, 199);\n"
                            "border-radius: 10px;")
+        
 
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:

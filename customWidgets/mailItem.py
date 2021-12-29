@@ -19,7 +19,8 @@ class MailItem(QtWidgets.QFrame):
         super(MailItem, self).__init__(container)
         self.mailData = mailData
         self.settings = settings
-        self.settings.subscribe(self)
+        if self.settings:
+            self.settings.subscribe(self)
 
         self.selectButton = SelectButton(self)
         self.avatarIcon = AvatarIcon(self)

@@ -9,7 +9,8 @@ class IconCheckButton(QPushButton):
     def __init__(self, container, iconUnselectedPath, iconSelectedPath, iconHoverPath, settings=None):
         super(IconCheckButton, self).__init__(container)
         self.settings = settings
-        self.settings.subscribe(self)
+        if self.settings:
+            self.settings.subscribe(self)
 
         self.selectedIcon = QIcon("customWidgets\icons\\" + iconSelectedPath)
         self.unselectedIcon = QIcon("customWidgets\icons\\" + iconUnselectedPath)

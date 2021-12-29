@@ -10,7 +10,8 @@ class AvatarIcon(QLabel):
     def __init__(self, container, settings=None):
         super(AvatarIcon, self).__init__(container)
         self.settings = settings
-        self.settings.subscribe(self)
+        if self.settings:
+            self.settings.subscribe(self)
 
         self.setupUi()
 

@@ -9,7 +9,8 @@ class IconClickButton(QPushButton):
     def __init__(self, container, iconUnClicked, iconClicked, iconHover, settings=None):
         super(IconClickButton, self).__init__(container)
         self.settings = settings
-        self.settings.subscribe(self)
+        if self.settings:
+            self.settings.subscribe(self)
 
         self.clickedIcon = QIcon("customWidgets\icons\\" + iconClicked)
         self.unClickedIcon = QIcon("customWidgets\icons\\" + iconUnClicked)

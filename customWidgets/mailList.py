@@ -10,7 +10,8 @@ class MailList(QtWidgets.QScrollArea):
     def __init__(self, container, settings=None):
         super(MailList, self).__init__(container)
         self.settings = settings
-        self.settings.subscribe(self)
+        if self.settings:
+            self.settings.subscribe(self)
 
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.verticalLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
