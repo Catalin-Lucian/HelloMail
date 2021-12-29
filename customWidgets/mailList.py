@@ -7,8 +7,10 @@ from customWidgets.mailItem import MailItem
 class MailList(QtWidgets.QScrollArea):
     mailItemChange = pyqtSignal(QtWidgets.QFrame)
 
-    def __init__(self, container):
+    def __init__(self, container, settings):
         super(MailList, self).__init__(container)
+        self.settings = settings
+        self.settings.subscribe(self)
 
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.verticalLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
@@ -81,3 +83,6 @@ class MailList(QtWidgets.QScrollArea):
         self.scrollAreaWidgetContents.resize(QSize(422, self.scrollAreaWidgetContents.size().height() + e.height()))
         print(self.size().height())
         print(e.height())
+
+    def notify(self):
+        pass

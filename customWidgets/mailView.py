@@ -7,8 +7,11 @@ from customWidgets.avatarIcon import AvatarIcon
 
 
 class MailView(QFrame):
-    def __init__(self, container):
+    def __init__(self, container, settings):
         super(MailView, self).__init__(container)
+        self.settings = settings
+        self.settings.subscribe(self)
+
         self.mailContentView = QWebEngineView(self)
         self.avatarIcon = AvatarIcon(self)
         self.senderNameLabel = QLabel(self)
@@ -89,3 +92,6 @@ class MailView(QFrame):
                                     self.mailContentView.size().height() + e.height())
         self.dateTimeLabel.move(QPoint(self.dateTimeLabel.pos().x() + e.width(), self.dateTimeLabel.pos().y()))
         self.subjectLabel.resize(QSize(self.subjectLabel.size().width() + e.width(), self.subjectLabel.size().height()))
+
+    def notify(self):
+        pass

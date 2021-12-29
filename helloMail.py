@@ -22,14 +22,15 @@ class HelloMail(QMainWindow):
         self.hasFirstResize = False
 
         self.googleApi = GoogleApi(CLIENT_FILE, API_NAME, API_VERSION, SCOPES, 'x')
-
-        self.centralWidget = QtWidgets.QWidget(self)
-        self.mailList = MailList(self.centralWidget)
-        self.mailView = MailView(self.centralWidget)
-        self.mailCover = QtWidgets.QFrame(self.centralWidget)
-
         self.settings = SettingsConfig()
         self.settings.subscribe(self)
+
+        self.centralWidget = QtWidgets.QWidget(self)
+        self.mailList = MailList(self.centralWidget, self.settings)
+        self.mailView = MailView(self.centralWidget, self.settings)
+        self.mailCover = QtWidgets.QFrame(self.centralWidget)
+
+
 
         self.setupUi()
         self.addMailItemsOnStartUp()
