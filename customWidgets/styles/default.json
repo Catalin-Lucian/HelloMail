@@ -1,0 +1,19 @@
+{
+  "elements": ["mainWindow", ""],
+  "values": {
+    "mainWindow": {
+      "default": [{
+        "name": "background-color",
+        "value": "rgb(24, 29, 35)"
+      }]
+    },
+    "mailCover":{
+      "default":[
+        {
+          "name": "background-color",
+          "value": "qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.4 rgba(24, 29, 35, 255), stop:1 rgba(255, 255, 255, 0))"
+        }
+      ]
+    }
+  }
+}
