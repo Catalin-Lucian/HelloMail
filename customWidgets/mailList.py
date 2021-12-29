@@ -64,10 +64,10 @@ class MailList(QtWidgets.QScrollArea):
 
         self.selectCheckButton.setGeometry(QRect(13, 10, 20, 20))
         self.arhiveButton.setGeometry(QRect(97, 10, 22, 21))
-        self.warningButton.setGeometry(QRect(140, 4, 32, 32))
-        self.trashButton.setGeometry(QRect(208, 4, 34, 34))
+        self.warningButton.setGeometry(QRect(140, 4, 36, 36))
+        self.trashButton.setGeometry(QRect(190, 4, 34, 34))
         self.unreadMailButton.setGeometry(QRect(292, 15, 26, 18))
-        self.readMailButton.setGeometry(QRect(344, 8, 32, 32))
+        self.readMailButton.setGeometry(QRect(340, 8, 32, 32))
 
     def addMailItem(self, mailData):
         self.verticalLayout.removeItem(self.spacerItem)

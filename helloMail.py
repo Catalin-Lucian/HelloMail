@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame
 from PyQt5 import QtCore, QtWidgets, QtGui
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
+from customWidgets.searchBar import SearchBar
 from customWidgets.settingsPanel import SettingsPanel
 from module.gmailApiService import GoogleApi
 from customWidgets.iconClickButton import IconClickButton
@@ -28,8 +29,9 @@ class HelloMail(QMainWindow):
         self.mailList = MailList(self.centralWidget)
         self.mailView = MailView(self.centralWidget)
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
+        self.searchBar = SearchBar(self.centralWidget)
+        self.settingsButton = SettingsPanel(self.centralWidget)
 
-        self.settingsButton=SettingsPanel(self.centralWidget)
         self.setupUi()
         self.addMailItemsOnStartUp()
 
@@ -54,6 +56,8 @@ class HelloMail(QMainWindow):
                                           "text-align:left;"
                                           "padding:10px;")
         self.settingsButton.setWindowFlags(Qt.WindowStaysOnTopHint)
+
+
 
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
