@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QFrame, QLabel
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 from customWidgets.avatarIcon import AvatarIcon
-
+from customWidgets.iconClickButton import IconClickButton
 
 class MailView(QFrame):
     def __init__(self, container):
@@ -15,6 +15,10 @@ class MailView(QFrame):
         self.senderEmailLabel = QLabel(self)
         self.dateTimeLabel = QLabel(self)
         self.subjectLabel = QLabel(self)
+        self.buttonsContainer = QFrame(self)
+        self.forwardButton = IconClickButton(self.buttonsContainer, "forward_unselected.svg", "forward_hover.svg", "forward_hover.svg")
+        self.replyButton = IconClickButton(self.buttonsContainer, "reply_unselected.svg", "reply_hover.svg","reply_hover.svg")
+        self.trashButton = IconClickButton(self.buttonsContainer, "trash_unselected.svg", "trash_hover.svg", "trash_hover.svg")
 
         self.setupUi()
 
@@ -70,6 +74,16 @@ class MailView(QFrame):
         self.subjectLabel.setAlignment(Qt.AlignCenter)
         self.subjectLabel.setStyleSheet("color: rgb(255, 255, 255);")
         self.subjectLabel.setScaledContents(True)
+
+        self.buttonsContainer.setGeometry(QRect(563, 26, 128, 38))
+        self.buttonsContainer.setStyleSheet("background-color: rgb(41, 48, 58);\n""border-radius:10px;")
+        self.buttonsContainer.setFrameShape(QFrame.StyledPanel)
+        self.buttonsContainer.setFrameShadow(QFrame.Raised)
+
+        self.forwardButton.setGeometry(QRect(8, 4, 30, 30))
+        self.replyButton.setGeometry(QRect(40, 4, 30, 30))
+        self.trashButton.setGeometry(QRect(72, 4, 30, 30))
+
 
     def setMailContentView(self, mailData):
         if mailData.get('body'):
