@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QRect, pyqtSignal, QSize, Qt, QEvent
-from PyQt5.QtGui import QMouseEvent, QIcon
+from PyQt5.QtGui import QMouseEvent, QIcon, QFont
 
 
 class IconClickButton(QPushButton):
@@ -42,3 +42,19 @@ class IconClickButton(QPushButton):
         self.onTop = False
         self.setIcon(self.unClickedIcon)
         super(IconClickButton, self).enterEvent(e)
+
+    def setPositionText(self, x, y, w, h, text, size):
+        self.setStyleSheet(f"background-color: #146BE2;"
+                           f"color:#FFFFFF;"
+                           "border-radius:10px;")
+
+        self.setGeometry(QRect(x, y, w, h))
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(size)
+        font.setBold(True)
+        font.setWeight(75)
+        self.setFont(font)
+        self.setText(f" {text}")
+        self.setFlat(True)
+

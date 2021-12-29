@@ -156,3 +156,6 @@ class MailItem(QtWidgets.QFrame):
             else:
                 self.setUnreadStyle(False)
         super(MailItem, self).enterEvent(e)
+
+    def getActive(self):
+        return self.active

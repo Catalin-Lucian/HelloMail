@@ -30,6 +30,7 @@ class MailView(QFrame):
                                            "border:10px solid black;"
                                            "border-radius:10px};\n")
         self.mailContentView.page().setBackgroundColor(Qt.transparent)
+        self.mailContentView.setWindowFlag(Qt.WindowStaysOnBottomHint)
 
         self.avatarIcon.setGeometry(QRect(30, 30, 50, 50))
         self.avatarIcon.setStyleSheet("background-color: rgb(255, 255, 255);\n"
@@ -89,3 +90,6 @@ class MailView(QFrame):
                                     self.mailContentView.size().height() + e.height())
         self.dateTimeLabel.move(QPoint(self.dateTimeLabel.pos().x() + e.width(), self.dateTimeLabel.pos().y()))
         self.subjectLabel.resize(QSize(self.subjectLabel.size().width() + e.width(), self.subjectLabel.size().height()))
+
+    def sleepView(self):
+        self.mailContentView.hide()

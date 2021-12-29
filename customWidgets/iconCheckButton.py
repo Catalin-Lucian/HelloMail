@@ -12,7 +12,6 @@ class IconCheckButton(QPushButton):
         self.unselectedIcon = QIcon("customWidgets\icons\\" + iconUnselectedPath)
         self.hoverIcon = QIcon("customWidgets\icons\\" + iconHoverPath)
 
-
         self.active = False
         self.themeStyle = None
         self.setupUi()
@@ -26,15 +25,17 @@ class IconCheckButton(QPushButton):
         self.setIcon(self.selectedIcon)
         self.active = True
         if self.themeStyle:
-            self.setStyleSheet(f"background-color:{self.themeStyle.get('checked').get('background-color')},"
-                               f"color:{self.themeStyle.get('checked').get('color')}")
+            self.setStyleSheet(f"background-color:{self.themeStyle.get('checked').get('background-color')};"
+                               f"color:{self.themeStyle.get('checked').get('color')}; "
+                               f"text-align: left;")
 
     def uncheck(self):
         self.setIcon(self.unselectedIcon)
         self.active = False
         if self.themeStyle:
-            self.setStyleSheet(f"background-color:{self.themeStyle.get('unchecked').get('background-color')},"
-                               f"color:{self.themeStyle.get('unchecked').get('color')}")
+            self.setStyleSheet(f"background-color:{self.themeStyle.get('unchecked').get('background-color')};"
+                               f"color:{self.themeStyle.get('unchecked').get('color')};"
+                               f"text-align: left;")
 
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
@@ -49,18 +50,25 @@ class IconCheckButton(QPushButton):
         if not self.active:
             self.setIcon(self.hoverIcon)
             if self.themeStyle:
-                self.setStyleSheet(f"background-color:{self.themeStyle.get('checked').get('background-color')},"
-                                   f"color:{self.themeStyle.get('checked').get('color')}")
+                self.setStyleSheet(f"background-color:{self.themeStyle.get('checked').get('background-color')};"
+                                   f"color:{self.themeStyle.get('checked').get('color')};"
+                                   f"text-align: left;")
         super(IconCheckButton, self).enterEvent(e)
 
     def leaveEvent(self, e: QEvent) -> None:
         if not self.active:
             self.setIcon(self.unselectedIcon)
             if self.themeStyle:
-                self.setStyleSheet(f"background-color:{self.themeStyle.get('unchecked').get('background-color')},"
-                                   f"color:{self.themeStyle.get('unchecked').get('color')}")
+                self.setStyleSheet(f"background-color:{self.themeStyle.get('unchecked').get('background-color')};"
+                                   f"color:{self.themeStyle.get('unchecked').get('color')};"
+                                   f"text-align: left;")
         super(IconCheckButton, self).enterEvent(e)
 
     def setThemeStyle(self, themeStyle):
         self.themeStyle = themeStyle
+        self.setStyleSheet(f"background-color:{self.themeStyle.get('unchecked').get('background-color')};"
+                           f"color:{self.themeStyle.get('unchecked').get('color')};"
+                           f"text-align: left;")
 
+    def getActive(self):
+        return self.active

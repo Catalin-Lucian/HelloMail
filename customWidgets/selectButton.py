@@ -52,3 +52,4 @@ class SelectButton(QFrame):
                                "border-radius: 10px;")
         super(SelectButton, self).leaveEvent(e)
 
+
