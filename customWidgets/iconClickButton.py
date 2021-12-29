@@ -6,8 +6,11 @@ from PyQt5.QtGui import QMouseEvent, QIcon
 class IconClickButton(QPushButton):
     click_signal = pyqtSignal()
 
-    def __init__(self, container, iconUnClicked, iconClicked, iconHover):
+    def __init__(self, container, iconUnClicked, iconClicked, iconHover, settings=None):
         super(IconClickButton, self).__init__(container)
+        self.settings = settings
+        self.settings.subscribe(self)
+
         self.clickedIcon = QIcon("customWidgets\icons\\" + iconClicked)
         self.unClickedIcon = QIcon("customWidgets\icons\\" + iconUnClicked)
         self.hoverIcon = QIcon("customWidgets\icons\\" + iconHover)
@@ -42,3 +45,6 @@ class IconClickButton(QPushButton):
         self.onTop = False
         self.setIcon(self.unClickedIcon)
         super(IconClickButton, self).enterEvent(e)
+
+    def notify(self):
+        pass

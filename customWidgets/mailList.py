@@ -7,7 +7,7 @@ from customWidgets.mailItem import MailItem
 class MailList(QtWidgets.QScrollArea):
     mailItemChange = pyqtSignal(QtWidgets.QFrame)
 
-    def __init__(self, container, settings):
+    def __init__(self, container, settings=None):
         super(MailList, self).__init__(container)
         self.settings = settings
         self.settings.subscribe(self)

@@ -6,8 +6,11 @@ from PyQt5.QtGui import QMouseEvent, QIcon
 class IconCheckButton(QPushButton):
     check_signal = pyqtSignal(bool)
 
-    def __init__(self, container, iconUnselectedPath, iconSelectedPath, iconHoverPath):
+    def __init__(self, container, iconUnselectedPath, iconSelectedPath, iconHoverPath, settings=None):
         super(IconCheckButton, self).__init__(container)
+        self.settings = settings
+        self.settings.subscribe(self)
+
         self.selectedIcon = QIcon("customWidgets\icons\\" + iconSelectedPath)
         self.unselectedIcon = QIcon("customWidgets\icons\\" + iconUnselectedPath)
         self.hoverIcon = QIcon("customWidgets\icons\\" + iconHoverPath)
@@ -47,3 +50,6 @@ class IconCheckButton(QPushButton):
         if not self.active:
             self.setIcon(self.unselectedIcon)
         super(IconCheckButton, self).enterEvent(e)
+
+    def notify(self):
+        pass

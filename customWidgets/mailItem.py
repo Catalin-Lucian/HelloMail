@@ -15,7 +15,7 @@ class MailItem(QtWidgets.QFrame):
     select_check_signal = pyqtSignal(bool)
     star_check_signal = pyqtSignal(bool, QtWidgets.QFrame)
 
-    def __init__(self, container, mailData, settings):
+    def __init__(self, container, mailData, settings=None):
         super(MailItem, self).__init__(container)
         self.mailData = mailData
         self.settings = settings

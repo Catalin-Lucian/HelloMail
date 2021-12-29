@@ -6,8 +6,11 @@ from PyQt5.QtGui import QMouseEvent
 class SelectButton(QFrame):
     checked = pyqtSignal(bool)
 
-    def __init__(self, container):
+    def __init__(self, container, settings=None):
         super(SelectButton, self).__init__(container)
+        self.settings = settings
+        self.settings.subscribe(self)
+
         self.checkedFlag = False
         self.setupUi()
 
@@ -51,4 +54,7 @@ class SelectButton(QFrame):
                                "border: 2px solid rgb(199, 199, 199);\n"
                                "border-radius: 10px;")
         super(SelectButton, self).leaveEvent(e)
+
+    def notify(self):
+        pass
 

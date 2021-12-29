@@ -7,7 +7,7 @@ from customWidgets.avatarIcon import AvatarIcon
 
 
 class MailView(QFrame):
-    def __init__(self, container, settings):
+    def __init__(self, container, settings=None):
         super(MailView, self).__init__(container)
         self.settings = settings
         self.settings.subscribe(self)

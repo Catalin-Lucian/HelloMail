@@ -7,8 +7,10 @@ from PyQt5.QtGui import QMouseEvent, QImage, QPixmap, QBitmap
 class AvatarIcon(QLabel):
     click_signal = pyqtSignal()
 
-    def __init__(self, container):
+    def __init__(self, container, settings=None):
         super(AvatarIcon, self).__init__(container)
+        self.settings = settings
+        self.settings.subscribe(self)
 
         self.setupUi()
 
@@ -34,3 +36,6 @@ class AvatarIcon(QLabel):
         # self.setStyleSheet(f"background-color: transparent;"
         #                    "border: 0px solid rgb(199, 199, 199);"
         #                    "border-radius: 20px;")
+
+    def notify(self):
+        pass
