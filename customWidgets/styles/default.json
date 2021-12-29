@@ -1,5 +1,5 @@
 {
-  "elements": ["mainWindow", ""],
+  "elements": ["mainWindow", "mailCover",""],
   "values": {
     "mainWindow": {
       "default": [{
