@@ -1,3 +1,5 @@
+import logging
+
 from PyQt5.QtCore import QRect, QEvent
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QFrame, QLabel
@@ -26,6 +28,29 @@ class SettingsPanel(QFrame):
         font.setFamily("Calibri")
         font.setPointSize(18)
         self.settingsButton.setFont(font)
+
+    def setSettings(self, settings):
+        self.settings = settings
+        if settings:
+            self.settings.subscribe(self)
+            self.searchButton.setSettings(settings)
+            self.applyStyleSheet("default")
+
+            style = self.settings.getStyleSheet(self.searchInput.objectName(), 'default')
+            self.searchInput.setStyleSheet(style)
+
+        else:
+            logging.warning(f"{self.objectName()}: settings value noneType")
+
+    def applyStyleSheet(self, state):
+        if self.settings:
+            style = self.settings.getStyleSheet(self.objectName(), state)
+            if style:
+                self.setStyleSheet(style)
+            else:
+                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
+        else:
+            logging.warning(f"{self.objectName()}: settings value noneType")
 
     def enterEvent(self, a0: QEvent) -> None:
         self.setGeometry(QRect(1310, 384, 188, 59))

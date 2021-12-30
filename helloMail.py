@@ -64,13 +64,13 @@ class HelloMail(QMainWindow):
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
 
-
+        self.searchBar.setObjectName('searchBar')
+        self.searchBar.setSettings(self.settings)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
             difH = e.size().height() - e.oldSize().height()
             difW = e.size().width() - e.oldSize().width()
-        
 
     def setupStyleSheets(self):
         self.setStyleSheet(self.settings.getStyleSheet("mainWindow"))
@@ -106,10 +106,11 @@ class HelloMail(QMainWindow):
             self.mailList.resizeContent(QSize(difW, difH))
             self.mailCover.move(QPoint(self.mailCover.pos().x(), self.mailCover.pos().y() + difH))
             self.mailView.resizeContent(QSize(difW, difH))
-            super(HelloMail, self).resizeEvent(e)
 
         if not self.hasFirstResize:
             self.hasFirstResize = True
+
+        super(HelloMail, self).resizeEvent(e)
 
     def notify(self):
         # ---------------------- get notification from settings -----------------

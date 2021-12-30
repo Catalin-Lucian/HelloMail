@@ -107,7 +107,7 @@ class MailItem(QtWidgets.QFrame):
             if style:
                 self.setStyleSheet(style)
             else:
-                logging.warning(f"!! {self.objectName()} styleSheet:{state} did not load !!")
+                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
         else:
             logging.warning("-- settings value noneType")
 
