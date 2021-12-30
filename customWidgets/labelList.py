@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSiz
 
 
 from HelloMail.customWidgets.iconCheckButton import IconCheckButton
+from HelloMail.customWidgets.iconClickButton import IconClickButton
 
 
 class LabelList(QScrollArea):
@@ -56,24 +57,27 @@ class LabelList(QScrollArea):
         self.setWidget(self.scrollAreaWidgetContents)
         self.setStyleSheet("color: rgba(255, 255, 255)")
 
-        self.addTagElement(0, "aaaaaaaaaaaaaa")
+        self.addTagElement("aaaaaaaaaaaaaa")
+        self.addTagElement( "xxxx")
+        self.show()
 
-
-    def addTagElement(self,y,name):
+    def addTagElement(self,name):
         self.verticalLayout.removeItem(self.spacerItem)
 
-        self.tagIcon = IconCheckButton(self.scrollAreaWidgetContents, "tag.svg",
+        self.tagIcon = IconClickButton(self.scrollAreaWidgetContents, "tag.svg",
                                          "tag.svg",
                                          "tag.svg")
-        self.tagIcon.setGeometry(QRect(0, 0, 14, 14))
-        font = QFont()
-        font.setFamily("Calibri")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(14)
-        self.tagIcon.setFont(font)
-        self.tagIcon.setText(f" {name}")
-        self.tagIcon.setFlat(True)
+        self.tagIcon.setPositionText(0, 0, 14, 14, name, 14)
+
+        # self.tagIcon.setGeometry(QRect(0, 0, 14, 14))
+        # font = QFont()
+        # font.setFamily("Calibri")
+        # font.setPointSize(14)
+        # font.setBold(True)
+        # font.setWeight(14)
+        # self.tagIcon.setFont(font)
+        # self.tagIcon.setText(f" {name}")
+        # self.tagIcon.setFlat(True)
 
         self.verticalLayout.addWidget(self.tagIcon, 0, Qt.AlignHCenter)
         self.verticalLayout.addSpacerItem(self.spacerItem)
