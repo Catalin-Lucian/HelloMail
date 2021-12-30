@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QRect, QEvent
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QFrame, QTextEdit
+from PyQt5.QtWidgets import QFrame, QLineEdit
 
 from customWidgets.iconClickButton import IconClickButton
 from customWidgets.settingsPanel import SettingsPanel
@@ -12,7 +12,7 @@ class SearchBar(QFrame):
         super(SearchBar, self).__init__(parent)
         self.searchButton = IconClickButton(self, "search_button.svg", "search_button_hover.svg",
                                             "search_button_hover.svg")
-        self.searchInput = QTextEdit(self)
+        self.searchInput = QLineEdit(self)
         self.setupUi()
 
     def setupUi(self):
@@ -29,7 +29,7 @@ class SearchBar(QFrame):
         font.setPointSize(12)
         self.searchButton.setFont(font)
 
-        self.searchInput.setGeometry(QRect(30, 1, 385, 21))
+        self.searchInput.setGeometry(QRect(30, 1, 355, 21))
         self.searchInput.setFont(font)
         self.searchInput.setStyleSheet("color: #FFFFFF")
 
