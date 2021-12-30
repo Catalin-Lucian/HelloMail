@@ -37,7 +37,7 @@ class IconClickButton(QPushButton):
             if style:
                 self.setStyleSheet(style)
             else:
-                logging.info(f"{self.objectName()} styleSheet:{state} was empty")
+                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 

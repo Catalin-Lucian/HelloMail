@@ -272,10 +272,7 @@
       "hover": []
     },
     "settingPannel": {
-      "default": [{
-        "name":"background-color",
-        "value":"rgba(20, 107, 226, 255)"
-      }],
+      "default": [],
       "pressed": [],
       "hover": []
     },

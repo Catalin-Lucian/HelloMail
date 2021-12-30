@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QFrame, QLabel
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 from customWidgets.avatarIcon import AvatarIcon
+from customWidgets.iconClickButton import IconClickButton
 from module.settingsConfig import SettingsConfig
 
 
@@ -20,6 +21,12 @@ class MailView(QFrame):
         self.senderEmailLabel = QLabel(self)
         self.dateTimeLabel = QLabel(self)
         self.subjectLabel = QLabel(self)
+
+        self.buttonsContainer = QFrame(self)
+        self.forwardButton = IconClickButton(self.buttonsContainer, "forward_unselected.svg", "forward_hover.svg", "forward_hover.svg")
+        self.replyButton = IconClickButton(self.buttonsContainer, "reply_unselected.svg", "reply_hover.svg","reply_hover.svg")
+        self.trashButton = IconClickButton(self.buttonsContainer, "trash_unselected.svg", "trash_hover.svg", "trash_hover.svg")
+        self.starButton = IconClickButton(self, "star_view_unselected.svg", "star_view_hover.svg", "star_view_hover.svg")
 
         self.setupUi()
 
@@ -83,6 +90,20 @@ class MailView(QFrame):
         # self.subjectLabel.setStyleSheet("color: rgb(255, 255, 255);")
         self.subjectLabel.setScaledContents(True)
 
+        self.buttonsContainer.setGeometry(QRect(563, 26, 128, 38))
+        self.buttonsContainer.setStyleSheet("background-color: rgb(41, 48, 58);\n""border-radius:10px;")
+        self.buttonsContainer.setFrameShape(QFrame.StyledPanel)
+        self.buttonsContainer.setFrameShadow(QFrame.Raised)
+        self.buttonsContainer.hide()
+
+        self.forwardButton.setGeometry(QRect(8, 4, 30, 30))
+        self.replyButton.setGeometry(QRect(52, 4, 30, 30))
+        self.trashButton.setGeometry(QRect(92, 4, 30, 30))
+
+        self.starButton.setGeometry(QRect(700, 30, 30, 30))
+        self.starButton.hide()
+
+
     def setSettings(self, settings):
         if settings:
             self.settings = settings
@@ -98,7 +119,7 @@ class MailView(QFrame):
             if style:
                 self.setStyleSheet(style)
             else:
-                logging.warning(f"!! {self.objectName()} styleSheet:{state} did not load !!")
+                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
@@ -134,6 +155,9 @@ class MailView(QFrame):
         self.senderEmailLabel.setText(mailData.get('from').get('email'))
         self.dateTimeLabel.setText(mailData.get('date'))
         self.subjectLabel.setText(mailData.get('subject'))
+        self.buttonsContainer.show()
+        self.starButton.show()
+
         # self.mailContentView.adjustSize()
 
     def resizeContent(self, e: QSize):

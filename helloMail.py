@@ -3,6 +3,9 @@ import sys
 from PyQt5.QtCore import QSize, QPoint, QRect
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
+from PyQt5.QtCore import QSize, QPoint, QRect, Qt
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame
 from PyQt5 import QtCore, QtWidgets, QtGui
 
 from customWidgets.iconClickButton import IconClickButton
@@ -11,7 +14,10 @@ from customWidgets.labelList import LabelList
 from customWidgets.newMessageDialog import NewMessageDialog
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
+from customWidgets.searchBar import SearchBar
+from customWidgets.settingsPanel import SettingsPanel
 from module.gmailApiService import GoogleApi
+from customWidgets.iconClickButton import IconClickButton
 from module.settingsConfig import SettingsConfig
 
 from customWidgets.navigationList import NavigationList
@@ -36,6 +42,8 @@ class HelloMail(QMainWindow):
         self.mailList = MailList(self.centralWidget)
         self.mailView = MailView(self.centralWidget)
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
+        self.searchBar = SearchBar(self.centralWidget)
+        self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.navigation = NavigationList(self.centralWidget)
 
@@ -75,6 +83,10 @@ class HelloMail(QMainWindow):
         self.newMessageButton.setFlat(True)
         self.newMessageButton.setObjectName("textButton")
         self.newMessageButton.setSettings(self.settings)
+        self.settingsPanel.setObjectName("settingPannel")
+
+        self.settingsPanel.setGeometry(QRect(1405, 384, 188, 59))
+        self.settingsPanel.setWindowFlags(Qt.WindowStaysOnTopHint)
 
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
@@ -89,6 +101,13 @@ class HelloMail(QMainWindow):
 
         self.newMessageDialog.setSettings(self.settings)
         self.newMessageButton.click_signal.connect(lambda: self.newMessageDialog.show())
+        self.searchBar.setObjectName('searchBar')
+        self.searchBar.setSettings(self.settings)
+
+    def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
+        if self.hasFirstResize:
+            difH = e.size().height() - e.oldSize().height()
+            difW = e.size().width() - e.oldSize().width()
 
     def setupStyleSheets(self):
         self.setStyleSheet(self.settings.getStyleSheet("mainWindow"))
@@ -124,10 +143,11 @@ class HelloMail(QMainWindow):
             self.mailList.resizeContent(QSize(difW, difH))
             self.mailCover.move(QPoint(self.mailCover.pos().x(), self.mailCover.pos().y() + difH))
             self.mailView.resizeContent(QSize(difW, difH))
-            super(HelloMail, self).resizeEvent(e)
 
         if not self.hasFirstResize:
             self.hasFirstResize = True
+
+        super(HelloMail, self).resizeEvent(e)
 
     def notify(self):
         # ---------------------- get notification from settings -----------------

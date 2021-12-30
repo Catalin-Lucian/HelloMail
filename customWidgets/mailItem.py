@@ -4,7 +4,7 @@ import urllib
 
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLabel, QFrame
 
 from customWidgets.avatarIcon import AvatarIcon
 from customWidgets.iconCheckButton import IconCheckButton
@@ -107,7 +107,7 @@ class MailItem(QtWidgets.QFrame):
             if style:
                 self.setStyleSheet(style)
             else:
-                logging.warning(f"!! {self.objectName()} styleSheet:{state} did not load !!")
+                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
         else:
             logging.warning("-- settings value noneType")
 
