@@ -16,6 +16,8 @@ class NavigationList:
         self.inboxIcon = IconCheckButton(self.container, "inbox_navigation_unselected.svg",
                                          "inbox_navigation_hover.svg",
                                          "inbox_navigation_hover.svg")
+        self.selected = self.inboxIcon
+
         self.staredIcon = IconCheckButton(self.container, "stared_navigation_unselected.svg",
                                           "stared_navigation_hover.svg",
                                           "stared_navigation_hover.svg")
@@ -32,9 +34,7 @@ class NavigationList:
                                          "trash_navigation_hover.svg",
                                          "trash_navigation_hover.svg")
 
-
         self.setupUI()
-
 
     def setupUI(self):
         self.navigationLabel.setObjectName("label")
@@ -57,6 +57,7 @@ class NavigationList:
         self.inboxIcon.setFont(font)
         self.inboxIcon.setText(" Inbox")
         self.inboxIcon.setFlat(True)
+        self.inboxIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.inboxIcon))
         # self.inboxIcon.setThemeStyle({
         #     'checked': {
         #         "background-color": "rgba(255, 255, 255, 0)",
@@ -67,7 +68,6 @@ class NavigationList:
         #         "color": "rgba(255, 255, 255, 255)"
         #     }
         # })
-        self.inboxIcon.check()
 
         self.staredIcon.setObjectName("navigationButton")
         self.staredIcon.setGeometry(QRect(61, 331, 150, 20))
@@ -79,6 +79,7 @@ class NavigationList:
         self.staredIcon.setFont(font)
         self.staredIcon.setText(" Stared")
         self.staredIcon.setFlat(True)
+        self.staredIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.staredIcon))
         # self.staredIcon.setThemeStyle({
         #     'checked': {
         #         "background-color": "rgba(255, 255, 255, 0)",
@@ -100,16 +101,7 @@ class NavigationList:
         self.sentIcon.setFont(font)
         self.sentIcon.setText(" Sent")
         self.sentIcon.setFlat(True)
-        # self.sentIcon.setThemeStyle({
-        #     'checked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(20, 107, 226, 255)"
-        #     },
-        #     'unchecked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(255, 255, 255, 255)"
-        #     }
-        # })
+        self.sentIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.sentIcon))
 
         self.warningIcon.setObjectName("navigationButton")
         self.warningIcon.setGeometry(QRect(61, 397, 150, 20))
@@ -121,6 +113,7 @@ class NavigationList:
         self.warningIcon.setFont(font)
         self.warningIcon.setText(" Spam")
         self.warningIcon.setFlat(True)
+        self.warningIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.warningIcon))
         # self.warningIcon.setThemeStyle({
         #     'checked': {
         #         "background-color": "rgba(255, 255, 255, 0)",
@@ -141,6 +134,7 @@ class NavigationList:
         self.draftsIcon.setFont(font)
         self.draftsIcon.setText(" Drafts")
         self.draftsIcon.setFlat(True)
+        self.draftsIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.draftsIcon))
         # self.draftsIcon.setThemeStyle({
         #     'checked': {
         #         "background-color": "rgba(255, 255, 255, 0)",
@@ -162,6 +156,7 @@ class NavigationList:
         self.trashIcon.setFont(font)
         self.trashIcon.setText(" Trash")
         self.trashIcon.setFlat(True)
+        self.trashIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.trashIcon))
         # self.trashIcon.setThemeStyle({
         #     'checked': {
         #         "background-color": "rgba(255, 255, 255, 0)",
@@ -173,11 +168,31 @@ class NavigationList:
         #     }
         # })
 
+    def setSettings(self, settings):
+        self.settings = settings
+        if settings:
+            self.inboxIcon.setSettings(settings)
+            self.inboxIcon.check()
+            self.staredIcon.setSettings(settings)
+            self.sentIcon.setSettings(settings)
+            self.warningIcon.setSettings(settings)
+            self.draftsIcon.setSettings(settings)
+            self.trashIcon.setSettings(settings)
 
+            self.settings.subscribe(self)
 
+            style = settings.getStyleSheet(self.navigationLabel.objectName(), "default")
+            self.navigationLabel.setStyleSheet(style)
 
+    def notify(self):
+        style = self.settings.getStyleSheet(self.navigationLabel.objectName(), "default")
+        self.navigationLabel.setStyleSheet(style)
 
-
-
+    def onButtonCheck(self, button: IconCheckButton):
+        if self.selected == button:
+            button.check()
+        else:
+            self.selected.uncheck()
+            self.selected = button
 
 

@@ -59,7 +59,6 @@ class LabelList(QScrollArea):
 
         self.addTagElement("aaaaaaaaaaaaaa")
         self.addTagElement( "xxxx")
-        self.show()
 
     def addTagElement(self,name):
         self.verticalLayout.removeItem(self.spacerItem)

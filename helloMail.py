@@ -37,7 +37,9 @@ class HelloMail(QMainWindow):
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
 
         self.navigation = NavigationList(self.centralWidget)
-        self.labelList = LabelList(self.centralWidget)
+        self.navigation.setSettings(self.settings)
+
+        # self.labelList = LabelList(self.centralWidget)
 
         self.newMessageButton = IconClickButton(self, "new_message.svg", "new_message.svg", "new_message.svg")
         self.newMessageButton.setPositionText(20, 156, 209, 45, " New Message",14)

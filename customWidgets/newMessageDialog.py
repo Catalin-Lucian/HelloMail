@@ -1,9 +1,8 @@
 from PyQt5.QtCore import Qt, QRect, QPoint
 from PyQt5.QtGui import QFont, QMouseEvent
-from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog
+from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit
 
 from HelloMail.customWidgets.iconClickButton import IconClickButton
-
 
 
 class NewMessageDialog(QDialog):
@@ -11,34 +10,33 @@ class NewMessageDialog(QDialog):
         super().__init__(container)
         self.setWindowTitle("New Message")
 
+        self.container = QFrame(self)
 
+        self.titleLabel = QLabel(self.container)
+        self.toLabel = QLabel(self.container)
+        self.subjectLabel = QLabel(self.container)
 
-
-        self.titleLabel = QLabel(self)
-        self.toLabel = QLabel(self)
-        self.subjectLabel = QLabel(self)
-
-        self.toTextEdit = QTextEdit(self)
-        self.subjectTextEdit = QTextEdit(self)
-        self.richTextEdit = QTextEdit(self)
+        self.toTextEdit = QLineEdit(self.container)
+        self.subjectTextEdit = QLineEdit(self.container)
+        self.richTextEdit = QTextEdit(self.container)
         self.filename = ""
 
         self.pressed = False
         self.lastPos = None
 
-        self.exitIcon = IconClickButton(self, "exit_chat_unselected.svg",
+        self.exitIcon = IconClickButton(self.container, "exit_chat_unselected.svg",
                                         "exit_chat_selected.svg",
                                         "exit_chat_selected.svg")
 
-        self.atachmentIco = IconClickButton(self, "attachment_popup_unselected.svg",
+        self.atachmentIco = IconClickButton(self.container, "attachment_popup_unselected.svg",
                                             "attachment_popup_selected.svg",
                                             "attachment_popup_selected.svg")
 
-        self.trashIco = IconClickButton(self, "trash_popup_unselected.svg",
+        self.trashIco = IconClickButton(self.container, "trash_popup_unselected.svg",
                                         "trash_popup_selected.svg",
                                         "trash_popup_selected.svg")
 
-        self.sendIco = IconClickButton(self, "send_popup_selected.svg",
+        self.sendIco = IconClickButton(self.container, "send_popup_selected.svg",
                                        "send_popup_selected.svg",
                                        "send_popup_selected.svg")
 
@@ -48,8 +46,13 @@ class NewMessageDialog(QDialog):
     def setupUI(self):
         self.setWindowFlag(Qt.WindowStaysOnTopHint)
         self.setGeometry(QRect(0, 0, 601, 456))
-        self.setStyleSheet("background-color: #262A30;"
-                           "border-radius:10px;")
+        self.setStyleSheet("background-color: rgba(0,0,0,0);")
+
+
+        self.container.setStyleSheet("background-color: #262A30;"
+                                     "border-radius:10px;")
+        self.container.setGeometry(QRect(0, 0, 601, 456))
+
         self.titleLabel.setGeometry(QRect(247, 11, 127, 22))
         font = QFont()
         font.setFamily("Calibri")
@@ -108,7 +111,6 @@ class NewMessageDialog(QDialog):
                                                   "All Files (*);;Python Files (*.py)")
         if fileName:
             print(fileName)
-
 
     def mousePressEvent(self, event):
         self.__mousePressPos = None
