@@ -33,7 +33,6 @@ class SearchBar(QFrame):
         self.searchInput.setFont(font)
         self.searchInput.setStyleSheet("color: #FFFFFF")
 
-
     def enterEvent(self, a0: QEvent) -> None:
         super(SearchBar, self).enterEvent(a0)
 
