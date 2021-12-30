@@ -216,6 +216,79 @@
         "value": "rgba(255, 255, 255, 0)"
       }]
     },
+    "searchBar": {
+      "default": [{
+          "name": "background-color",
+          "value": "rgba(59, 67, 80, 255)"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ],
+      "pressed": [{
+          "name": "background-color",
+          "value": "rgba(59, 67, 80, 255)"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        },
+        {
+          "name": "border",
+          "value": "1px solid rgba(20, 107, 226, 1)"
+        }
+      ],
+      "hover": [{
+          "name": "background-color",
+          "value": "rgba(59, 67, 80, 255)"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ]
+    },
+    "searchButton": {
+      "default": [],
+      "pressed": [],
+      "hover": []
+    },
+    "searchInput": {
+      "default": [{
+          "name": "color",
+          "value": "#FFFFFF"
+        },
+        {
+          "name": "border",
+          "value": "0px solid rgba(255, 255, 255, 255)"
+        }
+      ],
+      "pressed": [{
+          "name": "color",
+          "value": "#B8B8B8"
+        }
+      ],
+      "hover": []
+    },
+    "settingPannel": {
+      "default": [{
+        "name":"background-color",
+        "value":"rgba(20, 107, 226, 255)"
+      }],
+      "pressed": [],
+      "hover": []
+    },
+    "settingButton": {
+      "default": [],
+      "pressed": [],
+      "hover": []
+    },
+    "": {
+      "default": [],
+      "pressed": [],
+      "hover": []
+    },
     "navigationButton": {
       "default": [{
           "name": "background-color",
@@ -272,12 +345,10 @@
         }
       ]
     },
-    "newMessageButton":
-    {
-      "default":[],
-      "pressed":[],
-      "hover":[]
-
+    "newMessageButton": {
+      "default": [],
+      "pressed": [],
+      "hover": []
     },
     "textButton": {
       "default": [{
