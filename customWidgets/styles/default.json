@@ -271,6 +271,16 @@
       ],
       "hover": []
     },
+    "settingPannel": {
+      "default": [],
+      "pressed": [],
+      "hover": []
+    },
+    "settingButton": {
+      "default": [],
+      "pressed": [],
+      "hover": []
+    },
     "": {
       "default": [],
       "pressed": [],

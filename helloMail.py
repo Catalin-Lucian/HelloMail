@@ -34,7 +34,7 @@ class HelloMail(QMainWindow):
         self.mailView = MailView(self.centralWidget)
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
         self.searchBar = SearchBar(self.centralWidget)
-        self.settingsButton = SettingsPanel(self.centralWidget)
+        self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.setupUi()
         self.setupStyleSheets()
@@ -54,12 +54,10 @@ class HelloMail(QMainWindow):
         self.mailList.mailItemChange.connect(lambda mailItem: self.onMailItemChange(mailItem))
         self.mailList.setSettings(self.settings)
 
-        self.settingsButton.setGeometry(QRect(1405, 384, 188, 59))
-        self.settingsButton.setStyleSheet("background-color: rgba(20, 107, 226, 1);"
-                                          "border-radius:10px;"
-                                          "text-align:left;"
-                                          "padding:10px;")
-        self.settingsButton.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.settingsPanel.setObjectName("settingPannel")
+
+        self.settingsPanel.setGeometry(QRect(1405, 384, 188, 59))
+        self.settingsPanel.setWindowFlags(Qt.WindowStaysOnTopHint)
 
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)

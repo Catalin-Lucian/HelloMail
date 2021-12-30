@@ -16,7 +16,7 @@ class SettingsPanel(QFrame):
 
     def setupUi(self):
         self.setGeometry(QRect(1405, 384, 188, 59))
-        self.setStyleSheet("background-color: rgba(20, 107, 226, 1);"
+        self.setStyleSheet("background-color: rgba(20, 107, 226, 255);"
                            "border-radius:10px;"
                            "text-align:left;"
                            "padding:10px;")
