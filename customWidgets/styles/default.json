@@ -217,40 +217,116 @@
       }]
     },
     "navigationButton": {
-      "default": [
-        {
-          "name":"background-color",
-          "value":"rgba(255, 255, 255, 0)"
+      "default": [{
+          "name": "background-color",
+          "value": "rgba(255, 255, 255, 0)"
         },
         {
-          "name":"color",
+          "name": "color",
           "value": "rgba(255, 255, 255, 255)"
         },
         {
-          "name":"text-align",
-          "value":"left"
+          "name": "text-align",
+          "value": "left"
         }
       ],
-      "pressed": [
-        {
-          "name":"background-color",
-          "value":"rgba(255, 255, 255, 0)"
+      "pressed": [{
+          "name": "background-color",
+          "value": "rgba(255, 255, 255, 0)"
         },
         {
-          "name":"color",
+          "name": "color",
           "value": "rgba(20, 107, 226, 255)"
         }
       ],
-      "hover": [
-        {
-          "name":"background-color",
-          "value":"rgba(255, 255, 255, 0)"
+      "hover": [{
+          "name": "background-color",
+          "value": "rgba(255, 255, 255, 0)"
         },
         {
-          "name":"color",
+          "name": "color",
           "value": "rgba(20, 107, 226, 255)"
         }
       ]
+    },
+    "newMessageContainer": {
+      "default": [{
+          "name": "background-color",
+          "value": "#262A30"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ]
+    },
+    "newMessageTextEdit": {
+      "default": [{
+          "name": "background-color",
+          "value": "#929497"
+
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ]
+    },
+    "newMessageButton":
+    {
+      "default":[],
+      "pressed":[],
+      "hover":[]
+
+    },
+    "textButton": {
+      "default": [{
+          "name": "background-color",
+          "value": "#146BE2"
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ],
+      "pressed": [{
+          "name": "background-color",
+          "value": "#146BE2"
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ],
+      "hover": [{
+          "name": "background-color",
+          "value": "#146BE2"
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ]
+
     }
+
+
+
+
+
+
+
   }
 }

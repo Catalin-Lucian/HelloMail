@@ -37,7 +37,7 @@ class IconClickButton(QPushButton):
             if style:
                 self.setStyleSheet(style)
             else:
-                logging.warning(f"!! {self.objectName()} styleSheet:{state} did not load !!")
+                logging.info(f"{self.objectName()} styleSheet:{state} was empty")
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
@@ -68,21 +68,6 @@ class IconClickButton(QPushButton):
         self.setIcon(self.unClickedIcon)
         self.applyStyleSheet('default')
         super(IconClickButton, self).enterEvent(e)
-
-    def setPositionText(self, x, y, w, h, text, size):
-        self.setStyleSheet(f"background-color: #146BE2;"
-                           f"color:#FFFFFF;"
-                           "border-radius:10px;")
-
-        self.setGeometry(QRect(x, y, w, h))
-        font = QFont()
-        font.setFamily("Calibri")
-        font.setPointSize(size)
-        font.setBold(True)
-        font.setWeight(75)
-        self.setFont(font)
-        self.setText(f" {text}")
-        self.setFlat(True)
 
     def notify(self):
         if self.onTop:

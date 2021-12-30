@@ -1,3 +1,5 @@
+import logging
+
 from PyQt5.QtCore import Qt, QRect, QPoint
 from PyQt5.QtGui import QFont, QMouseEvent
 from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit
@@ -9,7 +11,7 @@ class NewMessageDialog(QDialog):
     def __init__(self, container):
         super().__init__(container)
         self.setWindowTitle("New Message")
-
+        self.settings = None
         self.container = QFrame(self)
 
         self.titleLabel = QLabel(self.container)
@@ -44,13 +46,17 @@ class NewMessageDialog(QDialog):
         self.setWindowFlag(Qt.FramelessWindowHint)
 
     def setupUI(self):
+        self.exitIcon.setObjectName("newMessageButton")
+        self.atachmentIco.setObjectName("newMessageButton")
+        self.trashIco.setObjectName("newMessageButton")
+
         self.setWindowFlag(Qt.WindowStaysOnTopHint)
         self.setGeometry(QRect(0, 0, 601, 456))
         self.setStyleSheet("background-color: rgba(0,0,0,0);")
 
-
-        self.container.setStyleSheet("background-color: #262A30;"
-                                     "border-radius:10px;")
+        # self.container.setStyleSheet("background-color: #262A30;"
+        #                              "border-radius:10px;")
+        self.container.setObjectName("newMessageContainer")
         self.container.setGeometry(QRect(0, 0, 601, 456))
 
         self.titleLabel.setGeometry(QRect(247, 11, 127, 22))
@@ -61,7 +67,8 @@ class NewMessageDialog(QDialog):
         font.setWeight(65)
         self.titleLabel.setFont(font)
         self.titleLabel.setText("New Message")
-        self.titleLabel.setStyleSheet("color: #FFFFFF;")
+        # self.titleLabel.setStyleSheet("color: #FFFFFF;")
+        self.titleLabel.setObjectName("label")
 
         self.toLabel.setGeometry(QRect(16, 47, 59, 19))
         font = QFont()
@@ -71,7 +78,8 @@ class NewMessageDialog(QDialog):
         font.setWeight(65)
         self.toLabel.setFont(font)
         self.toLabel.setText("To:")
-        self.toLabel.setStyleSheet("color: #FFFFFF;")
+        # self.toLabel.setStyleSheet("color: #FFFFFF;")
+        self.toLabel.setObjectName("label")
 
         self.subjectLabel.setGeometry(QRect(16, 86, 75, 19))
         font = QFont()
@@ -81,19 +89,23 @@ class NewMessageDialog(QDialog):
         font.setWeight(65)
         self.subjectLabel.setFont(font)
         self.subjectLabel.setText("Subject:")
-        self.subjectLabel.setStyleSheet("color: #FFFFFF;")
+        # self.subjectLabel.setStyleSheet("color: #FFFFFF;")
+        self.subjectLabel.setObjectName("label")
 
         self.toTextEdit.setGeometry(QRect(95, 47, 473, 25))
-        self.toTextEdit.setStyleSheet("background-color: #929497;"
-                                      "border-radius:10px;")
+        # self.toTextEdit.setStyleSheet("background-color: #929497;"
+        #                               "border-radius:10px;")
+        self.toTextEdit.setObjectName("newMessageTextEdit")
 
         self.subjectTextEdit.setGeometry(QRect(95, 86, 473, 25))
-        self.subjectTextEdit.setStyleSheet("background-color: #929497;"
-                                           "border-radius:10px;")
+        # self.subjectTextEdit.setStyleSheet("background-color: #929497;"
+        #                                    "border-radius:10px;")
+        self.subjectTextEdit.setObjectName("newMessageTextEdit")
 
         self.richTextEdit.setGeometry(QRect(16, 125, 555, 262))
-        self.richTextEdit.setStyleSheet("background-color: #929497;"
-                                        "border-radius:10px;")
+        # self.richTextEdit.setStyleSheet("background-color: #929497;"
+        #                                 "border-radius:10px;")
+        self.richTextEdit.setObjectName("newMessageTextEdit")
 
         self.exitIcon.setGeometry(QRect(574, 11, 14, 14))
         self.exitIcon.click_signal.connect(self.close)
@@ -102,7 +114,19 @@ class NewMessageDialog(QDialog):
         self.atachmentIco.click_signal.connect(self.openFileNameDialog)
 
         self.trashIco.setGeometry(QRect(70, 409, 20, 19))
-        self.sendIco.setPositionText(469, 400, 103, 34, " Send", 12)
+
+        self.sendIco.setGeometry(QRect(469, 400, 103, 34))
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.sendIco.setFont(font)
+        self.sendIco.setText(" Send")
+        self.sendIco.setFlat(True)
+        self.sendIco.setObjectName("textButton")
+
+
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -141,4 +165,52 @@ class NewMessageDialog(QDialog):
                 event.ignore()
                 return
 
-        super(NewMessageDialog, self).mouseReleaseEvent(event)
+            super(NewMessageDialog, self).mouseReleaseEvent(event)
+
+    def setSettings(self, settings):
+        self.settings = settings
+        if settings:
+            self.exitIcon.setSettings(self.settings)
+            self.atachmentIco.setSettings(self.settings)
+            self.trashIco.setSettings(self.settings)
+            self.sendIco.setSettings(self.settings)
+            self.setupStyleSheet()
+            self.settings.subscribe(self)
+
+    def applyStyleSheet(self, state):
+        if self.settings:
+            style = self.settings.getStyleSheet(self.objectName(), state)
+            if style:
+                self.setStyleSheet(style)
+            else:
+                logging.warning(f"!! {self.objectName()} styleSheet:{state} did not load !!")
+        else:
+            logging.warning("-- settings value noneType")
+
+    def setupStyleSheet(self):
+        self.applyStyleSheet("default")
+
+        style = self.settings.getStyleSheet(self.container.objectName(), "default")
+        self.container.setStyleSheet(style)
+
+        style = self.settings.getStyleSheet(self.titleLabel.objectName(), "default")
+        self.titleLabel.setStyleSheet(style)
+
+        style = self.settings.getStyleSheet(self.toTextEdit.objectName(), "default")
+        self.toTextEdit.setStyleSheet(style)
+
+        style = self.settings.getStyleSheet(self.subjectTextEdit.objectName(), "default")
+        self.subjectTextEdit.setStyleSheet(style)
+
+        style = self.settings.getStyleSheet(self.toLabel.objectName(), "default")
+        self.toLabel.setStyleSheet(style)
+
+        style = self.settings.getStyleSheet(self.subjectLabel.objectName(), "default")
+        self.subjectLabel.setStyleSheet(style)
+
+        style = self.settings.getStyleSheet(self.richTextEdit.objectName(), "default")
+        self.richTextEdit.setStyleSheet(style)
+
+    def notify(self):
+        self.setupStyleSheet()
+
