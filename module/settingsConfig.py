@@ -11,7 +11,6 @@ class SettingsConfig:
             # store file data in object
             return json.load(file_object)
 
-
     def getThemeValues(self, element):
         if self.theme:
             return self.theme.get('values').get(element)

@@ -7,11 +7,9 @@ from customWidgets.mailItem import MailItem
 class MailList(QtWidgets.QScrollArea):
     mailItemChange = pyqtSignal(QtWidgets.QFrame)
 
-    def __init__(self, container, settings=None):
+    def __init__(self, container):
         super(MailList, self).__init__(container)
-        self.settings = settings
-        if self.settings:
-            self.settings.subscribe(self)
+        self.settings = None
 
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.verticalLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
@@ -53,6 +51,8 @@ class MailList(QtWidgets.QScrollArea):
         self.verticalLayout.removeItem(self.spacerItem)
 
         mailItem = MailItem(self.scrollAreaWidgetContents, mailData)
+        mailItem.setObjectName("mailItem")
+        mailItem.setSettings(self.settings)
         mailItem.click_signal.connect(lambda itm: self.onMailClicked(itm))
         mailItem.select_check_signal.connect(lambda ch: self.onMailChecked(ch, mailItem))
         # mailItem.star_checked.connect(lambda ch: self.onMailStartChecked(ch, mailItem))
@@ -62,6 +62,7 @@ class MailList(QtWidgets.QScrollArea):
         return mailItem
 
     def removeMailItem(self, mailItem):
+        mailItem.settings.unsubscribe(mailItem)
         self.verticalLayout.removeWidget(mailItem)
 
     @QtCore.pyqtSlot()
@@ -82,8 +83,9 @@ class MailList(QtWidgets.QScrollArea):
     def resizeContent(self, e: QSize) -> None:
         self.resize(QSize(422, self.size().height() + e.height()))
         self.scrollAreaWidgetContents.resize(QSize(422, self.scrollAreaWidgetContents.size().height() + e.height()))
-        print(self.size().height())
-        print(e.height())
+
+    def setSettings(self, settings):
+        self.settings = settings
 
     def notify(self):
         pass

@@ -26,41 +26,34 @@ class HelloMail(QMainWindow):
         self.settings.subscribe(self)
 
         self.centralWidget = QtWidgets.QWidget(self)
-        self.mailList = MailList(self.centralWidget, self.settings)
-        self.mailView = MailView(self.centralWidget, self.settings)
+        self.mailList = MailList(self.centralWidget)
+        self.mailView = MailView(self.centralWidget)
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
 
-
-
         self.setupUi()
+        self.setupStyleSheets()
         self.addMailItemsOnStartUp()
 
     def setupUi(self):
         self.setWindowTitle("HelloMail")
         self.resize(1440, 900)
         self.setMinimumSize(QtCore.QSize(1440, 900))
-        self.setStyleSheet(self.settings.getStyleSheet("mainWindow"))
         self.setCentralWidget(self.centralWidget)
 
         self.mailCover.setGeometry(QtCore.QRect(244, 830, 432, 81))
-        self.mailCover.setStyleSheet(self.settings.getStyleSheet("mailCover"))
         self.mailCover.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.mailCover.setFrameShadow(QtWidgets.QFrame.Raised)
 
+        self.mailList.setObjectName("mailList")
         self.mailList.mailItemChange.connect(lambda mailItem: self.onMailItemChange(mailItem))
+        self.mailList.setSettings(self.settings)
 
-    def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
-        if self.hasFirstResize:
-            difH = e.size().height() - e.oldSize().height()
-            difW = e.size().width() - e.oldSize().width()
+        self.mailView.setObjectName("mailView")
+        self.mailView.setSettings(self.settings)
 
-            self.mailList.resizeContent(QSize(difW, difH))
-            self.mailCover.move(QPoint(self.mailCover.pos().x(), self.mailCover.pos().y() + difH))
-            self.mailView.resizeContent(QSize(difW, difH))
-            super(HelloMail, self).resizeEvent(e)
-
-        if not self.hasFirstResize:
-            self.hasFirstResize = True
+    def setupStyleSheets(self):
+        self.setStyleSheet(self.settings.getStyleSheet("mainWindow"))
+        self.mailCover.setStyleSheet(self.settings.getStyleSheet("mailCover"))
 
     def addMailItemsOnStartUp(self):
         mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 20)
@@ -83,6 +76,19 @@ class HelloMail(QMainWindow):
         if 'UNREAD' in mailItem.mailData['labelIds']:
             self.googleApi.modify_labels_to_email(mailItem.mailData.get('id'), [], ['UNREAD'])
             mailItem.mailData['labelIds'].remove('UNREAD')
+
+    def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
+        if self.hasFirstResize:
+            difH = e.size().height() - e.oldSize().height()
+            difW = e.size().width() - e.oldSize().width()
+
+            self.mailList.resizeContent(QSize(difW, difH))
+            self.mailCover.move(QPoint(self.mailCover.pos().x(), self.mailCover.pos().y() + difH))
+            self.mailView.resizeContent(QSize(difW, difH))
+            super(HelloMail, self).resizeEvent(e)
+
+        if not self.hasFirstResize:
+            self.hasFirstResize = True
 
     def notify(self):
         # ---------------------- get notification from settings -----------------
