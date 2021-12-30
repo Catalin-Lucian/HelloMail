@@ -2,7 +2,7 @@ import logging
 
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QRect, pyqtSignal, QSize, Qt, QEvent
-from PyQt5.QtGui import QMouseEvent, QIcon, QCursor
+from PyQt5.QtGui import QMouseEvent, QIcon, QCursor, QFont
 
 
 class IconClickButton(QPushButton):

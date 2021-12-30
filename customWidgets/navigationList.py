@@ -9,6 +9,7 @@ from HelloMail.customWidgets.iconCheckButton import IconCheckButton
 class NavigationList:
     def __init__(self, container):
         self.container = container
+        self.settings = None
         self.selected = None
 
         self.navigationLabel = QLabel(container)
@@ -36,6 +37,7 @@ class NavigationList:
 
 
     def setupUI(self):
+        self.navigationLabel.setObjectName("label")
         self.navigationLabel.setGeometry(QRect(23, 244, 148, 31))
         font = QFont()
         font.setFamily("Calibri")
@@ -43,10 +45,10 @@ class NavigationList:
         font.setWeight(75)
         self.navigationLabel.setFont(font)
         self.navigationLabel.setText("Navigation")
-        self.navigationLabel.setStyleSheet("color: #FFFFFF")
+        # self.navigationLabel.setStyleSheet("color: #FFFFFF")
 
+        self.inboxIcon.setObjectName("navigationButton")
         self.inboxIcon.setGeometry(QRect(61, 296, 150, 20))
-
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(14)
@@ -55,19 +57,19 @@ class NavigationList:
         self.inboxIcon.setFont(font)
         self.inboxIcon.setText(" Inbox")
         self.inboxIcon.setFlat(True)
-        self.inboxIcon.setThemeStyle({
-            'checked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(20, 107, 226, 255)"
-            },
-            'unchecked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(255, 255, 255, 255)"
-            }
-        })
+        # self.inboxIcon.setThemeStyle({
+        #     'checked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(20, 107, 226, 255)"
+        #     },
+        #     'unchecked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(255, 255, 255, 255)"
+        #     }
+        # })
         self.inboxIcon.check()
-        self.currentButton = self.inboxIcon
 
+        self.staredIcon.setObjectName("navigationButton")
         self.staredIcon.setGeometry(QRect(61, 331, 150, 20))
         font = QFont()
         font.setFamily("Calibri")
@@ -77,17 +79,18 @@ class NavigationList:
         self.staredIcon.setFont(font)
         self.staredIcon.setText(" Stared")
         self.staredIcon.setFlat(True)
-        self.staredIcon.setThemeStyle({
-            'checked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(20, 107, 226, 255)"
-            },
-            'unchecked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(255, 255, 255, 255)"
-            }
-        })
+        # self.staredIcon.setThemeStyle({
+        #     'checked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(20, 107, 226, 255)"
+        #     },
+        #     'unchecked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(255, 255, 255, 255)"
+        #     }
+        # })
 
+        self.sentIcon.setObjectName("navigationButton")
         self.sentIcon.setGeometry(QRect(61, 364, 150, 20))
         font = QFont()
         font.setFamily("Calibri")
@@ -97,17 +100,18 @@ class NavigationList:
         self.sentIcon.setFont(font)
         self.sentIcon.setText(" Sent")
         self.sentIcon.setFlat(True)
-        self.sentIcon.setThemeStyle({
-            'checked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(20, 107, 226, 255)"
-            },
-            'unchecked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(255, 255, 255, 255)"
-            }
-        })
+        # self.sentIcon.setThemeStyle({
+        #     'checked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(20, 107, 226, 255)"
+        #     },
+        #     'unchecked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(255, 255, 255, 255)"
+        #     }
+        # })
 
+        self.warningIcon.setObjectName("navigationButton")
         self.warningIcon.setGeometry(QRect(61, 397, 150, 20))
         font = QFont()
         font.setFamily("Calibri")
@@ -117,17 +121,17 @@ class NavigationList:
         self.warningIcon.setFont(font)
         self.warningIcon.setText(" Spam")
         self.warningIcon.setFlat(True)
-        self.warningIcon.setThemeStyle({
-            'checked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(20, 107, 226, 255)"
-            },
-            'unchecked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(255, 255, 255, 255)"
-            }
-        })
-
+        # self.warningIcon.setThemeStyle({
+        #     'checked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(20, 107, 226, 255)"
+        #     },
+        #     'unchecked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(255, 255, 255, 255)"
+        #     }
+        # })
+        self.draftsIcon.setObjectName("navigationButton")
         self.draftsIcon.setGeometry(QRect(62, 430, 150, 20))
         font = QFont()
         font.setFamily("Calibri")
@@ -137,17 +141,18 @@ class NavigationList:
         self.draftsIcon.setFont(font)
         self.draftsIcon.setText(" Drafts")
         self.draftsIcon.setFlat(True)
-        self.draftsIcon.setThemeStyle({
-            'checked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(20, 107, 226, 255)"
-            },
-            'unchecked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(255, 255, 255, 255)"
-            }
-        })
+        # self.draftsIcon.setThemeStyle({
+        #     'checked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(20, 107, 226, 255)"
+        #     },
+        #     'unchecked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(255, 255, 255, 255)"
+        #     }
+        # })
 
+        self.trashIcon.setObjectName("navigationButton")
         self.trashIcon.setGeometry(QRect(62, 462, 150, 20))
         font = QFont()
         font.setFamily("Calibri")
@@ -157,16 +162,16 @@ class NavigationList:
         self.trashIcon.setFont(font)
         self.trashIcon.setText(" Trash")
         self.trashIcon.setFlat(True)
-        self.trashIcon.setThemeStyle({
-            'checked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(20, 107, 226, 255)"
-            },
-            'unchecked': {
-                "background-color": "rgba(255, 255, 255, 0)",
-                "color": "rgba(255, 255, 255, 255)"
-            }
-        })
+        # self.trashIcon.setThemeStyle({
+        #     'checked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(20, 107, 226, 255)"
+        #     },
+        #     'unchecked': {
+        #         "background-color": "rgba(255, 255, 255, 0)",
+        #         "color": "rgba(255, 255, 255, 255)"
+        #     }
+        # })
 
 
 

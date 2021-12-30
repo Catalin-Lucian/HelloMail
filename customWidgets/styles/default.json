@@ -216,10 +216,37 @@
         "value": "rgba(255, 255, 255, 0)"
       }]
     },
-    "": {
-      "default": [],
-      "pressed": [],
-      "hover": []
+    "navigationButton": {
+      "default": [
+        {
+          "name":"background-color",
+          "value":"rgba(255, 255, 255, 0)"
+        },
+        {
+          "name":"color",
+          "value": "rgba(255, 255, 255, 255)"
+        }
+      ],
+      "pressed": [
+        {
+          "name":"background-color",
+          "value":"rgba(255, 255, 255, 0)"
+        },
+        {
+          "name":"color",
+          "value": "rgba(20, 107, 226, 255)"
+        }
+      ],
+      "hover": [
+        {
+          "name":"background-color",
+          "value":"rgba(255, 255, 255, 0)"
+        },
+        {
+          "name":"color",
+          "value": "rgba(20, 107, 226, 255)"
+        }
+      ]
     }
   }
 }
