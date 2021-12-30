@@ -1,14 +1,19 @@
+import logging
+
 from PyQt5.QtCore import QRect, QSize, Qt, QPoint
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QFrame, QLabel
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 from customWidgets.avatarIcon import AvatarIcon
+from module.settingsConfig import SettingsConfig
 
 
 class MailView(QFrame):
     def __init__(self, container):
         super(MailView, self).__init__(container)
+        self.settings = None
+
         self.mailContentView = QWebEngineView(self)
         self.avatarIcon = AvatarIcon(self)
         self.senderNameLabel = QLabel(self)
@@ -21,22 +26,25 @@ class MailView(QFrame):
     def setupUi(self):
         self.setGeometry(QRect(675, 87, 745, 793))
         self.setMinimumSize(QSize(745, 793))
-        self.setStyleSheet("background-color: rgb(59, 67, 80);border-radius:10px;")
+        self.setStyleSheet("background-color: rgb(59, 67, 80)")
 
+        self.mailContentView.setObjectName("mailContentView")
         self.mailContentView.setGeometry(QRect(20, 145, 705, 647))
         self.mailContentView.setMinimumSize(QSize(705, 647))
-        self.mailContentView.setStyleSheet("QWebEngineView{\n"
-                                           "border-color:rgb(58, 110, 255)\n"
-                                           "border:10px solid black;"
-                                           "border-radius:10px};\n")
+        # self.mailContentView.setStyleSheet("\n"
+        #                                    "border-color:rgb(58, 110, 255)\n"
+        #                                    "border:10px solid black;"
+        #                                    "border-radius:10px;\n")
         self.mailContentView.page().setBackgroundColor(Qt.transparent)
 
+        self.avatarIcon.setObjectName("mailViewAvatarIcon")
         self.avatarIcon.setGeometry(QRect(30, 30, 50, 50))
-        self.avatarIcon.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-                                      "border: 0px solid rgb(199, 199, 199);\n"
-                                      "border-radius: 25px;")
+        # self.avatarIcon.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+        #                               "border: 0px solid rgb(199, 199, 199);\n"
+        #                               "border-radius: 25px;")
         self.avatarIcon.hide()
 
+        self.senderNameLabel.setObjectName("label")
         self.senderNameLabel.setGeometry(QRect(100, 20, 275, 30))
         font = QFont()
         font.setFamily("Calibri")
@@ -44,8 +52,9 @@ class MailView(QFrame):
         font.setBold(True)
         font.setWeight(75)
         self.senderNameLabel.setFont(font)
-        self.senderNameLabel.setStyleSheet("color: rgb(255, 255, 255);")
+        # self.senderNameLabel.setStyleSheet("color: rgb(255, 255, 255);")
 
+        self.senderEmailLabel.setObjectName("label")
         self.senderEmailLabel.setGeometry(QRect(100, 50, 275, 30))
         font = QFont()
         font.setFamily("Calibri")
@@ -53,29 +62,72 @@ class MailView(QFrame):
         font.setBold(False)
         font.setWeight(50)
         self.senderEmailLabel.setFont(font)
-        self.senderEmailLabel.setStyleSheet("color: rgb(255, 255, 255);")
+        # self.senderEmailLabel.setStyleSheet("color: rgb(255, 255, 255);")
 
+        self.dateTimeLabel.setObjectName("label")
         self.dateTimeLabel.setGeometry(QRect(403, 35, 135, 20))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(10)
         self.dateTimeLabel.setFont(font)
-        self.dateTimeLabel.setStyleSheet("color: rgb(255, 255, 255);")
+        # self.dateTimeLabel.setStyleSheet("color: rgb(255, 255, 255);")
 
+        self.subjectLabel.setObjectName("label")
         self.subjectLabel.setGeometry(QRect(20, 100, 705, 35))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(18)
         self.subjectLabel.setFont(font)
         self.subjectLabel.setAlignment(Qt.AlignCenter)
-        self.subjectLabel.setStyleSheet("color: rgb(255, 255, 255);")
+        # self.subjectLabel.setStyleSheet("color: rgb(255, 255, 255);")
         self.subjectLabel.setScaledContents(True)
+
+    def setSettings(self, settings):
+        if settings:
+            self.settings = settings
+            self.settings.subscribe(self)
+            self.avatarIcon.setSettings(settings)
+            self.setupStyleSheet()
+        else:
+            logging.warning(f"{self.objectName()}: settings value noneType")
+
+    def applyStyleSheet(self, state):
+        if self.settings:
+            style = self.settings.getStyleSheet(self.objectName(), state)
+            if style:
+                self.setStyleSheet(style)
+            else:
+                logging.warning(f"!! {self.objectName()} styleSheet:{state} did not load !!")
+        else:
+            logging.warning(f"{self.objectName()}: settings value noneType")
+
+    def setupStyleSheet(self):
+        self.applyStyleSheet("default")
+        if self.settings:
+            style = self.settings.getStyleSheet(self.mailContentView.objectName(), "default")
+            self.mailContentView.setStyleSheet(style)
+
+            style = self.settings.getStyleSheet(self.avatarIcon.objectName(), "default")
+            self.avatarIcon.setStyleSheet(style)
+
+            style = self.settings.getStyleSheet(self.senderNameLabel.objectName(), "default")
+            self.senderNameLabel.setStyleSheet(style)
+
+            style = self.settings.getStyleSheet(self.senderEmailLabel.objectName(), "default")
+            self.senderEmailLabel.setStyleSheet(style)
+
+            style = self.settings.getStyleSheet(self.dateTimeLabel.objectName(), "default")
+            self.dateTimeLabel.setStyleSheet(style)
+
+            style = self.settings.getStyleSheet(self.subjectLabel.objectName(), "default")
+            self.subjectLabel.setStyleSheet(style)
+        else:
+            logging.warning(f"{self.objectName()}: settings value noneType")
 
     def setMailContentView(self, mailData):
         if mailData.get('body'):
             self.mailContentView.setHtml(mailData.get('body'))
         self.mailContentView.page().setBackgroundColor(Qt.transparent)
-        self.avatarIcon.setImage("https://lh3.googleusercontent.com/a-/AOh14GhZ69H4K_rvAjs0P7w-2LJnhujsrAqU0RzI7n-p")
         self.avatarIcon.show()
         self.senderNameLabel.setText(mailData.get('from').get('name'))
         self.senderEmailLabel.setText(mailData.get('from').get('email'))
@@ -89,3 +141,6 @@ class MailView(QFrame):
                                     self.mailContentView.size().height() + e.height())
         self.dateTimeLabel.move(QPoint(self.dateTimeLabel.pos().x() + e.width(), self.dateTimeLabel.pos().y()))
         self.subjectLabel.resize(QSize(self.subjectLabel.size().width() + e.width(), self.subjectLabel.size().height()))
+
+    def notify(self):
+        pass
