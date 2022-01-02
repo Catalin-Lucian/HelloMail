@@ -2,9 +2,7 @@ from PyQt5.QtCore import QRect, Qt, QSize
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, QLabel, QFrame
 
-
-from customWidgets.iconCheckButton import IconCheckButton
-from customWidgets.iconClickButton import IconClickButton
+from customWidgets.buttons.iconClickButton import IconClickButton
 
 
 class LabelList(QScrollArea):

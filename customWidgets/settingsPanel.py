@@ -1,10 +1,10 @@
 import logging
 
-from PyQt5.QtCore import QRect, QEvent
+from PyQt5.QtCore import QRect, QEvent, QPoint
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QFrame, QLabel
+from PyQt5.QtWidgets import QFrame
 
-from customWidgets.iconClickButton import IconClickButton
+from customWidgets.buttons.iconClickButton import IconClickButton
 
 
 class SettingsPanel(QFrame):
@@ -53,9 +53,11 @@ class SettingsPanel(QFrame):
             logging.warning(f"{self.objectName()}: settings value noneType")
 
     def enterEvent(self, a0: QEvent) -> None:
-        self.setGeometry(QRect(1310, 384, 188, 59))
+        pos = self.pos()
+        self.move(QPoint(pos.x()-90, pos.y()))
         super(SettingsPanel, self).enterEvent(a0)
 
     def leaveEvent(self, a0: QEvent) -> None:
-        self.setGeometry(QRect(1405, 384, 188, 59))
+        pos = self.pos()
+        self.move(QPoint(pos.x() + 90, pos.y()))
         super(SettingsPanel, self).enterEvent(a0)

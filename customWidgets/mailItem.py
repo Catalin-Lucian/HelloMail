@@ -1,14 +1,12 @@
-import hashlib
 import logging
-import urllib
 
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QLabel, QFrame
+from PyQt5.QtWidgets import QLabel
 
-from customWidgets.avatarIcon import AvatarIcon
-from customWidgets.iconCheckButton import IconCheckButton
-from customWidgets.selectButton import SelectButton
+from customWidgets.buttons.avatarIcon import AvatarIcon
+from customWidgets.buttons.iconCheckButton import IconCheckButton
+from customWidgets.buttons.selectButton import SelectButton
 
 
 class MailItem(QtWidgets.QFrame):

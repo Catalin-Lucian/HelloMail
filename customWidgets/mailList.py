@@ -2,8 +2,8 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt, pyqtSignal, QSize, QRect
 from PyQt5.QtWidgets import QLayout, QFrame
 
-from customWidgets.iconCheckButton import IconCheckButton
-from customWidgets.iconClickButton import IconClickButton
+from customWidgets.buttons.iconCheckButton import IconCheckButton
+from customWidgets.buttons.iconClickButton import IconClickButton
 from customWidgets.mailItem import MailItem
 
 
@@ -90,10 +90,7 @@ class MailList(QtWidgets.QScrollArea):
 
     @QtCore.pyqtSlot()
     def onMailClicked(self, mailItem):
-        if self.selectedMailItem:
-            self.selectedMailItem.deselect()
-        mailItem.select()
-        self.selectedMailItem = mailItem
+        self.selectMailItem(mailItem)
         self.mailItemChange.emit(mailItem)
 
     @QtCore.pyqtSlot()
@@ -102,6 +99,19 @@ class MailList(QtWidgets.QScrollArea):
             self.selectedMails.append(mailItem)
         else:
             self.selectedMails.remove(mailItem)
+
+    def selectMailItem(self, mailItem):
+        if self.selectedMailItem:
+            self.selectedMailItem.deselect()
+        mailItem.select()
+        self.selectedMailItem = mailItem
+
+    def unselectMailItem(self):
+        if self.selectedMailItem:
+            self.selectedMailItem.deselect()
+        self.selectedMailItem = None
+
+
 
     def resizeContent(self, e: QSize) -> None:
         self.resize(QSize(422, self.size().height() + e.height()))

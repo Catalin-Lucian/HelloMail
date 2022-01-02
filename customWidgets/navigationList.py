@@ -1,9 +1,8 @@
-from PyQt5.QtCore import QRect, Qt, QSize
+from PyQt5.QtCore import QRect
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QLabel, QSizePolicy, QPushButton, QWidget, QVBoxLayout, QSpacerItem, QScrollArea, QFrame, \
-    QLayout
+from PyQt5.QtWidgets import QLabel
 
-from customWidgets.iconCheckButton import IconCheckButton
+from customWidgets.buttons.iconCheckButton import IconCheckButton
 
 
 class NavigationList:

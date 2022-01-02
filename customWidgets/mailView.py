@@ -5,9 +5,8 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QFrame, QLabel
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
-from customWidgets.avatarIcon import AvatarIcon
-from customWidgets.iconClickButton import IconClickButton
-from module.settingsConfig import SettingsConfig
+from customWidgets.buttons.avatarIcon import AvatarIcon
+from customWidgets.buttons.iconClickButton import IconClickButton
 
 
 class MailView(QFrame):

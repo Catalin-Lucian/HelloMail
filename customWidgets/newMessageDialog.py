@@ -1,10 +1,10 @@
 import logging
 
-from PyQt5.QtCore import Qt, QRect, QPoint
-from PyQt5.QtGui import QFont, QMouseEvent
+from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit
 
-from customWidgets.iconClickButton import IconClickButton
+from customWidgets.buttons.iconClickButton import IconClickButton
 
 
 class NewMessageDialog(QDialog):
