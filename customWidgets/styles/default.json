@@ -265,10 +265,9 @@
         }
       ],
       "pressed": [{
-          "name": "color",
-          "value": "#B8B8B8"
-        }
-      ],
+        "name": "color",
+        "value": "#B8B8B8"
+      }],
       "hover": []
     },
     "settingPannel": {
@@ -387,7 +386,19 @@
           "value": "10px"
         }
       ]
-
+    },
+    "actionBar": {
+      "default": [{
+          "name": "background-color",
+          "value": "background-color: rgba(196, 196, 196, 0.08)"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ],
+      "pressed": [],
+      "hover": []
     }
 
 

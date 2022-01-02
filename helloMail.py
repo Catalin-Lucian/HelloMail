@@ -1,3 +1,4 @@
+import logging
 import sys
 
 from PyQt5.QtGui import QFont
@@ -22,6 +23,8 @@ API_NAME = 'gmail'
 API_VERSION = 'v1'
 SCOPES = ['https://mail.google.com/']
 CLIENT_FILE = 'token/credentials.json'
+
+logging.basicConfig(filename='logger.log', filemode='w', level=logging.INFO)
 
 
 class HelloMail(QMainWindow):
