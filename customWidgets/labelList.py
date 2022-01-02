@@ -3,8 +3,8 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, QLabel, QFrame
 
 
-from HelloMail.customWidgets.iconCheckButton import IconCheckButton
-from HelloMail.customWidgets.iconClickButton import IconClickButton
+from customWidgets.iconCheckButton import IconCheckButton
+from customWidgets.iconClickButton import IconClickButton
 
 
 class LabelList(QScrollArea):
