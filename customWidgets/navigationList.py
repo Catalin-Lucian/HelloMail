@@ -3,7 +3,7 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QLabel, QSizePolicy, QPushButton, QWidget, QVBoxLayout, QSpacerItem, QScrollArea, QFrame, \
     QLayout
 
-from HelloMail.customWidgets.iconCheckButton import IconCheckButton
+from customWidgets.iconCheckButton import IconCheckButton
 
 
 class NavigationList:

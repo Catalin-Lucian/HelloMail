@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt, QRect, QPoint
 from PyQt5.QtGui import QFont, QMouseEvent
 from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit
 
-from HelloMail.customWidgets.iconClickButton import IconClickButton
+from customWidgets.iconClickButton import IconClickButton
 
 
 class NewMessageDialog(QDialog):

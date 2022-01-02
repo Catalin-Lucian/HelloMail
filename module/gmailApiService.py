@@ -41,7 +41,12 @@ class GoogleApi:
 
         if not cred or not cred.valid:
             if cred and cred.expired and cred.refresh_token:
-                cred.refresh(Request())
+                try:
+                    cred.refresh(Request())
+                except Exception as e:
+                    os.remove(os.path.join(working_dir, token_dir, pickle_file))
+                    flow = InstalledAppFlow.from_client_secrets_file(self.CREDENTIALS, self.SCOPES)
+                    cred = flow.run_local_server()
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(self.CREDENTIALS, self.SCOPES)
                 cred = flow.run_local_server()
