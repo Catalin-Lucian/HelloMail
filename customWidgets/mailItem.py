@@ -122,6 +122,12 @@ class MailItem(QtWidgets.QFrame):
     def onSelectChecked(self, checked):
         self.select_check_signal.emit(checked)
 
+    def checkStar(self, check):
+        if check:
+            self.starIcon.check()
+        else:
+            self.starIcon.uncheck()
+
     def enterEvent(self, e: QtCore.QEvent) -> None:
         if not self.active:
             # self.setStyleSheet(

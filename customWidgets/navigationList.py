@@ -1,12 +1,15 @@
-from PyQt5.QtCore import QRect
+from PyQt5.QtCore import QRect, pyqtSignal
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLabel, QWidget
 
 from customWidgets.buttons.iconCheckButton import IconCheckButton
 
 
-class NavigationList:
+class NavigationList(QWidget):
+    label_change_signal = pyqtSignal(int)
+
     def __init__(self, container):
+        super(NavigationList, self).__init__(container)
         self.container = container
         self.settings = None
         self.selected = None
@@ -55,7 +58,7 @@ class NavigationList:
         self.inboxIcon.setFont(font)
         self.inboxIcon.setText(" Inbox")
         self.inboxIcon.setFlat(True)
-        self.inboxIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.inboxIcon))
+        self.inboxIcon.check_signal.connect(lambda ch: self.onInbox())
 
         self.staredIcon.setObjectName("navigationButton")
         self.staredIcon.setGeometry(QRect(61, 331, 150, 20))
@@ -67,7 +70,7 @@ class NavigationList:
         self.staredIcon.setFont(font)
         self.staredIcon.setText(" Stared")
         self.staredIcon.setFlat(True)
-        self.staredIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.staredIcon))
+        self.staredIcon.check_signal.connect(lambda ch: self.onStared())
 
         self.sentIcon.setObjectName("navigationButton")
         self.sentIcon.setGeometry(QRect(61, 364, 150, 20))
@@ -79,7 +82,7 @@ class NavigationList:
         self.sentIcon.setFont(font)
         self.sentIcon.setText(" Sent")
         self.sentIcon.setFlat(True)
-        self.sentIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.sentIcon))
+        self.sentIcon.check_signal.connect(lambda ch: self.onSent())
 
         self.warningIcon.setObjectName("navigationButton")
         self.warningIcon.setGeometry(QRect(61, 397, 150, 20))
@@ -91,7 +94,7 @@ class NavigationList:
         self.warningIcon.setFont(font)
         self.warningIcon.setText(" Spam")
         self.warningIcon.setFlat(True)
-        self.warningIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.warningIcon))
+        self.warningIcon.check_signal.connect(lambda ch: self.onSpam())
 
         self.draftsIcon.setObjectName("navigationButton")
         self.draftsIcon.setGeometry(QRect(62, 430, 150, 20))
@@ -103,7 +106,7 @@ class NavigationList:
         self.draftsIcon.setFont(font)
         self.draftsIcon.setText(" Drafts")
         self.draftsIcon.setFlat(True)
-        self.draftsIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.draftsIcon))
+        self.draftsIcon.check_signal.connect(lambda ch: self.onDraft())
 
         self.trashIcon.setObjectName("navigationButton")
         self.trashIcon.setGeometry(QRect(62, 462, 150, 20))
@@ -115,7 +118,7 @@ class NavigationList:
         self.trashIcon.setFont(font)
         self.trashIcon.setText(" Trash")
         self.trashIcon.setFlat(True)
-        self.trashIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.trashIcon))
+        self.trashIcon.check_signal.connect(lambda ch: self.onTrash())
 
     def setSettings(self, settings):
         self.settings = settings
@@ -130,18 +133,64 @@ class NavigationList:
 
             self.settings.subscribe(self)
 
-            style = settings.getStyleSheet(self.navigationLabel.objectName(), "default")
-            self.navigationLabel.setStyleSheet(style)
+            self.settings.applyStylesheet(self.navigationLabel)
 
     def notify(self):
-        style = self.settings.getStyleSheet(self.navigationLabel.objectName(), "default")
-        self.navigationLabel.setStyleSheet(style)
+        self.settings.applyStylesheet(self.navigationLabel)
 
-    def onButtonCheck(self, button: IconCheckButton):
-        if self.selected == button:
-            button.check()
+    def onInbox(self):
+        if self.selected == self.inboxIcon:
+            self.selected.check()
         else:
             self.selected.uncheck()
-            self.selected = button
+            self.selected = self.inboxIcon
+        self.label_change_signal.emit(BUTTON.INBOX)
+
+    def onStared(self):
+        if self.selected == self.staredIcon:
+            self.staredIcon.check()
+        else:
+            self.selected.uncheck()
+            self.selected = self.staredIcon
+        self.label_change_signal.emit(BUTTON.STARRED)
+
+    def onSent(self):
+        if self.selected == self.sentIcon:
+            self.sentIcon.check()
+        else:
+            self.selected.uncheck()
+            self.selected = self.sentIcon
+            self.label_change_signal.emit(BUTTON.SENT)
+
+    def onSpam(self):
+        if self.selected == self.warningIcon:
+            self.warningIcon.check()
+        else:
+            self.selected.uncheck()
+            self.selected = self.warningIcon
+            self.label_change_signal.emit(BUTTON.SPAM)
+
+    def onDraft(self):
+        if self.selected == self.draftsIcon:
+            self.draftsIcon.check()
+        else:
+            self.selected.uncheck()
+            self.selected = self.draftsIcon
+            self.label_change_signal.emit(BUTTON.DRAFT)
+
+    def onTrash(self):
+        if self.selected == self.trashIcon:
+            self.trashIcon.check()
+        else:
+            self.selected.uncheck()
+            self.selected = self.trashIcon
+            self.label_change_signal.emit(BUTTON.TRASH)
 
 
+class BUTTON:
+    INBOX = 0
+    STARRED = 1
+    SENT = 2
+    SPAM = 3
+    DRAFT = 4
+    TRASH = 5
