@@ -45,15 +45,16 @@ class HelloMail(QMainWindow):
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
         self.searchBar = SearchBar(self.centralWidget)
         self.actionBar = ActionBar(self.centralWidget)
-        self.settingsButton = SettingsButton(self)
+
 
         self.navigation = NavigationList(self.centralWidget)
 
-        self.newMessageButton = IconClickButton(self.centralWidget, "new_message.svg", "new_message.svg", "new_message.svg")
+        self.newMessageButton = IconClickButton(self.centralWidget, "new_message.svg", "new_message.svg",
+                                                "new_message.svg")
         self.createLabel = QPushButton(self.centralWidget)
         self.newMessageDialog = NewMessageDialog(self.centralWidget)
 
-        # self.settingsPanel = SettingsPanel(self.centralWidget)
+        self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.setupUi()
         self.setupStyleSheets()
@@ -86,9 +87,7 @@ class HelloMail(QMainWindow):
         self.newMessageButton.setObjectName("textButton")
         self.newMessageButton.setSettings(self.settings)
 
-        self.settingsButton.setObjectName("settingsButton")
-        self.settingsButton.setGeometry(QRect(1405, 384, 188, 59))
-        self.settingsButton.setWindowFlags(Qt.WindowStaysOnTopHint)
+
 
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
@@ -156,7 +155,9 @@ class HelloMail(QMainWindow):
             self.mailView.resizeContent(QSize(difW, difH))
 
             self.searchBar.move(QPoint(self.searchBar.pos().x() + difW, self.searchBar.pos().y()))
-            self.settingsButton.move(QPoint(self.settingsButton.pos().x() + difW, self.settingsButton.pos().y()))
+
+
+            self.settingsPanel.resizeContent(QSize(difW, difH))
 
         if not self.hasFirstResize:
             self.hasFirstResize = True
