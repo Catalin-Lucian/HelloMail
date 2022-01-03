@@ -10,6 +10,6 @@ class SettingsPanel(QFrame):
         self.setupUI()
 
     def setupUI(self):
-        self.setWindowFlags(Qt.WindowStaysOnTopHint )
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setGeometry(20, 20, 1400, 860)
         self.setStyleSheet("background-color: #fffff")

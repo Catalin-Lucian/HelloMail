@@ -2,12 +2,12 @@ import logging
 
 from PyQt5.QtCore import QRect, QEvent, QPoint
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QFrame
+from PyQt5.QtWidgets import QFrame, QPushButton
 
 from HelloMail.customWidgets.buttons.iconClickButton import IconClickButton
 
 
-class SettingsButton(QFrame):
+class SettingsButton(QPushButton):
 
     def __init__(self, container):
         super(SettingsButton, self).__init__(container)
