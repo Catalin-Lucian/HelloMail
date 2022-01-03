@@ -1,9 +1,9 @@
 import logging
 
-from PyQt5.QtCore import QRect, QSize, Qt, QPoint
-from PyQt5.QtGui import QFont
+from PyQt5.QtCore import QRect, QSize, Qt, QPoint, QUrl
+from PyQt5.QtGui import QFont, QDesktopServices
 from PyQt5.QtWidgets import QFrame, QLabel
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
 from customWidgets.buttons.avatarIcon import AvatarIcon
 from customWidgets.buttons.iconClickButton import IconClickButton
@@ -22,10 +22,14 @@ class MailView(QFrame):
         self.subjectLabel = QLabel(self)
 
         self.buttonsContainer = QFrame(self)
-        self.forwardButton = IconClickButton(self.buttonsContainer, "forward_unselected.svg", "forward_hover.svg", "forward_hover.svg")
-        self.replyButton = IconClickButton(self.buttonsContainer, "reply_unselected.svg", "reply_hover.svg","reply_hover.svg")
-        self.trashButton = IconClickButton(self.buttonsContainer, "trash_unselected.svg", "trash_hover.svg", "trash_hover.svg")
-        self.starButton = IconClickButton(self, "star_view_unselected.svg", "star_view_hover.svg", "star_view_hover.svg")
+        self.forwardButton = IconClickButton(self.buttonsContainer, "forward_unselected.svg", "forward_hover.svg",
+                                             "forward_hover.svg")
+        self.replyButton = IconClickButton(self.buttonsContainer, "reply_unselected.svg", "reply_hover.svg",
+                                           "reply_hover.svg")
+        self.trashButton = IconClickButton(self.buttonsContainer, "trash_unselected.svg", "trash_hover.svg",
+                                           "trash_hover.svg")
+        self.starButton = IconClickButton(self, "star_view_unselected.svg", "star_view_hover.svg",
+                                          "star_view_hover.svg")
 
         self.setupUi()
 
@@ -102,7 +106,6 @@ class MailView(QFrame):
         self.starButton.setGeometry(QRect(700, 30, 30, 30))
         self.starButton.hide()
 
-
     def setSettings(self, settings):
         if settings:
             self.settings = settings
@@ -146,6 +149,7 @@ class MailView(QFrame):
             logging.warning(f"{self.objectName()}: settings value noneType")
 
     def setMailContentView(self, mailData):
+        self.mailContentView.setPage(CustomWebPage(self.mailContentView))
         if mailData.get('body'):
             self.mailContentView.setHtml(mailData.get('body'))
         self.mailContentView.page().setBackgroundColor(Qt.transparent)
@@ -168,3 +172,14 @@ class MailView(QFrame):
 
     def notify(self):
         pass
+
+
+class CustomWebPage(QWebEnginePage):
+    def __init__(self, parent):
+        super(CustomWebPage, self).__init__(parent)
+
+    def acceptNavigationRequest(self, url: QUrl, type: 'QWebEnginePage.NavigationType', isMainFrame: bool) -> bool:
+        if type == QWebEnginePage.NavigationTypeLinkClicked:
+            QDesktopServices.openUrl(url)
+            return False
+        return True

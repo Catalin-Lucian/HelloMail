@@ -8,12 +8,13 @@ from PyQt5.QtCore import QSize, QPoint, QRect, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets, QtGui
 
+from HelloMail.customWidgets.buttons.settingsButton import SettingsButton
+from HelloMail.customWidgets.settingsPanel import SettingsPanel
 from customWidgets.actionBar import ActionBar
 from customWidgets.newMessageDialog import NewMessageDialog
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
 from customWidgets.searchBar import SearchBar
-from customWidgets.settingsPanel import SettingsPanel
 from module.gmailApiService import GoogleApi
 from customWidgets.buttons.iconClickButton import IconClickButton
 from module.settingsConfig import SettingsConfig
@@ -44,13 +45,15 @@ class HelloMail(QMainWindow):
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
         self.searchBar = SearchBar(self.centralWidget)
         self.actionBar = ActionBar(self.centralWidget)
-        self.settingsPanel = SettingsPanel(self.centralWidget)
+        self.settingsButton = SettingsButton(self)
 
         self.navigation = NavigationList(self.centralWidget)
 
-        self.newMessageButton = IconClickButton(self, "new_message.svg", "new_message.svg", "new_message.svg")
+        self.newMessageButton = IconClickButton(self.centralWidget, "new_message.svg", "new_message.svg", "new_message.svg")
         self.createLabel = QPushButton(self.centralWidget)
         self.newMessageDialog = NewMessageDialog(self.centralWidget)
+
+        # self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.setupUi()
         self.setupStyleSheets()
@@ -83,9 +86,9 @@ class HelloMail(QMainWindow):
         self.newMessageButton.setObjectName("textButton")
         self.newMessageButton.setSettings(self.settings)
 
-        self.settingsPanel.setObjectName("settingPannel")
-        self.settingsPanel.setGeometry(QRect(1405, 384, 188, 59))
-        self.settingsPanel.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.settingsButton.setObjectName("settingsButton")
+        self.settingsButton.setGeometry(QRect(1405, 384, 188, 59))
+        self.settingsButton.setWindowFlags(Qt.WindowStaysOnTopHint)
 
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
@@ -100,6 +103,7 @@ class HelloMail(QMainWindow):
 
         self.newMessageDialog.setSettings(self.settings)
         self.newMessageButton.click_signal.connect(lambda: self.newMessageDialog.show())
+        self.newMessageButton.setWindowFlags(Qt.WindowStaysOnBottomHint)
 
         self.searchBar.setObjectName('searchBar')
         self.searchBar.setSettings(self.settings)
