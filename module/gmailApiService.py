@@ -201,10 +201,11 @@ class GoogleApi:
     def get_emails_by_tags(self, tags, maxResults):
         emails = self.service.users().messages().list(userId="me", labelIds=tags, maxResults=maxResults).execute()
         resultEmails = []
-        for email in emails['messages']:
-            email = self.service.users().messages().get(userId="me", id=email["id"], format='full').execute()
-            resultEmail = self.process_email(email)
-            resultEmails.append(resultEmail)
+        if emails.get('messages'):
+            for email in emails['messages']:
+                email = self.service.users().messages().get(userId="me", id=email["id"], format='full').execute()
+                resultEmail = self.process_email(email)
+                resultEmails.append(resultEmail)
 
         return resultEmails
 

@@ -1,15 +1,19 @@
 import logging
 
-from PyQt5.QtCore import QRect, QSize, Qt, QPoint, QUrl
+from PyQt5 import QtCore
+from PyQt5.QtCore import QRect, QSize, Qt, QPoint, QUrl, pyqtSignal
 from PyQt5.QtGui import QFont, QDesktopServices
 from PyQt5.QtWidgets import QFrame, QLabel
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
 from customWidgets.buttons.avatarIcon import AvatarIcon
+from customWidgets.buttons.iconCheckButton import IconCheckButton
 from customWidgets.buttons.iconClickButton import IconClickButton
 
 
 class MailView(QFrame):
+    star_check_signal = pyqtSignal(bool)
+
     def __init__(self, container):
         super(MailView, self).__init__(container)
         self.settings = None
@@ -29,7 +33,7 @@ class MailView(QFrame):
                                            "reply_hover.svg")
         self.trashButton = IconClickButton(self.buttonsContainer, "trash_unselected.svg", "trash_hover.svg",
                                            "trash_hover.svg")
-        self.starButton = IconClickButton(self, "star_view_unselected.svg", "star_view_hover.svg",
+        self.starButton = IconCheckButton(self, "star_view_unselected.svg", "star_view_selected.svg",
                                           "star_view_hover.svg")
 
         self.setupUi()
@@ -101,6 +105,8 @@ class MailView(QFrame):
 
         self.starButton.setGeometry(QRect(700, 30, 30, 30))
         self.starButton.hide()
+        self.starButton.check_signal.connect(lambda ch: self.onStarClicked(ch))
+
 
     def setSettings(self, settings):
         if settings:
@@ -135,6 +141,10 @@ class MailView(QFrame):
         self.subjectLabel.setText(mailData.get('subject'))
         self.buttonsContainer.show()
         self.starButton.show()
+        if "STARRED" in mailData.get('labelIds'):
+            self.starButton.check()
+        else:
+            self.starButton.uncheck()
 
     def resizeContent(self, e: QSize):
         self.resize(QSize(self.size().width() + e.width(), self.size().height() + e.height()))
@@ -145,7 +155,26 @@ class MailView(QFrame):
 
     def notify(self):
         self.applyStyleSheets()
-        
+
+    def checkStar(self, check):
+        if check:
+            self.starButton.check()
+        else:
+            self.starButton.uncheck()
+
+    @QtCore.pyqtSlot()
+    def onStarClicked(self, check):
+        self.star_check_signal.emit(check)
+
+    def hideMail(self):
+        self.mailContentView.hide()
+        self.avatarIcon.hide()
+        self.senderNameLabel.setText("")
+        self.senderEmailLabel.setText("")
+        self.dateTimeLabel.setText("")
+        self.subjectLabel.setText("")
+        self.buttonsContainer.hide()
+        self.starButton.hide()
 
 class CustomWebPage(QWebEnginePage):
     def __init__(self, parent):

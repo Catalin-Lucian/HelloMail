@@ -44,4 +44,7 @@ class SettingsConfig:
 
     def notify(self):
         for sub in self.subs:
-            sub.notify()
+            try:
+                sub.notify()
+            except:
+                self.subs.remove(sub)
