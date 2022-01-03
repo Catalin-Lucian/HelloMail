@@ -8,14 +8,13 @@ from PyQt5.QtCore import QSize, QPoint, QRect, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-from HelloMail.customWidgets.buttons.settingsButton import SettingsButton
-from HelloMail.customWidgets.settingsPanel import SettingsPanel
 from customWidgets.actionBar import ActionBar
 from customWidgets.newMessageDialog import NewMessageDialog
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
 from customWidgets.searchBar import SearchBar
 from customWidgets.buttons.settingsButton import SettingsButton
+from customWidgets.settingsPanel import SettingsPanel
 from module.gmailApiService import GoogleApi
 from customWidgets.buttons.iconClickButton import IconClickButton
 from module.settingsConfig import SettingsConfig
@@ -46,8 +45,7 @@ class HelloMail(QMainWindow):
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
         self.searchBar = SearchBar(self.centralWidget)
         self.actionBar = ActionBar(self.centralWidget)
-        self.settingsButton = SettingsButton(self.centralWidget)
-
+        # self.settingsButton = SettingsButton(self.centralWidget)
 
         self.navigation = NavigationList(self.centralWidget)
 
@@ -89,7 +87,6 @@ class HelloMail(QMainWindow):
         self.newMessageButton.setObjectName("textButton")
         self.newMessageButton.setSettings(self.settings)
 
-
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
 
@@ -111,6 +108,9 @@ class HelloMail(QMainWindow):
 
         self.actionBar.setObjectName("actionBar")
         self.actionBar.setSettings(self.settings)
+
+        self.settingsPanel.setObjectName("settingPanel")
+        self.settingsPanel.setSettings(self.settings)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:

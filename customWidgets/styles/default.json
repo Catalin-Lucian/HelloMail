@@ -270,8 +270,16 @@
       }],
       "hover": []
     },
-    "settingPannel": {
-      "default": [],
+    "settingPanel": {
+      "default": [{
+          "name": "background-color",
+          "value": "#146BE2"
+        },
+        {
+          "name":"border-radius",
+          "value":"10px"
+        }
+      ],
       "pressed": [],
       "hover": []
     },
@@ -281,20 +289,20 @@
           "value": "rgba(20, 107, 226, 255)"
         },
         {
-          "name":"color",
-          "value":"#FFFFFF"
+          "name": "color",
+          "value": "#FFFFFF"
         },
         {
-          "name":"border-radius",
-          "value":"10px"
+          "name": "border-radius",
+          "value": "10px"
         },
         {
-          "name":"text-align",
-          "value":"left"
+          "name": "text-align",
+          "value": "left"
         },
         {
-          "name":"padding",
-          "value":"10px"
+          "name": "padding",
+          "value": "10px"
         }
       ],
       "pressed": [],
