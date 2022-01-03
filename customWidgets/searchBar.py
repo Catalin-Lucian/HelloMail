@@ -1,14 +1,15 @@
 import logging
 
-from PyQt5.QtCore import QRect, QEvent, pyqtSignal
-from PyQt5.QtGui import QFont, QFocusEvent
+from PyQt5.QtCore import QRect, QEvent, pyqtSignal, Qt
+from PyQt5.QtGui import QFont, QFocusEvent, QKeyEvent
 from PyQt5.QtWidgets import QFrame, QLineEdit
 
-from customWidgets.iconClickButton import IconClickButton
+from customWidgets.buttons.iconClickButton import IconClickButton
 
 
 class CustomLineEdit(QLineEdit):
     focus_signal = pyqtSignal(bool)
+    enter_signal = pyqtSignal()
 
     def __init__(self, parent=None):
         super(CustomLineEdit, self).__init__(parent)
@@ -21,8 +22,14 @@ class CustomLineEdit(QLineEdit):
         self.focus_signal.emit(False)
         super(CustomLineEdit, self).focusOutEvent(a0)
 
+    def keyPressEvent(self, a0: QKeyEvent) -> None:
+        if a0.key() == 16777220 or a0.key() == 16777221:  # enter key
+            self.enter_signal.emit()
+        super(CustomLineEdit, self).keyPressEvent(a0)
+
 
 class SearchBar(QFrame):
+    search_signal = pyqtSignal(str)
 
     def __init__(self, parent):
         super(SearchBar, self).__init__(parent)
@@ -37,12 +44,10 @@ class SearchBar(QFrame):
         self.setGeometry(QRect(968, 50, 388, 24))
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
-        # self.setStyleSheet("background-color: rgba(59, 67, 80, 255);"
-        #                    "border-radius:10px;")
 
         self.searchButton.setObjectName("searchInput")
         self.searchButton.setGeometry(QRect(7, 2, 20, 21))
-        # self.searchButton.setStyleSheet("color:#FFFFFF;")
+        self.searchButton.click_signal.connect(lambda: self.onSearch())
 
         self.searchInput.setObjectName('searchInput')
         font = QFont()
@@ -50,29 +55,22 @@ class SearchBar(QFrame):
         font.setPointSize(12)
         self.searchInput.setGeometry(QRect(30, 1, 355, 21))
         self.searchInput.setFont(font)
-        self.searchInput.focus_signal.connect(lambda focused: self.onFocusSignal(focused))
-        # self.searchInput.setStyleSheet("color: #FFFFFF")
+        self.searchInput.focus_signal.connect(lambda focused: self.onFocus(focused))
+        self.searchInput.enter_signal.connect(lambda: self.onSearch())
 
     def setSettings(self, settings):
         self.settings = settings
         if settings:
             self.settings.subscribe(self)
             self.searchButton.setSettings(settings)
-            self.applyStyleSheet("default")
-
-            style = self.settings.getStyleSheet(self.searchInput.objectName(), 'default')
-            self.searchInput.setStyleSheet(style)
-
+            self.applyStyleSheets()
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
-    def applyStyleSheet(self, state):
+    def applyStyleSheets(self ):
         if self.settings:
-            style = self.settings.getStyleSheet(self.objectName(), state)
-            if style:
-                self.setStyleSheet(style)
-            else:
-                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
+            self.settings.applyStylesheet(self)
+            self.settings.applyStylesheet(self.searchInput)
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
@@ -82,13 +80,17 @@ class SearchBar(QFrame):
     def leaveEvent(self, a0: QEvent) -> None:
         super(SearchBar, self).enterEvent(a0)
 
-    def onFocusSignal(self, focused):
+    def onFocus(self, focused):
         if focused:
-            self.applyStyleSheet('pressed')
+            if self.settings:
+                self.settings.applyStylesheet(self, 'pressed')
         else:
-            self.applyStyleSheet('default')
+            if self.settings:
+                self.settings.applyStylesheet(self, 'default')
+
+    def onSearch(self):
+        query = self.searchInput.text()
+        self.search_signal.emit(query)
 
     def notify(self):
-        self.applyStyleSheet('default')
-        style = self.settings.getStyleSheet(self.searchInput.objectName(), 'default')
-        self.searchInput.setStyleSheet(style)
+        self.applyStyleSheets()

@@ -1,4 +1,5 @@
 import json
+import logging
 
 
 class SettingsConfig:
@@ -26,6 +27,14 @@ class SettingsConfig:
                 for elementVal in stateValues:
                     styleSheet = styleSheet + f"{elementVal.get('name')}:{elementVal.get('value')};"
         return styleSheet
+
+    def applyStylesheet(self, widget, state="default"):
+        name = widget.objectName()
+        style = self.getStyleSheet(name, state)
+        if style:
+            widget.setStyleSheet(style)
+        else:
+            logging.info(f"{name} - {state} style not found.")
 
     def subscribe(self, element):
         self.subs.append(element)

@@ -1,23 +1,22 @@
+import logging
 import sys
 
-from PyQt5.QtCore import QSize, QPoint, QRect
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
+from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize, QPoint, QRect, Qt
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame
+from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-from customWidgets.iconClickButton import IconClickButton
-from customWidgets.labelList import LabelList
-
+from customWidgets.actionBar import ActionBar
 from customWidgets.newMessageDialog import NewMessageDialog
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
 from customWidgets.searchBar import SearchBar
+from customWidgets.buttons.settingsButton import SettingsButton
 from customWidgets.settingsPanel import SettingsPanel
 from module.gmailApiService import GoogleApi
-from customWidgets.iconClickButton import IconClickButton
+from customWidgets.buttons.iconClickButton import IconClickButton
 from module.settingsConfig import SettingsConfig
 
 from customWidgets.navigationList import NavigationList
@@ -26,6 +25,8 @@ API_NAME = 'gmail'
 API_VERSION = 'v1'
 SCOPES = ['https://mail.google.com/']
 CLIENT_FILE = 'token/credentials.json'
+
+logging.basicConfig(level=logging.INFO)
 
 
 class HelloMail(QMainWindow):
@@ -43,15 +44,17 @@ class HelloMail(QMainWindow):
         self.mailView = MailView(self.centralWidget)
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
         self.searchBar = SearchBar(self.centralWidget)
-        self.settingsPanel = SettingsPanel(self.centralWidget)
+        self.actionBar = ActionBar(self.centralWidget)
+        # self.settingsButton = SettingsButton(self.centralWidget)
 
         self.navigation = NavigationList(self.centralWidget)
 
-        # self.labelList = LabelList(self.centralWidget)
-
-        self.newMessageButton = IconClickButton(self, "new_message.svg", "new_message.svg", "new_message.svg")
+        self.newMessageButton = IconClickButton(self.centralWidget, "new_message.svg", "new_message.svg",
+                                                "new_message.svg")
         self.createLabel = QPushButton(self.centralWidget)
         self.newMessageDialog = NewMessageDialog(self.centralWidget)
+
+        self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.setupUi()
         self.setupStyleSheets()
@@ -83,10 +86,6 @@ class HelloMail(QMainWindow):
         self.newMessageButton.setFlat(True)
         self.newMessageButton.setObjectName("textButton")
         self.newMessageButton.setSettings(self.settings)
-        self.settingsPanel.setObjectName("settingPannel")
-
-        self.settingsPanel.setGeometry(QRect(1405, 384, 188, 59))
-        self.settingsPanel.setWindowFlags(Qt.WindowStaysOnTopHint)
 
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
@@ -101,8 +100,17 @@ class HelloMail(QMainWindow):
 
         self.newMessageDialog.setSettings(self.settings)
         self.newMessageButton.click_signal.connect(lambda: self.newMessageDialog.show())
+        self.newMessageButton.setWindowFlags(Qt.WindowStaysOnBottomHint)
+
         self.searchBar.setObjectName('searchBar')
         self.searchBar.setSettings(self.settings)
+        self.searchBar.search_signal.connect(lambda query: self.onSearch(query))
+
+        self.actionBar.setObjectName("actionBar")
+        self.actionBar.setSettings(self.settings)
+
+        self.settingsPanel.setObjectName("settingPanel")
+        self.settingsPanel.setSettings(self.settings)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -135,6 +143,9 @@ class HelloMail(QMainWindow):
             self.googleApi.modify_labels_to_email(mailItem.mailData.get('id'), [], ['UNREAD'])
             mailItem.mailData['labelIds'].remove('UNREAD')
 
+    def onSearch(self, query):
+        print(query)
+
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
             difH = e.size().height() - e.oldSize().height()
@@ -143,6 +154,9 @@ class HelloMail(QMainWindow):
             self.mailList.resizeContent(QSize(difW, difH))
             self.mailCover.move(QPoint(self.mailCover.pos().x(), self.mailCover.pos().y() + difH))
             self.mailView.resizeContent(QSize(difW, difH))
+
+            self.searchBar.move(QPoint(self.searchBar.pos().x() + difW, self.searchBar.pos().y()))
+            self.settingsPanel.resizeContent(QSize(difW, difH))
 
         if not self.hasFirstResize:
             self.hasFirstResize = True

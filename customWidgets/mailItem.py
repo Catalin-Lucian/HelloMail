@@ -1,14 +1,12 @@
-import hashlib
 import logging
-import urllib
 
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QLabel, QFrame
+from PyQt5.QtWidgets import QLabel
 
-from customWidgets.avatarIcon import AvatarIcon
-from customWidgets.iconCheckButton import IconCheckButton
-from customWidgets.selectButton import SelectButton
+from customWidgets.buttons.avatarIcon import AvatarIcon
+from customWidgets.buttons.iconCheckButton import IconCheckButton
+from customWidgets.buttons.selectButton import SelectButton
 
 
 class MailItem(QtWidgets.QFrame):
@@ -148,10 +146,6 @@ class MailItem(QtWidgets.QFrame):
     def select(self):
         self.active = True
         self.setMinimumSize(QtCore.QSize(431, 80))
-        # self.setStyleSheet(
-        #     "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), "
-        #     "stop:1 rgba(59, 67, 80, 255));\n "
-        #     "border-radius:10px;")
         self.applyStyleSheet('pressed')
 
     def deselect(self):
@@ -183,30 +177,6 @@ class MailItem(QtWidgets.QFrame):
 
         style = self.settings.getStyleSheet(self.dateTimeLabel.objectName(), 'default')
         self.dateTimeLabel.setStyleSheet(style)
-
-    # def setUnreadStyle(self, isUnread):
-    #     if isUnread:
-    #         self.setStyleSheet(
-    #             "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255), "
-    #             "stop:1 rgba(34, 38, 49, 255));\n "
-    #             "border-radius:10px;")
-    #         self.subjectLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-    #                                         "color:#FFFFFF")
-    #         self.senderNameLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-    #                                            "color:#FFFFFF")
-    #         self.dateTimeLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-    #                                          "color:#FFFFFF")
-    #     else:
-    #         self.setStyleSheet(
-    #             "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(34, 39, 51, 255), "
-    #             "stop:1 rgba(31, 34, 45, 255));\n "
-    #             "border-radius:10px;")
-    #         self.subjectLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-    #                                         "color:#8A8A8A")
-    #         self.senderNameLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-    #                                            "color:#8A8A8A")
-    #         self.dateTimeLabel.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-    #                                          "color:#8A8A8A")
 
     def notify(self):
         pass

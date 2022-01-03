@@ -7,3 +7,4 @@ module/__pycache__
 .idea/misc.xml
 *.pyc
 
+/logger.log

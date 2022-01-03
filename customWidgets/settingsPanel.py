@@ -1,61 +1,61 @@
-import logging
+from PyQt5.QtCore import Qt, QRect, QPoint
+from PyQt5.QtWidgets import QFrame
 
-from PyQt5.QtCore import QRect, QEvent
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QFrame, QLabel
-
-from customWidgets.iconClickButton import IconClickButton
+from customWidgets.buttons.iconClickButton import IconClickButton
+from customWidgets.buttons.settingsButton import SettingsButton
 
 
 class SettingsPanel(QFrame):
 
-    def __init__(self, container):
-        super(SettingsPanel, self).__init__(container)
-        self.settingsButton = IconClickButton(self, "settings.svg", "settings.svg", "settings.svg")
-        self.setupUi()
+    def __init__(self, parrent):
+        super(SettingsPanel, self).__init__(parrent)
+        self.settings = None
+        self.cancelButton = IconClickButton(self, "exit_chat_unselected.svg",
+                                            "exit_chat_selected.svg",
+                                            "exit_chat_selected.svg")
+        self.settingsButton = SettingsButton(parrent)
+        self.hide()
+        self.setupUI()
 
-    def setupUi(self):
-        self.setGeometry(QRect(1405, 384, 188, 59))
-        self.setStyleSheet("background-color: rgba(20, 107, 226, 255);"
-                           "border-radius:10px;"
-                           "text-align:left;"
-                           "padding:10px;")
-        self.settingsButton.setGeometry(QRect(0, 2, 188, 59))
-        self.settingsButton.setText("Settings")
-        self.settingsButton.setStyleSheet("color:#FFFFFF;")
+    def setupUI(self):
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.setGeometry(20, 20, 1400, 860)
+        # self.setStyleSheet("background-color: #146BE2;\n"
+        #                    "border-radius: 10px;")
 
-        font = QFont()
-        font.setFamily("Calibri")
-        font.setPointSize(18)
-        self.settingsButton.setFont(font)
+        self.cancelButton.setGeometry(QRect(1346, 12, 35, 35))
+
+        self.cancelButton.click_signal.connect(self.closeSettings)
+        self.settingsButton.click_signal.connect(self.openSettings)
+
+        self.settingsButton.setObjectName("settingButton")
+        self.settingsButton.setGeometry(QRect(1405, 384, 188, 59))
+        self.settingsButton.setWindowFlags(Qt.WindowStaysOnTopHint)
 
     def setSettings(self, settings):
         self.settings = settings
         if settings:
-            self.settings.subscribe(self)
-            self.searchButton.setSettings(settings)
-            self.applyStyleSheet("default")
+            settings.subscribe(self)
+            self.cancelButton.setSettings(settings)
+            self.settingsButton.setSettings(settings)
+            self.applyStyleSheets()
 
-            style = self.settings.getStyleSheet(self.searchInput.objectName(), 'default')
-            self.searchInput.setStyleSheet(style)
-
-        else:
-            logging.warning(f"{self.objectName()}: settings value noneType")
-
-    def applyStyleSheet(self, state):
+    def applyStyleSheets(self):
         if self.settings:
-            style = self.settings.getStyleSheet(self.objectName(), state)
-            if style:
-                self.setStyleSheet(style)
-            else:
-                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
-        else:
-            logging.warning(f"{self.objectName()}: settings value noneType")
+            self.settings.applyStylesheet(self)
 
-    def enterEvent(self, a0: QEvent) -> None:
-        self.setGeometry(QRect(1310, 384, 188, 59))
-        super(SettingsPanel, self).enterEvent(a0)
+    def resizeContent(self, difSize):
+        self.resize(difSize.width() + self.size().width(), difSize.height() + self.size().height())
+        self.cancelButton.move(difSize.width() + self.cancelButton.pos().x(), self.cancelButton.pos().y())
+        self.settingsButton.move(QPoint(self.settingsButton.pos().x() + difSize.width(), self.settingsButton.pos().y()))
 
-    def leaveEvent(self, a0: QEvent) -> None:
-        self.setGeometry(QRect(1405, 384, 188, 59))
-        super(SettingsPanel, self).enterEvent(a0)
+    def openSettings(self):
+        self.show()
+        self.settingsButton.hide()
+
+    def closeSettings(self):
+        self.hide()
+        self.settingsButton.show()
+
+    def notify(self):
+        self.applyStyleSheets()

@@ -1,9 +1,8 @@
-from PyQt5.QtCore import QRect, Qt, QSize
+from PyQt5.QtCore import QRect
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QLabel, QSizePolicy, QPushButton, QWidget, QVBoxLayout, QSpacerItem, QScrollArea, QFrame, \
-    QLayout
+from PyQt5.QtWidgets import QLabel
 
-from customWidgets.iconCheckButton import IconCheckButton
+from customWidgets.buttons.iconCheckButton import IconCheckButton
 
 
 class NavigationList:
@@ -45,7 +44,6 @@ class NavigationList:
         font.setWeight(75)
         self.navigationLabel.setFont(font)
         self.navigationLabel.setText("Navigation")
-        # self.navigationLabel.setStyleSheet("color: #FFFFFF")
 
         self.inboxIcon.setObjectName("navigationButton")
         self.inboxIcon.setGeometry(QRect(61, 296, 150, 20))
@@ -58,16 +56,6 @@ class NavigationList:
         self.inboxIcon.setText(" Inbox")
         self.inboxIcon.setFlat(True)
         self.inboxIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.inboxIcon))
-        # self.inboxIcon.setThemeStyle({
-        #     'checked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(20, 107, 226, 255)"
-        #     },
-        #     'unchecked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(255, 255, 255, 255)"
-        #     }
-        # })
 
         self.staredIcon.setObjectName("navigationButton")
         self.staredIcon.setGeometry(QRect(61, 331, 150, 20))
@@ -80,16 +68,6 @@ class NavigationList:
         self.staredIcon.setText(" Stared")
         self.staredIcon.setFlat(True)
         self.staredIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.staredIcon))
-        # self.staredIcon.setThemeStyle({
-        #     'checked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(20, 107, 226, 255)"
-        #     },
-        #     'unchecked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(255, 255, 255, 255)"
-        #     }
-        # })
 
         self.sentIcon.setObjectName("navigationButton")
         self.sentIcon.setGeometry(QRect(61, 364, 150, 20))
@@ -114,16 +92,7 @@ class NavigationList:
         self.warningIcon.setText(" Spam")
         self.warningIcon.setFlat(True)
         self.warningIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.warningIcon))
-        # self.warningIcon.setThemeStyle({
-        #     'checked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(20, 107, 226, 255)"
-        #     },
-        #     'unchecked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(255, 255, 255, 255)"
-        #     }
-        # })
+
         self.draftsIcon.setObjectName("navigationButton")
         self.draftsIcon.setGeometry(QRect(62, 430, 150, 20))
         font = QFont()
@@ -135,16 +104,6 @@ class NavigationList:
         self.draftsIcon.setText(" Drafts")
         self.draftsIcon.setFlat(True)
         self.draftsIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.draftsIcon))
-        # self.draftsIcon.setThemeStyle({
-        #     'checked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(20, 107, 226, 255)"
-        #     },
-        #     'unchecked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(255, 255, 255, 255)"
-        #     }
-        # })
 
         self.trashIcon.setObjectName("navigationButton")
         self.trashIcon.setGeometry(QRect(62, 462, 150, 20))
@@ -157,16 +116,6 @@ class NavigationList:
         self.trashIcon.setText(" Trash")
         self.trashIcon.setFlat(True)
         self.trashIcon.check_signal.connect(lambda ch: self.onButtonCheck(self.trashIcon))
-        # self.trashIcon.setThemeStyle({
-        #     'checked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(20, 107, 226, 255)"
-        #     },
-        #     'unchecked': {
-        #         "background-color": "rgba(255, 255, 255, 0)",
-        #         "color": "rgba(255, 255, 255, 255)"
-        #     }
-        # })
 
     def setSettings(self, settings):
         self.settings = settings

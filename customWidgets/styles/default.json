@@ -265,19 +265,46 @@
         }
       ],
       "pressed": [{
-          "name": "color",
-          "value": "#B8B8B8"
-        }
-      ],
+        "name": "color",
+        "value": "#B8B8B8"
+      }],
       "hover": []
     },
-    "settingPannel": {
-      "default": [],
+    "settingPanel": {
+      "default": [{
+          "name": "background-color",
+          "value": "#146BE2"
+        },
+        {
+          "name":"border-radius",
+          "value":"10px"
+        }
+      ],
       "pressed": [],
       "hover": []
     },
     "settingButton": {
-      "default": [],
+      "default": [{
+          "name": "background-color",
+          "value": "rgba(20, 107, 226, 255)"
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        },
+        {
+          "name": "text-align",
+          "value": "left"
+        },
+        {
+          "name": "padding",
+          "value": "10px"
+        }
+      ],
       "pressed": [],
       "hover": []
     },
@@ -387,14 +414,24 @@
           "value": "10px"
         }
       ]
-
+    },
+    "actionBar": {
+      "default": [{
+          "name": "background-color",
+          "value": "rgba(196, 196, 196, 0.08)"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ],
+      "pressed": [],
+      "hover": []
+    },
+    "actionButton": {
+      "default": [],
+      "pressed": [],
+      "hover": []
     }
-
-
-
-
-
-
-
   }
 }
