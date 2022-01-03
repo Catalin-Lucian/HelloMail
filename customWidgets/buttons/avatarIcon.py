@@ -16,9 +16,6 @@ class AvatarIcon(QLabel):
     def setupUi(self):
         self.setGeometry(QRect(30, 20, 40, 40))
         self.setCursor(QCursor(Qt.PointingHandCursor))
-        # self.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-        #                    "border: 0px solid rgb(199, 199, 199);\n"
-        #                    "border-radius: 20px;")
 
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
@@ -26,18 +23,15 @@ class AvatarIcon(QLabel):
 
     def setSettings(self, settings):
         self.settings = settings
-        self.settings.subscribe(self)
-        self.applyStyleSheet("default")
-
-    def applyStyleSheet(self, state):
         if self.settings:
-            style = self.settings.getStyleSheet(self.objectName(), state)
-            if style:
-                self.setStyleSheet(style)
-            else:
-                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
+            self.settings.subscribe(self)
+            self.applyStyleSheets()
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
+    def applyStyleSheets(self):
+        if self.settings:
+            self.settings.applyStylesheet(self)
+
     def notify(self):
-        self.applyStyleSheet("default")
+        self.applyStyleSheets()

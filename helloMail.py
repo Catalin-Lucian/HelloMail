@@ -13,7 +13,7 @@ from customWidgets.newMessageDialog import NewMessageDialog
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
 from customWidgets.searchBar import SearchBar
-from customWidgets.settingsPanel import SettingsPanel
+from customWidgets.settingsButton import SettingsButton
 from module.gmailApiService import GoogleApi
 from customWidgets.buttons.iconClickButton import IconClickButton
 from module.settingsConfig import SettingsConfig
@@ -44,7 +44,7 @@ class HelloMail(QMainWindow):
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
         self.searchBar = SearchBar(self.centralWidget)
         self.actionBar = ActionBar(self.centralWidget)
-        self.settingsPanel = SettingsPanel(self.centralWidget)
+        self.settingsPanel = SettingsButton(self.centralWidget)
 
         self.navigation = NavigationList(self.centralWidget)
 

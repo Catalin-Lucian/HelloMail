@@ -30,6 +30,7 @@ class ActionBar(QFrame):
         self.setFrameShadow(QFrame.Raised)
 
         self.selectCheckButton.setGeometry(QRect(13, 10, 20, 20))
+
         self.archiveButton.setGeometry(QRect(97, 10, 22, 21))
         self.warningButton.setGeometry(QRect(140, 4, 36, 36))
         self.trashButton.setGeometry(QRect(190, 4, 34, 34))
@@ -46,14 +47,14 @@ class ActionBar(QFrame):
             self.settings.applyStylesheet(self)
 
     def notify(self):
-        pass
+        self.applyStyleSheets()
 
 
 class ACTION:
     CHECKED_FLAG = 0
     UNCHECKED_FLAG = 1
     ARCHIVE_FLAG = 2
-    SPAM_FLAG = 3
+    WARNING_FLAG = 3
     TRASH_FLAG = 4
     UNREAD_FLAG = 5
     READ_FLAG = 6

@@ -63,21 +63,14 @@ class SearchBar(QFrame):
         if settings:
             self.settings.subscribe(self)
             self.searchButton.setSettings(settings)
-            self.applyStyleSheet("default")
-
-            style = self.settings.getStyleSheet(self.searchInput.objectName(), 'default')
-            self.searchInput.setStyleSheet(style)
-
+            self.applyStyleSheets()
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
-    def applyStyleSheet(self, state):
+    def applyStyleSheets(self ):
         if self.settings:
-            style = self.settings.getStyleSheet(self.objectName(), state)
-            if style:
-                self.setStyleSheet(style)
-            else:
-                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
+            self.settings.applyStylesheet(self)
+            self.settings.applyStylesheet(self.searchInput)
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
@@ -89,9 +82,11 @@ class SearchBar(QFrame):
 
     def onFocus(self, focused):
         if focused:
-            self.applyStyleSheet('pressed')
+            if self.settings:
+                self.settings.applyStylesheet(self, 'pressed')
         else:
-            self.applyStyleSheet('default')
+            if self.settings:
+                self.settings.applyStylesheet(self, 'default')
 
     def onSearch(self):
         query = self.searchInput.text()

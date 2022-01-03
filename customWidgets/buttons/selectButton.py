@@ -18,39 +18,26 @@ class SelectButton(QFrame):
     def setupUi(self):
         self.setGeometry(QRect(6, 6, 20, 20))
         self.setCursor(QCursor(Qt.PointingHandCursor))
-        # self.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-        #                    "border: 2px solid rgb(199, 199, 199);\n"
-        #                    "border-radius: 10px;")
 
     def setSettings(self, settings):
         self.settings = settings
         if settings:
             self.settings.subscribe(self)
-            self.applyStyleSheet("default")
+            self.applyStyleSheets()
 
-    def applyStyleSheet(self, state):
+    def applyStyleSheets(self):
         if self.settings:
-            style = self.settings.getStyleSheet(self.objectName(), state)
-            if style:
-                self.setStyleSheet(style)
-            else:
-                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
+            self.settings.applyStylesheet(self)
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
     def check(self):
-        # self.setStyleSheet("background-color: rgb(48, 229, 132);\n"
-        #                    "border: 2px solid rgb(48, 229, 132);\n"
-        #                    "border-radius: 10px;")
-        self.applyStyleSheet('pressed')
+        self.settings.applyStylesheet(self, 'pressed')
         self.checkedFlag = True
         self.check_signal.emit(self.checkedFlag)
 
     def uncheck(self):
-        # self.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-        #                    "border: 2px solid rgb(199, 199, 199);\n"
-        #                    "border-radius: 10px;")
-        self.applyStyleSheet('default')
+        self.settings.applyStylesheet(self, 'default')
         self.checkedFlag = False
         self.check_signal.emit(self.checkedFlag)
 
@@ -63,18 +50,12 @@ class SelectButton(QFrame):
 
     def enterEvent(self, e: QEvent) -> None:
         if not self.checkedFlag:
-            # self.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-            #                    "border: 2px solid rgb(48, 229, 132);\n"
-            #                    "border-radius: 10px;")
-            self.applyStyleSheet('hover')
+            self.settings.applyStylesheet(self, 'hover')
         super(SelectButton, self).enterEvent(e)
 
     def leaveEvent(self, e: QEvent) -> None:
         if not self.checkedFlag:
-            # self.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-            #                    "border: 2px solid rgb(199, 199, 199);\n"
-            #                    "border-radius: 10px;")
-            self.applyStyleSheet('default')
+            self.settings.applyStylesheet(self, 'default')
         super(SelectButton, self).leaveEvent(e)
 
     def notify(self):
