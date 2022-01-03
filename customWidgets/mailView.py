@@ -1,9 +1,9 @@
 import logging
 
-from PyQt5.QtCore import QRect, QSize, Qt, QPoint
-from PyQt5.QtGui import QFont
+from PyQt5.QtCore import QRect, QSize, Qt, QPoint, QUrl
+from PyQt5.QtGui import QFont, QDesktopServices
 from PyQt5.QtWidgets import QFrame, QLabel
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
 from customWidgets.buttons.avatarIcon import AvatarIcon
 from customWidgets.buttons.iconClickButton import IconClickButton
@@ -15,6 +15,7 @@ class MailView(QFrame):
         self.settings = None
 
         self.mailContentView = QWebEngineView(self)
+        self.customPage = CustomWebPage(self.mailContentView)
         self.avatarIcon = AvatarIcon(self)
         self.senderNameLabel = QLabel(self)
         self.senderEmailLabel = QLabel(self)
@@ -41,8 +42,14 @@ class MailView(QFrame):
         self.mailContentView.setObjectName("mailContentView")
         self.mailContentView.setGeometry(QRect(20, 145, 705, 647))
         self.mailContentView.setMinimumSize(QSize(705, 647))
-        self.mailContentView.page().setBackgroundColor(Qt.transparent)
+        # self.mailContentView.setStyleSheet("\n"
+        #                                    "border-color:rgb(58, 110, 255)\n"
+        #                                    "border:10px solid black;"
+        #                                    "border-radius:10px;\n")
+        self.mailContentView.setPage(self.customPage)
         self.mailContentView.setWindowFlag(Qt.WindowStaysOnBottomHint)
+        self.mailContentView.hide()
+
 
         self.avatarIcon.setObjectName("mailViewAvatarIcon")
         self.avatarIcon.setGeometry(QRect(30, 30, 50, 50))
@@ -118,9 +125,9 @@ class MailView(QFrame):
             logging.warning(f"{self.objectName()}: settings value noneType")
 
     def setMailContentView(self, mailData):
+        self.mailContentView.show()
         if mailData.get('body'):
             self.mailContentView.setHtml(mailData.get('body'))
-        self.mailContentView.page().setBackgroundColor(Qt.transparent)
         self.avatarIcon.show()
         self.senderNameLabel.setText(mailData.get('from').get('name'))
         self.senderEmailLabel.setText(mailData.get('from').get('email'))
@@ -138,3 +145,14 @@ class MailView(QFrame):
 
     def notify(self):
         self.applyStyleSheets()
+        
+
+class CustomWebPage(QWebEnginePage):
+    def __init__(self, parent):
+        super(CustomWebPage, self).__init__(parent)
+
+    def acceptNavigationRequest(self, url: QUrl, type: 'QWebEnginePage.NavigationType', isMainFrame: bool) -> bool:
+        if type == QWebEnginePage.NavigationTypeLinkClicked:
+            QDesktopServices.openUrl(url)
+            return False
+        return True
