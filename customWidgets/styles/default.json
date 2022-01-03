@@ -419,6 +419,11 @@
       ],
       "pressed": [],
       "hover": []
+    },
+    "actionButton": {
+      "default": [],
+      "pressed": [],
+      "hover": []
     }
   }
 }
