@@ -156,7 +156,7 @@ class HelloMail(QMainWindow):
             self.mailView.resizeContent(QSize(difW, difH))
 
             self.searchBar.move(QPoint(self.searchBar.pos().x() + difW, self.searchBar.pos().y()))
-            self.settingsPanel.move(QPoint(self.settingsPanel.pos().x() + difW, self.settingsPanel.pos().y()))
+            self.settingsButton.move(QPoint(self.settingsButton.pos().x() + difW, self.settingsButton.pos().y()))
 
         if not self.hasFirstResize:
             self.hasFirstResize = True
