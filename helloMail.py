@@ -44,7 +44,7 @@ class HelloMail(QMainWindow):
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
         self.searchBar = SearchBar(self.centralWidget)
         self.actionBar = ActionBar(self.centralWidget)
-        self.settingsPanel = SettingsButton(self.centralWidget)
+        self.settingsButton = SettingsButton(self.centralWidget)
 
         self.navigation = NavigationList(self.centralWidget)
 
@@ -83,9 +83,10 @@ class HelloMail(QMainWindow):
         self.newMessageButton.setObjectName("textButton")
         self.newMessageButton.setSettings(self.settings)
 
-        self.settingsPanel.setObjectName("settingPannel")
-        self.settingsPanel.setGeometry(QRect(1405, 384, 188, 59))
-        self.settingsPanel.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.settingsButton.setObjectName("settingButton")
+        self.settingsButton.setGeometry(QRect(1405, 384, 188, 59))
+        self.settingsButton.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.settingsButton.setSettings(self.settings)
 
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
@@ -152,7 +153,7 @@ class HelloMail(QMainWindow):
             self.mailView.resizeContent(QSize(difW, difH))
 
             self.searchBar.move(QPoint(self.searchBar.pos().x() + difW, self.searchBar.pos().y()))
-            self.settingsPanel.move(QPoint(self.settingsPanel.pos().x() + difW, self.settingsPanel.pos().y()))
+            self.settingsButton.move(QPoint(self.settingsButton.pos().x() + difW, self.settingsButton.pos().y()))
 
         if not self.hasFirstResize:
             self.hasFirstResize = True

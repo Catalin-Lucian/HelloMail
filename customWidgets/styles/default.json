@@ -276,7 +276,27 @@
       "hover": []
     },
     "settingButton": {
-      "default": [],
+      "default": [{
+          "name": "background-color",
+          "value": "rgba(20, 107, 226, 255)"
+        },
+        {
+          "name":"color",
+          "value":"#FFFFFF"
+        },
+        {
+          "name":"border-radius",
+          "value":"10px"
+        },
+        {
+          "name":"text-align",
+          "value":"left"
+        },
+        {
+          "name":"padding",
+          "value":"10px"
+        }
+      ],
       "pressed": [],
       "hover": []
     },

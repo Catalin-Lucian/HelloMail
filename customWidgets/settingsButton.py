@@ -11,19 +11,18 @@ class SettingsButton(QFrame):
 
     def __init__(self, container):
         super(SettingsButton, self).__init__(container)
+        self.settings = None
+
         self.settingsButton = IconClickButton(self, "settings.svg", "settings.svg", "settings.svg")
         self.setupUi()
 
     def setupUi(self):
         self.setGeometry(QRect(1405, 384, 188, 59))
-        self.setStyleSheet("background-color: rgba(20, 107, 226, 255);"
-                           "border-radius:10px;"
-                           "text-align:left;"
-                           "padding:10px;")
+
+        self.settingsButton.setObjectName("settingButton")
         self.settingsButton.setGeometry(QRect(0, 2, 188, 59))
         self.settingsButton.setText("Settings")
-        self.settingsButton.setStyleSheet("color:#FFFFFF;")
-
+        # self.settingsButton.setStyleSheet("color:#FFFFFF;")
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(18)
@@ -33,22 +32,15 @@ class SettingsButton(QFrame):
         self.settings = settings
         if settings:
             self.settings.subscribe(self)
-            self.searchButton.setSettings(settings)
-            self.applyStyleSheet("default")
-
-            style = self.settings.getStyleSheet(self.searchInput.objectName(), 'default')
-            self.searchInput.setStyleSheet(style)
+            self.settingsButton.setSettings(settings)
+            self.applyStyleSheets()
 
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
-    def applyStyleSheet(self, state):
+    def applyStyleSheets(self):
         if self.settings:
-            style = self.settings.getStyleSheet(self.objectName(), state)
-            if style:
-                self.setStyleSheet(style)
-            else:
-                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
+            self.settings.applyStylesheet(self)
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
@@ -61,3 +53,6 @@ class SettingsButton(QFrame):
         pos = self.pos()
         self.move(QPoint(pos.x() + 90, pos.y()))
         super(SettingsButton, self).enterEvent(a0)
+
+    def notify(self):
+        self.applyStyleSheet()

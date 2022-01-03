@@ -93,6 +93,4 @@ class SearchBar(QFrame):
         self.search_signal.emit(query)
 
     def notify(self):
-        self.applyStyleSheet('default')
-        style = self.settings.getStyleSheet(self.searchInput.objectName(), 'default')
-        self.searchInput.setStyleSheet(style)
+        self.applyStyleSheets()
