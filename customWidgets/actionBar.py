@@ -102,6 +102,7 @@ class ActionBar(QFrame):
         else:
             self.selectCheckButton.uncheck()
 
+
 class ACTION:
     CHECKED_FLAG = 0
     UNCHECKED_FLAG = 1
