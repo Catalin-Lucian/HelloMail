@@ -29,50 +29,53 @@ class IconClickButton(QPushButton):
         self.settings = settings
         if settings:
             self.settings.subscribe(self)
-            self.applyStyleSheet("default")
+            self.applyStyleSheets()
 
-    def applyStyleSheet(self, state):
+    def applyStyleSheets(self):
         if self.settings:
-            style = self.settings.getStyleSheet(self.objectName(), state)
-            if style:
-                self.setStyleSheet(style)
-            else:
-                logging.info(f"{self.objectName()} - styleSheet:{state} was empty")
+            self.settings.applyStylesheet(self)
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
     def mousePressEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
             self.setIcon(self.clickedIcon)
-            self.applyStyleSheet('pressed')
+            if self.settings:
+                self.settings.applyStylesheet(self, 'pressed')
         super(IconClickButton, self).mousePressEvent(e)
 
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
             if self.onTop:
                 self.setIcon(self.hoverIcon)
-                self.applyStyleSheet('hover')
+                if self.settings:
+                    self.settings.applyStylesheet(self, 'hover')
             else:
                 self.setIcon(self.unClickedIcon)
-                self.applyStyleSheet('default')
+                if self.settings:
+                    self.settings.applyStylesheet(self, 'default')
             self.click_signal.emit()
 
     def enterEvent(self, e: QEvent) -> None:
         self.onTop = True
         self.setIcon(self.hoverIcon)
-        self.applyStyleSheet('hover')
+        if self.settings:
+            self.settings.applyStylesheet(self, 'hover')
         super(IconClickButton, self).enterEvent(e)
 
     def leaveEvent(self, e: QEvent) -> None:
         self.onTop = False
         self.setIcon(self.unClickedIcon)
-        self.applyStyleSheet('default')
+        if self.settings:
+            self.settings.applyStylesheet(self, 'default')
         super(IconClickButton, self).enterEvent(e)
 
     def notify(self):
         if self.onTop:
             self.setIcon(self.hoverIcon)
-            self.applyStyleSheet('hover')
+            if self.settings:
+                self.settings.applyStylesheet(self, 'hover')
         else:
             self.setIcon(self.unClickedIcon)
-            self.applyStyleSheet('default')
+            if self.settings:
+                self.settings.applyStylesheet(self, 'default')

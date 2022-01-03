@@ -63,18 +63,6 @@ class MailList(QtWidgets.QScrollArea):
 
         self.setWidget(self.scrollAreaWidgetContents)
 
-        # self.iconsBar.setGeometry(QRect(268, 87, 392, 42))
-        # self.iconsBar.setStyleSheet("background-color: rgba(196, 196, 196, 0.08);\n""border-radius:10px;")
-        # self.iconsBar.setFrameShape(QFrame.StyledPanel)
-        # self.iconsBar.setFrameShadow(QFrame.Raised)
-        #
-        # self.selectCheckButton.setGeometry(QRect(13, 10, 20, 20))
-        # self.arhiveButton.setGeometry(QRect(97, 10, 22, 21))
-        # self.warningButton.setGeometry(QRect(140, 4, 36, 36))
-        # self.trashButton.setGeometry(QRect(190, 4, 34, 34))
-        # self.unreadMailButton.setGeometry(QRect(292, 15, 26, 18))
-        # self.readMailButton.setGeometry(QRect(340, 8, 32, 32))
-
     def addMailItem(self, mailData):
         self.verticalLayout.removeItem(self.spacerItem)
 
@@ -83,7 +71,6 @@ class MailList(QtWidgets.QScrollArea):
         mailItem.setSettings(self.settings)
         mailItem.click_signal.connect(lambda itm: self.onMailClicked(itm))
         mailItem.select_check_signal.connect(lambda ch: self.onMailChecked(ch, mailItem))
-        # mailItem.star_checked.connect(lambda ch: self.onMailStartChecked(ch, mailItem))
         self.verticalLayout.addWidget(mailItem, 0, Qt.AlignHCenter)
         self.verticalLayout.addSpacerItem(self.spacerItem)
 

@@ -36,6 +36,7 @@ class ActionBar(QFrame):
         self.selectCheckButton.check_signal.connect(lambda check: self.onCheck(check))
 
         self.archiveButton.setObjectName("actionButton")
+
         self.archiveButton.setGeometry(QRect(97, 10, 22, 21))
         self.archiveButton.click_signal.connect(lambda: self.onArchive())
 
@@ -93,7 +94,7 @@ class ActionBar(QFrame):
             self.settings.applyStylesheet(self)
 
     def notify(self):
-        self.aplyStyleSheets()
+        self.applyStyleSheets()
 
     def setCheckButton(self, check):
         if check:

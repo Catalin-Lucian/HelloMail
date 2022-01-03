@@ -54,8 +54,6 @@ class NewMessageDialog(QDialog):
         self.setGeometry(QRect(0, 0, 601, 456))
         self.setStyleSheet("background-color: rgba(0,0,0,0);")
 
-        # self.container.setStyleSheet("background-color: #262A30;"
-        #                              "border-radius:10px;")
         self.container.setObjectName("newMessageContainer")
         self.container.setGeometry(QRect(0, 0, 601, 456))
 
@@ -67,7 +65,6 @@ class NewMessageDialog(QDialog):
         font.setWeight(65)
         self.titleLabel.setFont(font)
         self.titleLabel.setText("New Message")
-        # self.titleLabel.setStyleSheet("color: #FFFFFF;")
         self.titleLabel.setObjectName("label")
 
         self.toLabel.setGeometry(QRect(16, 47, 59, 19))
@@ -78,7 +75,6 @@ class NewMessageDialog(QDialog):
         font.setWeight(65)
         self.toLabel.setFont(font)
         self.toLabel.setText("To:")
-        # self.toLabel.setStyleSheet("color: #FFFFFF;")
         self.toLabel.setObjectName("label")
 
         self.subjectLabel.setGeometry(QRect(16, 86, 75, 19))
@@ -89,22 +85,15 @@ class NewMessageDialog(QDialog):
         font.setWeight(65)
         self.subjectLabel.setFont(font)
         self.subjectLabel.setText("Subject:")
-        # self.subjectLabel.setStyleSheet("color: #FFFFFF;")
         self.subjectLabel.setObjectName("label")
 
         self.toTextEdit.setGeometry(QRect(95, 47, 473, 25))
-        # self.toTextEdit.setStyleSheet("background-color: #929497;"
-        #                               "border-radius:10px;")
         self.toTextEdit.setObjectName("newMessageTextEdit")
 
         self.subjectTextEdit.setGeometry(QRect(95, 86, 473, 25))
-        # self.subjectTextEdit.setStyleSheet("background-color: #929497;"
-        #                                    "border-radius:10px;")
         self.subjectTextEdit.setObjectName("newMessageTextEdit")
 
         self.richTextEdit.setGeometry(QRect(16, 125, 555, 262))
-        # self.richTextEdit.setStyleSheet("background-color: #929497;"
-        #                                 "border-radius:10px;")
         self.richTextEdit.setObjectName("newMessageTextEdit")
 
         self.exitIcon.setGeometry(QRect(574, 11, 14, 14))
@@ -125,8 +114,6 @@ class NewMessageDialog(QDialog):
         self.sendIco.setText(" Send")
         self.sendIco.setFlat(True)
         self.sendIco.setObjectName("textButton")
-
-
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -174,7 +161,7 @@ class NewMessageDialog(QDialog):
             self.atachmentIco.setSettings(self.settings)
             self.trashIco.setSettings(self.settings)
             self.sendIco.setSettings(self.settings)
-            self.setupStyleSheet()
+            self.applyStyleSheets()
             self.settings.subscribe(self)
 
     def applyStyleSheet(self, state):
@@ -187,30 +174,15 @@ class NewMessageDialog(QDialog):
         else:
             logging.warning("-- settings value noneType")
 
-    def setupStyleSheet(self):
-        self.applyStyleSheet("default")
-
-        style = self.settings.getStyleSheet(self.container.objectName(), "default")
-        self.container.setStyleSheet(style)
-
-        style = self.settings.getStyleSheet(self.titleLabel.objectName(), "default")
-        self.titleLabel.setStyleSheet(style)
-
-        style = self.settings.getStyleSheet(self.toTextEdit.objectName(), "default")
-        self.toTextEdit.setStyleSheet(style)
-
-        style = self.settings.getStyleSheet(self.subjectTextEdit.objectName(), "default")
-        self.subjectTextEdit.setStyleSheet(style)
-
-        style = self.settings.getStyleSheet(self.toLabel.objectName(), "default")
-        self.toLabel.setStyleSheet(style)
-
-        style = self.settings.getStyleSheet(self.subjectLabel.objectName(), "default")
-        self.subjectLabel.setStyleSheet(style)
-
-        style = self.settings.getStyleSheet(self.richTextEdit.objectName(), "default")
-        self.richTextEdit.setStyleSheet(style)
+    def applyStyleSheets(self):
+        self.settings.applyStylesheet(self)
+        self.settings.applyStylesheet(self.container)
+        self.settings.applyStylesheet(self.titleLabel)
+        self.settings.applyStylesheet(self.toTextEdit)
+        self.settings.applyStylesheet(self.subjectTextEdit)
+        self.settings.applyStylesheet(self.toLabel)
+        self.settings.applyStylesheet(self.subjectLabel)
+        self.settings.applyStylesheet(self.richTextEdit)
 
     def notify(self):
-        self.setupStyleSheet()
-
+        self.applyStyleSheets()

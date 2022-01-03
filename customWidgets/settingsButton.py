@@ -7,10 +7,10 @@ from PyQt5.QtWidgets import QFrame
 from customWidgets.buttons.iconClickButton import IconClickButton
 
 
-class SettingsPanel(QFrame):
+class SettingsButton(QFrame):
 
     def __init__(self, container):
-        super(SettingsPanel, self).__init__(container)
+        super(SettingsButton, self).__init__(container)
         self.settingsButton = IconClickButton(self, "settings.svg", "settings.svg", "settings.svg")
         self.setupUi()
 
@@ -55,9 +55,9 @@ class SettingsPanel(QFrame):
     def enterEvent(self, a0: QEvent) -> None:
         pos = self.pos()
         self.move(QPoint(pos.x()-90, pos.y()))
-        super(SettingsPanel, self).enterEvent(a0)
+        super(SettingsButton, self).enterEvent(a0)
 
     def leaveEvent(self, a0: QEvent) -> None:
         pos = self.pos()
         self.move(QPoint(pos.x() + 90, pos.y()))
-        super(SettingsPanel, self).enterEvent(a0)
+        super(SettingsButton, self).enterEvent(a0)
