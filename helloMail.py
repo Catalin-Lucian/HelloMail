@@ -8,6 +8,7 @@ from PyQt5.QtCore import QSize, QPoint, QRect, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets, QtGui
 
+from customWidgets.actionBar import ActionBar
 from customWidgets.newMessageDialog import NewMessageDialog
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
@@ -24,7 +25,7 @@ API_VERSION = 'v1'
 SCOPES = ['https://mail.google.com/']
 CLIENT_FILE = 'token/credentials.json'
 
-logging.basicConfig(filename='logger.log', filemode='w', level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 
 class HelloMail(QMainWindow):
@@ -42,6 +43,7 @@ class HelloMail(QMainWindow):
         self.mailView = MailView(self.centralWidget)
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
         self.searchBar = SearchBar(self.centralWidget)
+        self.actionBar = ActionBar(self.centralWidget)
         self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.navigation = NavigationList(self.centralWidget)
@@ -102,6 +104,9 @@ class HelloMail(QMainWindow):
         self.searchBar.setObjectName('searchBar')
         self.searchBar.setSettings(self.settings)
         self.searchBar.search_signal.connect(lambda query: self.onSearch(query))
+
+        self.actionBar.setObjectName("actionBar")
+        self.actionBar.setSettings(self.settings)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:

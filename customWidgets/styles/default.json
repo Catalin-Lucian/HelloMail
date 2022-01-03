@@ -390,7 +390,7 @@
     "actionBar": {
       "default": [{
           "name": "background-color",
-          "value": "background-color: rgba(196, 196, 196, 0.08)"
+          "value": "rgba(196, 196, 196, 0.08)"
         },
         {
           "name": "border-radius",
@@ -400,12 +400,5 @@
       "pressed": [],
       "hover": []
     }
-
-
-
-
-
-
-
   }
 }
