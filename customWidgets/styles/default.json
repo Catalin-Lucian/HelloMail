@@ -1,6 +1,8 @@
 {
   "elements": ["mainWindow", "mailCover", "mailList", "mailView", "mailItem", "mailItemAvatarIcon", "iconCheckButton",
-    "iconClickButton", "selectButton"
+    "iconClickButton", "mailItemSelectButton", "mailItemCheckButton",  "searchButton", "searchInput", "settingPanel", "settingButton",
+    "navigationButton", "newMessageContainer", "newMessageTextEdit", "newMessageButton", "textButton",
+    "actionBar"
   ],
   "values": {
     "mainWindow": {
