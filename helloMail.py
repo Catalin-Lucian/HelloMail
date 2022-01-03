@@ -13,7 +13,7 @@ from customWidgets.newMessageDialog import NewMessageDialog
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
 from customWidgets.searchBar import SearchBar
-from customWidgets.settingsButton import SettingsButton
+from customWidgets.buttons.settingsButton import SettingsButton
 from module.gmailApiService import GoogleApi
 from customWidgets.buttons.iconClickButton import IconClickButton
 from module.settingsConfig import SettingsConfig
