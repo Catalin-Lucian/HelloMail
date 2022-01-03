@@ -1,13 +1,14 @@
 import logging
 
-from PyQt5.QtCore import QRect, QEvent, QPoint
-from PyQt5.QtGui import QFont
+from PyQt5.QtCore import QRect, QEvent, QPoint, pyqtSignal, Qt
+from PyQt5.QtGui import QFont, QMouseEvent
 from PyQt5.QtWidgets import QFrame
 
 from customWidgets.buttons.iconClickButton import IconClickButton
 
 
 class SettingsButton(QFrame):
+    click_signal = pyqtSignal()
 
     def __init__(self, container):
         super(SettingsButton, self).__init__(container)
@@ -23,6 +24,7 @@ class SettingsButton(QFrame):
         self.settingsButton.setGeometry(QRect(0, 2, 188, 59))
         self.settingsButton.setText("Settings")
         # self.settingsButton.setStyleSheet("color:#FFFFFF;")
+        self.settingsButton.click_signal.connect(lambda: self.onClick())
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(18)
@@ -53,6 +55,14 @@ class SettingsButton(QFrame):
         pos = self.pos()
         self.move(QPoint(pos.x() + 90, pos.y()))
         super(SettingsButton, self).enterEvent(a0)
+
+    def mouseReleaseEvent(self, a0: QMouseEvent):
+        if a0.button() == Qt.LeftButton:
+            self.onClick()
+        super(SettingsButton, self).mouseReleaseEvent(a0)
+
+    def onClick(self):
+        self.click_signal.emit()
 
     def notify(self):
         self.applyStyleSheet()
