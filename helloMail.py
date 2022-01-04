@@ -55,7 +55,7 @@ class HelloMail(QMainWindow):
 
         self.newMessageDialog = NewMessageDialog(self.centralWidget)
         self.labellist = LabelList(self.centralWidget)
-        
+
         self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.setupUi()
