@@ -3,6 +3,7 @@ from PyQt5.QtGui import QFont, QMouseEvent
 from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, QLabel, QFrame, \
     QPushButton
 
+from customWidgets.buttons.iconCheckButton import IconCheckButton
 from customWidgets.buttons.iconClickButton import IconClickButton
 from customWidgets.newLabelFrame import NewLabelFrame
 from module.settingsConfig import SettingsConfig
@@ -15,6 +16,7 @@ class LabelList(QScrollArea):
         super(LabelList, self).__init__(parent)
         self.settings = None
 
+        self.tagList = []
 
         self.myLabel = QLabel(parent)
 
@@ -61,7 +63,7 @@ class LabelList(QScrollArea):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWidgetResizable(False)
-        self.setAlignment(Qt.AlignLeft)
+        # self.setAlignment(Qt.AlignLeft)
 
         # self.scrollAreaWidgetContents.setStyleSheet("background-color: #FFFFFF;")
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 185, 176))
@@ -76,6 +78,7 @@ class LabelList(QScrollArea):
         self.setStyleSheet("color: rgba(255, 255, 255)")
 
         self.addTagElement("custom 1")
+        self.addTagElement("custom 2")
 
         self.createLabel.click_signal.connect(lambda: self.createLabelShow())
 
@@ -84,9 +87,12 @@ class LabelList(QScrollArea):
     def addTagElement(self, name):
         self.verticalLayout.removeItem(self.spacerItem)
 
-        tagButton = IconClickButton(self.scrollAreaWidgetContents, "tag.svg",
+        tagButton = IconCheckButton(self.scrollAreaWidgetContents, "tag.svg",
                                          "tag.svg",
                                          "tag.svg")
+
+        tagButton.setObjectName("navigationButton")
+
         tagButton.setStyleSheet("text-align: left;")
         tagButton.setGeometry(QRect(0, 0, 185, 24))
 
@@ -99,9 +105,14 @@ class LabelList(QScrollArea):
         tagButton.setText(f" {name}")
         tagButton.setFlat(True)
 
+        tagButton.setObjectName("navigationButton")
+
+
         self.verticalLayout.addWidget(tagButton, 0, Qt.AlignLeft)
+        self.tagList.append(tagButton)
         self.verticalLayout.addSpacerItem(self.spacerItem)
 
+        self.setSettings(self.settings)
     def createLabelShow(self):
         self.newLabelFrame.show()
 
@@ -112,6 +123,9 @@ class LabelList(QScrollArea):
         if settings:
             self.settings.subscribe(self)
             self.newLabelFrame.setSettings(self.settings)
+
+            for tag in self.tagList:
+                tag.setSettings(settings)
 
             self.applyStylesheets()
 
