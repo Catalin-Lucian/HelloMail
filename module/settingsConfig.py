@@ -42,6 +42,9 @@ class SettingsConfig:
     def unsubscribe(self, element):
         self.subs.remove(element)
 
+    def getTheme(self):
+        return self.theme
+
     def notify(self):
         for sub in self.subs:
             try:
