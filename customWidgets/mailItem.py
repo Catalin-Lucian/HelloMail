@@ -130,6 +130,12 @@ class MailItem(QtWidgets.QFrame):
         else:
             self.starIcon.uncheck()
 
+    def checkItem(self, check):
+        if check:
+            self.selectButton.check()
+        else:
+            self.selectButton.uncheck()
+
     def enterEvent(self, e: QtCore.QEvent) -> None:
         if not self.active:
             # self.setStyleSheet(
@@ -175,6 +181,9 @@ class MailItem(QtWidgets.QFrame):
         style = self.settings.getStyleSheet(self.dateTimeLabel.objectName(), 'default_deep')
         self.dateTimeLabel.setStyleSheet(style)
 
+        if 'UNREAD' in self.mailData['labelIds']:
+            self.mailData['labelIds'].remove("UNREAD")
+
     def unread(self):
         self.applyStyleSheet('default')
         style = self.settings.getStyleSheet(self.subjectLabel.objectName(), 'default')
@@ -185,6 +194,9 @@ class MailItem(QtWidgets.QFrame):
 
         style = self.settings.getStyleSheet(self.dateTimeLabel.objectName(), 'default')
         self.dateTimeLabel.setStyleSheet(style)
+
+        if 'UNREAD' not in self.mailData['labelIds']:
+            self.mailData['labelIds'].append("UNREAD")
 
     def notify(self):
         pass
