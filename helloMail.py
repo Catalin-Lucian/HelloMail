@@ -8,7 +8,7 @@ from PyQt5.QtCore import QSize, QPoint, QRect, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-from customWidgets.actionBar import ActionBar
+from customWidgets.actionBar import ActionBar, ACTION
 from customWidgets.labelList import LabelList
 from customWidgets.newMessageDialog import NewMessageDialog
 from customWidgets.mailList import MailList
@@ -16,7 +16,7 @@ from customWidgets.mailView import MailView
 from customWidgets.searchBar import SearchBar
 from customWidgets.buttons.settingsButton import SettingsButton
 from customWidgets.settingsPanel import SettingsPanel
-from module.gmailApiService import GoogleApi
+from module.gmailApiService import GmailApi
 from customWidgets.buttons.iconClickButton import IconClickButton
 from module.settingsConfig import SettingsConfig
 
@@ -36,7 +36,7 @@ class HelloMail(QMainWindow):
         super(HelloMail, self).__init__()
         self.hasFirstResize = False
 
-        self.googleApi = GoogleApi(CLIENT_FILE, API_NAME, API_VERSION, SCOPES, 'x')
+        self.gmailApi = GmailApi(CLIENT_FILE, API_NAME, API_VERSION, SCOPES, 'x')
         self.settings = SettingsConfig()
         self.settings.subscribe(self)
 
@@ -75,6 +75,7 @@ class HelloMail(QMainWindow):
 
         self.mailList.setObjectName("mailList")
         self.mailList.mailItemChange.connect(lambda mailItem: self.onMailItemChange(mailItem))
+        self.mailList.firstLastSelectSignal.connect(lambda first: self.actionBar.setCheckButton(first))
         self.mailList.setSettings(self.settings)
 
         self.newMessageButton.setGeometry(QRect(20, 156, 209, 45))
@@ -108,6 +109,7 @@ class HelloMail(QMainWindow):
 
         self.actionBar.setObjectName("actionBar")
         self.actionBar.setSettings(self.settings)
+        self.actionBar.action_signal.connect(lambda action: self.onActionBarSignal(action))
 
         self.settingsPanel.setObjectName("settingPanel")
         self.settingsPanel.setSettings(self.settings)
@@ -123,7 +125,7 @@ class HelloMail(QMainWindow):
         self.mailCover.setStyleSheet(self.settings.getStyleSheet("mailCover"))
 
     def addMailItemsOnStartUp(self):
-        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 20)
+        mails_data = self.gmailApi.get_emails_by_tags(["INBOX"], 20)
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
@@ -131,20 +133,20 @@ class HelloMail(QMainWindow):
     @QtCore.pyqtSlot()
     def onMailItemStarChecked(self, checked, mailItem):
         if checked:
-            self.googleApi.modify_labels_to_email(mailItem.mailData.get('id'), ['STARRED'], [])
+            self.gmailApi.modify_labels_to_email(mailItem.mailData.get('id'), ['STARRED'], [])
             mailItem.mailData['labelIds'].append('STARRED')
         else:
-            self.googleApi.modify_labels_to_email(mailItem.mailData.get('id'), [], ['STARRED'])
+            self.gmailApi.modify_labels_to_email(mailItem.mailData.get('id'), [], ['STARRED'])
             mailItem.mailData['labelIds'].remove('STARRED')
         self.mailView.checkStar(checked)
 
     @QtCore.pyqtSlot()
     def onMailViewStarChecked(self, checked):
         if checked:
-            self.googleApi.modify_labels_to_email(self.mailList.getSelected().mailData.get('id'), ['STARRED'], [])
+            self.gmailApi.modify_labels_to_email(self.mailList.getSelected().mailData.get('id'), ['STARRED'], [])
             self.mailList.getSelected().mailData['labelIds'].append('STARRED')
         else:
-            self.googleApi.modify_labels_to_email(self.mailList.getSelected().mailData.get('id'), [], ['STARRED'])
+            self.gmailApi.modify_labels_to_email(self.mailList.getSelected().mailData.get('id'), [], ['STARRED'])
             self.mailList.getSelected().mailData['labelIds'].remove('STARRED')
         self.mailList.getSelected().checkStar(checked)
 
@@ -152,7 +154,7 @@ class HelloMail(QMainWindow):
     def onMailItemChange(self, mailItem):
         self.mailView.setMailContentView(mailItem.mailData)
         if 'UNREAD' in mailItem.mailData['labelIds']:
-            self.googleApi.modify_labels_to_email(mailItem.mailData.get('id'), [], ['UNREAD'])
+            self.gmailApi.modify_labels_to_email(mailItem.mailData.get('id'), [], ['UNREAD'])
             mailItem.mailData['labelIds'].remove('UNREAD')
 
     @QtCore.pyqtSlot()
@@ -161,21 +163,52 @@ class HelloMail(QMainWindow):
         self.mailView.hideMail()
         self.mailList.clearMailList()
         if label == BUTTON.INBOX:
-            mails = self.googleApi.get_emails_by_tags(['INBOX'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['INBOX'], 20)
         elif label == BUTTON.STARRED:
-            mails = self.googleApi.get_emails_by_tags(['STARRED'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['STARRED'], 20)
         elif label == BUTTON.SENT:
-            mails = self.googleApi.get_emails_by_tags(['SENT'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['SENT'], 20)
         elif label == BUTTON.SPAM:
-            mails = self.googleApi.get_emails_by_tags(['SPAM'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['SPAM'], 20)
         elif label == BUTTON.DRAFT:
-            mails = self.googleApi.get_emails_by_tags(['DRAFT'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['DRAFT'], 20)
         elif label == BUTTON.TRASH:
-            mails = self.googleApi.get_emails_by_tags(['TRASH'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['TRASH'], 20)
         for mail_data in mails:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
 
+    @QtCore.pyqtSlot()
+    def onActionBarSignal(self, action):
+        if action == ACTION.CHECKED_FLAG:
+            self.mailList.selectAll()
+        elif action == ACTION.UNCHECKED_FLAG:
+            self.mailList.unselectAll()
+        elif action == ACTION.UNREAD_FLAG:
+            mailIds = []
+            selectedMails = self.mailList.getSelectedMails()
+            selectedMail = self.mailList.getSelected()
+            for selected in selectedMails:
+                if selectedMail and selected == selectedMail:
+                    selectedMail.deselect()
+                    self.mailView.hideMail()
+                selected.unread()
+                mailIds.append(selected.mailData.get('id'))
+            self.gmailApi.modify_labels_to_emails(mailIds, ['UNREAD'], [])
+        elif action == ACTION.READ_FLAG:
+            mailIds = []
+            selectedMails = self.mailList.getSelectedMails()
+            selectedMail = self.mailList.getSelected()
+            for selected in selectedMails:
+                if selectedMail and selected == selectedMail:
+                    selectedMail.deselect()
+                    self.mailView.hideMail()
+                selected.read()
+                mailIds.append(selected.mailData.get('id'))
+            self.gmailApi.modify_labels_to_emails(mailIds, [], ['UNREAD'])
+
+
+    @QtCore.pyqtSlot()
     def onSearch(self, query):
         print(query)
 
