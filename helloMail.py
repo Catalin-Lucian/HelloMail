@@ -64,6 +64,7 @@ class HelloMail(QMainWindow):
 
     def setupUi(self):
 
+
         self.setWindowTitle("HelloMail")
         self.resize(1440, 900)
         self.setMinimumSize(QtCore.QSize(1440, 900))
@@ -109,6 +110,8 @@ class HelloMail(QMainWindow):
 
         self.settingsPanel.setObjectName("settingPanel")
         self.settingsPanel.setSettings(self.settings)
+
+        self.labellist.setSettings(self.settings)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
