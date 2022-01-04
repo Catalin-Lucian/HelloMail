@@ -20,20 +20,7 @@ class MailList(QtWidgets.QScrollArea):
 
         self.selectedMailItem = None
         self.selectedMails = []
-
-        # self.iconsBar = QFrame(container)
-        # self.selectCheckButton = IconCheckButton(self.iconsBar, "circle_unselected.svg", "circle_selected.svg",
-        #                                          "circle_hover.svg")
-        # self.arhiveButton = IconClickButton(self.iconsBar, "archive_unselected.svg", "archive_hover.svg",
-        #                                     "archive_hover.svg")
-        # self.warningButton = IconClickButton(self.iconsBar, "warning_unselected.svg", "warning_hover.svg",
-        #                                      "warning_hover.svg")
-        # self.trashButton = IconClickButton(self.iconsBar, "trash_unselected.svg", "trash_hover.svg", "trash_hover.svg")
-        # self.unreadMailButton = IconClickButton(self.iconsBar, "mail_unread_unselected.svg", "mail_unread_hover.svg",
-        #                                         "mail_unread_hover.svg")
-        # self.readMailButton = IconClickButton(self.iconsBar, "mail_read_unselected.svg", "mail_read_hover.svg",
-        #                                       "mail_read_hover.svg")
-
+        self.mailItems = []
         self.setupUi()
 
     def setupUi(self):
@@ -74,6 +61,8 @@ class MailList(QtWidgets.QScrollArea):
         self.verticalLayout.addWidget(mailItem, 0, Qt.AlignHCenter)
         self.verticalLayout.addSpacerItem(self.spacerItem)
 
+        self.mailItems.append(mailItem)
+
         return mailItem
 
     def removeMailItem(self, mailItem):
@@ -109,6 +98,17 @@ class MailList(QtWidgets.QScrollArea):
 
     def setSettings(self, settings):
         self.settings = settings
+
+    def getSelected(self):
+        return self.selectedMailItem
+
+    def clearMailList(self):
+        for i in reversed(range(self.verticalLayout.count()-1)):
+            widget = self.verticalLayout.takeAt(i).widget()
+            if widget is not None:
+                widget.setParent(None)
+
+        self.selectedMailItem = None
 
     def notify(self):
         pass
