@@ -1,8 +1,9 @@
-from PyQt5.QtCore import Qt, QRect, QPoint
-from PyQt5.QtWidgets import QFrame
+from PyQt5.QtCore import Qt, QRect, QPoint, QSize
+from PyQt5.QtWidgets import QFrame, QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout
 
 from customWidgets.buttons.iconClickButton import IconClickButton
 from customWidgets.buttons.settingsButton import SettingsButton
+from customWidgets.settingsElement import SettingElement, CustomStyleWindow
 
 
 class SettingsPanel(QFrame):
@@ -16,13 +17,19 @@ class SettingsPanel(QFrame):
         self.settingsButton = SettingsButton(parrent)
         # self.element = SettingElement(self, 642, 251)
         self.hide()
+
+        self.scrollArea = QScrollArea(self)
+        self.scrollAreaWidgetContents = QWidget()
+        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.elementList = []
+
+
         self.setupUI()
 
     def setupUI(self):
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setGeometry(20, 20, 1400, 860)
-        # self.setStyleSheet("background-color: #146BE2;\n"
-        #                    "border-radius: 10px;")
 
         self.cancelButton.setGeometry(QRect(1346, 12, 35, 35))
         self.cancelButton.click_signal.connect(self.closeSettings)
@@ -31,6 +38,32 @@ class SettingsPanel(QFrame):
         self.settingsButton.setObjectName("settingButton")
         self.settingsButton.setGeometry(QRect(1405, 384, 188, 59))
         self.settingsButton.setWindowFlags(Qt.WindowStaysOnTopHint)
+
+        self.scrollArea.setEnabled(True)
+        self.scrollArea.setGeometry(QRect(299, 87, 1076, 751))
+        sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.scrollArea.setSizePolicy(sizePolicy)
+        self.scrollArea.setMinimumSize(QSize(422, 741))
+        self.scrollArea.setMaximumSize(QSize(422, 16777215))
+        self.scrollArea.setFrameShape(QFrame.NoFrame)
+        self.scrollArea.setLineWidth(0)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setWidgetResizable(False)
+        self.scrollArea.setAlignment(Qt.AlignCenter)
+
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 422, 911))
+
+        self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(10)
+
+        self.verticalLayout.addSpacerItem(self.spacerItem)
+
+        self.setWidget(self.scrollAreaWidgetContents)
 
     def setSettings(self, settings):
         self.settings = settings
@@ -43,6 +76,19 @@ class SettingsPanel(QFrame):
     def applyStyleSheets(self):
         if self.settings:
             self.settings.applyStylesheet(self)
+
+    def uploadCustomDesignData(self):
+        if self.settings:
+            data = self.settings.getTheme()
+            elements = data.get('elements')
+            for element in elements:
+
+
+    def addCustomStyleWindow(self, name, value):
+        self.verticalLayout.removeItem(self.spacerItem)
+
+        customStyleWindow = CustomStyleWindow(self.scrollAreaWidgetContents)
+        customStyleWindow.setObjectName("")
 
     def resizeContent(self, difSize):
         self.resize(difSize.width() + self.size().width(), difSize.height() + self.size().height())
