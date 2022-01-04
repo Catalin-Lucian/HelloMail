@@ -55,8 +55,8 @@ class CustomStyleState(QScrollArea):
         # self.scrollArea = QScrollArea(self)
         self.scrollAreaWidgetContents = QWidget(self)
 
-        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContent)
-        self.spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.elementList = []
 
@@ -73,7 +73,7 @@ class CustomStyleState(QScrollArea):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setMinimumSize(QSize(902, 39))
+        self.setMinimumSize(QSize(902, 303))
         self.setMaximumSize(QSize(902, 303))
         self.setFrameShape(QFrame.NoFrame)
         self.setLineWidth(0)
@@ -108,7 +108,7 @@ class CustomStyleState(QScrollArea):
 
         self.elementList.append(customStyleElement)
 
-        self.verticalLayout.addSpacerItem(self.spacer)
+        self.verticalLayout.addSpacerItem(self.spacerItem)
 
     def setSettings(self, settings: SettingsConfig):
         self.settings = settings
@@ -140,8 +140,8 @@ class CustomStyleWindow(QScrollArea):
         # self.scrollArea = QScrollArea(self)
         self.scrollAreaWidgetContents = QWidget(self)
 
-        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContent)
-        self.spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.elementList = []
 
@@ -151,6 +151,7 @@ class CustomStyleWindow(QScrollArea):
         self.windowName.setGeometry(QRect(0, 0, 174, 40))
         self.windowName.setObjectName("label")
 
+        self.setStyleSheet("background-color:#FFFFFF;")
         self.setEnabled(True)
         self.setGeometry(QRect(0, 0, 1076, 304))
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -158,7 +159,7 @@ class CustomStyleWindow(QScrollArea):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setMinimumSize(QSize(1076, 304))
+        self.setMinimumSize(QSize(1076, 458))
         self.setMaximumSize(QSize(1076, 458))
         self.setFrameShape(QFrame.NoFrame)
         self.setLineWidth(0)
@@ -197,12 +198,12 @@ class CustomStyleWindow(QScrollArea):
         self.verticalLayout.removeItem(self.spacerItem)
 
         customStyleState = CustomStyleState(self.scrollAreaWidgetContents)
-        customStyleState.setObjectName("settingsWindowState")
+        customStyleState.setObjectName("settingsState")
         customStyleState.setStateValue(name, value)
         customStyleState.setSettings(self.settings)
 
         self.elementList.append(customStyleState)
-        self.verticalLayout.addSpacerItem(self.spacer)
+        self.verticalLayout.addSpacerItem(self.spacerItem)
 
     def setSettings(self, settings: SettingsConfig):
         self.settings = settings
