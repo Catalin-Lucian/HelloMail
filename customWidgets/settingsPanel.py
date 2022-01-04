@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QFrame
 
 from customWidgets.buttons.iconClickButton import IconClickButton
 from customWidgets.buttons.settingsButton import SettingsButton
+from customWidgets.settingsElement import SettingElement
 
 
 class SettingsPanel(QFrame):
@@ -14,6 +15,7 @@ class SettingsPanel(QFrame):
                                             "exit_chat_selected.svg",
                                             "exit_chat_selected.svg")
         self.settingsButton = SettingsButton(parrent)
+        self.element = SettingElement(self, 642, 251)
         self.hide()
         self.setupUI()
 
@@ -24,10 +26,9 @@ class SettingsPanel(QFrame):
         #                    "border-radius: 10px;")
 
         self.cancelButton.setGeometry(QRect(1346, 12, 35, 35))
-
         self.cancelButton.click_signal.connect(self.closeSettings)
-        self.settingsButton.click_signal.connect(self.openSettings)
 
+        self.settingsButton.click_signal.connect(self.openSettings)
         self.settingsButton.setObjectName("settingButton")
         self.settingsButton.setGeometry(QRect(1405, 384, 188, 59))
         self.settingsButton.setWindowFlags(Qt.WindowStaysOnTopHint)
