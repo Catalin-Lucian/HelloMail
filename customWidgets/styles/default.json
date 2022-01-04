@@ -1,5 +1,5 @@
 {
-  "elements": ["mainWindow", "mailCover", "mailList", "mailView", "mailItem", "mailItemAvatarIcon", "iconCheckButton",
+  "elements": ["mainWindow", "mailCover", "mailList", "mailView", "mailItem", "mailItemAvatarIcon",
     "iconClickButton", "mailItemSelectButton", "mailItemCheckButton",  "searchButton", "searchInput", "settingPanel", "settingButton",
     "navigationButton", "newMessageContainer", "newMessageTextEdit", "newMessageButton", "textButton",
     "actionBar"
@@ -482,9 +482,12 @@
       "hover": []
   },
   
-  "settingsWindowState":{
+  "settingsWidget":{
     "states":["default","pressed","hover"],
-    "default": [],
+    "default": [{
+      "name":"background-color",
+      "value":"#262B32"
+    }],
       "pressed": [],
       "hover": []
   }
