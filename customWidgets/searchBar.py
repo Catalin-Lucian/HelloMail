@@ -57,6 +57,7 @@ class SearchBar(QFrame):
         self.searchInput.setFont(font)
         self.searchInput.focus_signal.connect(lambda focused: self.onFocus(focused))
         self.searchInput.enter_signal.connect(lambda: self.onSearch())
+        self.searchInput.setPlaceholderText("type here to search...")
 
     def setSettings(self, settings):
         self.settings = settings
@@ -67,7 +68,7 @@ class SearchBar(QFrame):
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
-    def applyStyleSheets(self ):
+    def applyStyleSheets(self):
         if self.settings:
             self.settings.applyStylesheet(self)
             self.settings.applyStylesheet(self.searchInput)

@@ -74,8 +74,7 @@ class HelloMail(QMainWindow):
 
     def setupUi(self):
 
-
-        self.setWindowTitle("HelloMail")
+        self.setWindowTitle("helloMail")
         self.resize(1440, 900)
         self.setMinimumSize(QtCore.QSize(1440, 900))
         self.setCentralWidget(self.centralWidget)
@@ -216,7 +215,6 @@ class HelloMail(QMainWindow):
                 selected.read()
                 mailIds.append(selected.mailData.get('id'))
             self.gmailApi.modify_labels_to_emails(mailIds, [], ['UNREAD'])
-
 
     @QtCore.pyqtSlot()
     def onSearch(self, query):
