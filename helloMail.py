@@ -55,7 +55,7 @@ class HelloMail(QMainWindow):
 
         self.newMessageDialog = NewMessageDialog(self.centralWidget)
         self.labellist = LabelList(self.centralWidget)
-
+        
         self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.setupUi()
@@ -93,6 +93,8 @@ class HelloMail(QMainWindow):
         self.mailView.setSettings(self.settings)
         self.mailView.star_check_signal.connect(lambda ch: self.onMailViewStarChecked(ch))
 
+
+
         self.navigationList.setSettings(self.settings)
         self.navigationList.label_change_signal.connect(lambda button: self.onLabelChange(button))
 
@@ -121,7 +123,7 @@ class HelloMail(QMainWindow):
         self.mailCover.setStyleSheet(self.settings.getStyleSheet("mailCover"))
 
     def addMailItemsOnStartUp(self):
-        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 6)
+        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 20)
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
