@@ -42,6 +42,7 @@ class MailItem(QtWidgets.QFrame):
 
         self.avatarIcon.setObjectName("mailItemAvatarIcon")
         self.avatarIcon.click_signal.connect(lambda: self.onAvatarIconClick())
+        self.avatarIcon.setImage(self.mailData.get('from').get('email')[0] + ".png")
 
         self.subjectLabel.setObjectName("mailItemLabel")
         self.subjectLabel.setGeometry(QtCore.QRect(98, 13, 265, 22))
@@ -72,6 +73,7 @@ class MailItem(QtWidgets.QFrame):
         self.starIcon.setObjectName("mailItemCheckButton")
         self.starIcon.setGeometry(QtCore.QRect(370, 2, 20, 20))
         self.starIcon.check_signal.connect(lambda ch: self.onStarChecked(ch))
+
 
     def translate(self):
         if self.mailData.get('subject'):

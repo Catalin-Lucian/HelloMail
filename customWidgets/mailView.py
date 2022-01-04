@@ -56,7 +56,7 @@ class MailView(QFrame):
 
 
         self.avatarIcon.setObjectName("mailViewAvatarIcon")
-        self.avatarIcon.setGeometry(QRect(30, 30, 50, 50))
+        self.avatarIcon.setGeometry(QRect(30, 30, 40, 40))
         self.avatarIcon.hide()
 
         self.senderNameLabel.setObjectName("label")
@@ -134,6 +134,7 @@ class MailView(QFrame):
         self.mailContentView.show()
         if mailData.get('body'):
             self.mailContentView.setHtml(mailData.get('body'))
+        self.avatarIcon.setImage(mailData.get('from').get('email')[0] + ".png")
         self.avatarIcon.show()
         self.senderNameLabel.setText(mailData.get('from').get('name'))
         self.senderEmailLabel.setText(mailData.get('from').get('email'))

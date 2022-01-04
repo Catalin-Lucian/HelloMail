@@ -1,7 +1,8 @@
 import logging
+import os
 import sys
 
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize, QPoint, QRect, Qt
 
@@ -55,8 +56,17 @@ class HelloMail(QMainWindow):
 
         self.newMessageDialog = NewMessageDialog(self.centralWidget)
         self.labellist = LabelList(self.centralWidget)
-        
+
         self.settingsPanel = SettingsPanel(self.centralWidget)
+
+        # logo
+        self.logoImage = QtWidgets.QLabel(self.centralWidget)
+        self.logoImage.setGeometry(QtCore.QRect(3, 40, 260, 59))
+        pixmap = QPixmap("customWidgets" + os.path.sep + "icons" + os.path.sep + "logo.png")
+        self.logoImage.setPixmap(pixmap)
+
+        # icon
+        self.setWindowIcon(QtGui.QIcon("customWidgets" + os.path.sep + "icons" + os.path.sep + "icon.png"))
 
         self.setupUi()
         self.setupStyleSheets()
@@ -93,8 +103,6 @@ class HelloMail(QMainWindow):
         self.mailView.setSettings(self.settings)
         self.mailView.star_check_signal.connect(lambda ch: self.onMailViewStarChecked(ch))
 
-
-
         self.navigationList.setSettings(self.settings)
         self.navigationList.label_change_signal.connect(lambda button: self.onLabelChange(button))
 
@@ -111,7 +119,6 @@ class HelloMail(QMainWindow):
 
         self.settingsPanel.setObjectName("settingPanel")
         self.settingsPanel.setSettings(self.settings)
-
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:

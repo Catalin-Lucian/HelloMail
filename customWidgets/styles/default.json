@@ -50,7 +50,7 @@
     "mailViewAvatarIcon": {
       "default": [{
           "name": "background-color",
-          "value": "rgb(255, 255, 255)"
+          "value": "rgba(255, 255, 255, 0)"
         },
         {
           "name": "border",
@@ -115,7 +115,7 @@
     "mailItemAvatarIcon": {
       "default": [{
           "name": "background-color",
-          "value": "rgb(255, 255, 255)"
+          "value": "rgba(255, 255, 255, 0)"
         },
         {
           "name": "border",
