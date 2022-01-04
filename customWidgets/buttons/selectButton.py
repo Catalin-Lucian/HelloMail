@@ -34,12 +34,10 @@ class SelectButton(QFrame):
     def check(self):
         self.settings.applyStylesheet(self, 'pressed')
         self.checkedFlag = True
-        self.check_signal.emit(self.checkedFlag)
 
     def uncheck(self):
         self.settings.applyStylesheet(self, 'default')
         self.checkedFlag = False
-        self.check_signal.emit(self.checkedFlag)
 
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
@@ -47,6 +45,7 @@ class SelectButton(QFrame):
                 self.uncheck()
             else:
                 self.check()
+            self.check_signal.emit(self.checkedFlag)
 
     def enterEvent(self, e: QEvent) -> None:
         if not self.checkedFlag:
