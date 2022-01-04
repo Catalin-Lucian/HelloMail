@@ -93,13 +93,6 @@ class HelloMail(QMainWindow):
         self.mailView.setSettings(self.settings)
         self.mailView.star_check_signal.connect(lambda ch: self.onMailViewStarChecked(ch))
 
-        # creare buton label
-        self.createLabel.setGeometry(53, 688, 160, 26)
-        self.createLabel.setStyleSheet("background-color: #2D3242;"
-                                       "color:#FFFFFF;"
-                                       "border-radius:10px;")
-        self.createLabel.setText("+ Create new label")
-
         self.navigationList.setSettings(self.settings)
         self.navigationList.label_change_signal.connect(lambda button: self.onLabelChange(button))
 
