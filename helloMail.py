@@ -125,7 +125,7 @@ class HelloMail(QMainWindow):
         self.mailCover.setStyleSheet(self.settings.getStyleSheet("mailCover"))
 
     def addMailItemsOnStartUp(self):
-        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 5)
+        mails_data = self.gmailApi.get_emails_by_tags(["INBOX"], 5)
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
