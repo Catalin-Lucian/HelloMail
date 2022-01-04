@@ -55,7 +55,7 @@ class HelloMail(QMainWindow):
 
         self.newMessageDialog = NewMessageDialog(self.centralWidget)
         self.labellist = LabelList(self.centralWidget)
-        
+
         self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.setupUi()
@@ -63,6 +63,7 @@ class HelloMail(QMainWindow):
         self.addMailItemsOnStartUp()
 
     def setupUi(self):
+
 
         self.setWindowTitle("HelloMail")
         self.resize(1440, 900)
@@ -93,8 +94,6 @@ class HelloMail(QMainWindow):
         self.mailView.setSettings(self.settings)
         self.mailView.star_check_signal.connect(lambda ch: self.onMailViewStarChecked(ch))
 
-
-
         self.navigationList.setSettings(self.settings)
         self.navigationList.label_change_signal.connect(lambda button: self.onLabelChange(button))
 
@@ -112,6 +111,7 @@ class HelloMail(QMainWindow):
         self.settingsPanel.setObjectName("settingPanel")
         self.settingsPanel.setSettings(self.settings)
 
+        self.labellist.setSettings(self.settings)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
