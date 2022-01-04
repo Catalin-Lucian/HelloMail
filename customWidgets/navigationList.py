@@ -68,7 +68,7 @@ class NavigationList(QWidget):
         font.setBold(True)
         font.setWeight(75)
         self.staredIcon.setFont(font)
-        self.staredIcon.setText(" Stared")
+        self.staredIcon.setText(" Starred")
         self.staredIcon.setFlat(True)
         self.staredIcon.check_signal.connect(lambda ch: self.onStared())
 
@@ -185,6 +185,9 @@ class NavigationList(QWidget):
             self.selected.uncheck()
             self.selected = self.trashIcon
             self.label_change_signal.emit(BUTTON.TRASH)
+
+    def getLabel(self):
+        return self.selected.text()
 
 
 class BUTTON:

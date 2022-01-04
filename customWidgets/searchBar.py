@@ -57,6 +57,7 @@ class SearchBar(QFrame):
         self.searchInput.setFont(font)
         self.searchInput.focus_signal.connect(lambda focused: self.onFocus(focused))
         self.searchInput.enter_signal.connect(lambda: self.onSearch())
+        self.searchInput.setPlaceholderText("type here to search...")
 
     def setSettings(self, settings):
         self.settings = settings
