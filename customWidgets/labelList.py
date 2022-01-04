@@ -1,24 +1,31 @@
 from PyQt5.QtCore import QRect, Qt, QSize
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, QLabel, QFrame
+from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, QLabel, QFrame, \
+    QPushButton
 
 from customWidgets.buttons.iconClickButton import IconClickButton
 
 
 class LabelList(QScrollArea):
-    def __init__(self, container):
+    def __init__(self, parent):
+        super(LabelList, self).__init__(parent)
+        self.myLabel = QLabel(parent)
 
-        super().__init__()
-        self.container = container
-
-        self.myLabel = QLabel(container)
-
-        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents = QWidget(self)
         self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.createLabel = QPushButton(parent)
+
         self.setupUi()
 
     def setupUi(self):
+        self.createLabel.setGeometry(56, 757, 160, 26)
+        self.createLabel.setStyleSheet("background-color: #2D3242;"
+                                       "color:#FFFFFF;"
+                                       "border-radius:10px;")
+        self.createLabel.setText("+ Create new label")
+
         self.myLabel.setGeometry(QRect(23, 512, 148, 31))
         font = QFont()
         font.setFamily("Calibri")
@@ -29,52 +36,66 @@ class LabelList(QScrollArea):
         self.myLabel.setStyleSheet("color: #FFFFFF")
 
         self.setEnabled(True)
-        self.setGeometry(QRect(23, 541, 185, 124))
+        self.setGeometry(QRect(56, 550, 185, 176))
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setMinimumSize(QSize(185, 741))
-        self.setMaximumSize(QSize(185, 16777215))
+        self.setMinimumSize(QSize(185, 176))
+        self.setMaximumSize(QSize(185, 176))
         self.setFrameShape(QFrame.NoFrame)
         self.setLineWidth(0)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWidgetResizable(False)
-        self.setAlignment(Qt.AlignCenter)
+        self.setAlignment(Qt.AlignLeft)
 
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 185, 741))
+        # self.scrollAreaWidgetContents.setStyleSheet("background-color: #FFFFFF;")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 185, 176))
 
         self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setSpacing(18)
+        self.verticalLayout.setSpacing(0)
 
         self.verticalLayout.addSpacerItem(self.spacerItem)
 
         self.setWidget(self.scrollAreaWidgetContents)
         self.setStyleSheet("color: rgba(255, 255, 255)")
 
-        self.addTagElement("aaaaaaaaaaaaaa")
-        self.addTagElement( "xxxx")
+        self.addTagElement("custom 1")
+        self.addTagElement("custom 2")
+        self.addTagElement("custom 3")
+        self.addTagElement("custom 4")
+        self.addTagElement("custom 1")
+        self.addTagElement("custom 2")
+        self.addTagElement("custom 1")
+        self.addTagElement("custom 2")
+        self.addTagElement("custom 2")
+        self.addTagElement("custom 3")
+        self.addTagElement("custom 4")
+        self.addTagElement("custom 1")
+        self.addTagElement("custom 2")
+        self.addTagElement("custom 1")
+        self.addTagElement("custom 2")
 
-    def addTagElement(self,name):
+    def addTagElement(self, name):
         self.verticalLayout.removeItem(self.spacerItem)
 
-        self.tagIcon = IconClickButton(self.scrollAreaWidgetContents, "tag.svg",
-                                         "tag.svg",
-                                         "tag.svg")
-        self.tagIcon.setPositionText(0, 0, 14, 14, name, 14)
+        self.tagButton = IconClickButton(self.scrollAreaWidgetContents, "tag.svg",
+                                       "tag.svg",
+                                       "tag.svg")
+        self.tagButton.setStyleSheet("text-align: left;")
+        self.tagButton.setGeometry(QRect(0, 0, 185, 24))
 
-        # self.tagIcon.setGeometry(QRect(0, 0, 14, 14))
-        # font = QFont()
-        # font.setFamily("Calibri")
-        # font.setPointSize(14)
-        # font.setBold(True)
-        # font.setWeight(14)
-        # self.tagIcon.setFont(font)
-        # self.tagIcon.setText(f" {name}")
-        # self.tagIcon.setFlat(True)
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.tagButton.setFont(font)
+        self.tagButton.setText(f" {name}")
+        self.tagButton.setFlat(True)
 
-        self.verticalLayout.addWidget(self.tagIcon, 0, Qt.AlignHCenter)
+        self.verticalLayout.addWidget(self.tagButton, 0, Qt.AlignLeft)
         self.verticalLayout.addSpacerItem(self.spacerItem)

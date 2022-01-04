@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets, QtGui
 
 from customWidgets.actionBar import ActionBar
+from customWidgets.labelList import LabelList
 from customWidgets.newMessageDialog import NewMessageDialog
 from customWidgets.mailList import MailList
 from customWidgets.mailView import MailView
@@ -51,9 +52,10 @@ class HelloMail(QMainWindow):
 
         self.newMessageButton = IconClickButton(self.centralWidget, "new_message.svg", "new_message.svg",
                                                 "new_message.svg")
-        self.createLabel = QPushButton(self.centralWidget)
-        self.newMessageDialog = NewMessageDialog(self.centralWidget)
 
+        self.newMessageDialog = NewMessageDialog(self.centralWidget)
+        self.labellist = LabelList(self.centralWidget)
+        
         self.settingsPanel = SettingsPanel(self.centralWidget)
 
         self.setupUi()
@@ -90,12 +92,8 @@ class HelloMail(QMainWindow):
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
 
-        # creare buton label
-        self.createLabel.setGeometry(53, 688, 160, 26)
-        self.createLabel.setStyleSheet("background-color: #2D3242;"
-                                       "color:#FFFFFF;"
-                                       "border-radius:10px;")
-        self.createLabel.setText("+ Create new label")
+
+
         self.navigation.setSettings(self.settings)
 
         self.newMessageDialog.setSettings(self.settings)
@@ -112,6 +110,7 @@ class HelloMail(QMainWindow):
         self.settingsPanel.setObjectName("settingPanel")
         self.settingsPanel.setSettings(self.settings)
 
+
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
             difH = e.size().height() - e.oldSize().height()
@@ -122,7 +121,7 @@ class HelloMail(QMainWindow):
         self.mailCover.setStyleSheet(self.settings.getStyleSheet("mailCover"))
 
     def addMailItemsOnStartUp(self):
-        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 20)
+        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 6)
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
