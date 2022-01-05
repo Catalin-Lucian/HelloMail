@@ -456,30 +456,19 @@
       "hover": []
     }
   },
-  "settingsInput": {
-    "states": ["default", "pressed", "hover"],
+  "settingsComboBox": {
+    "states": ["default"],
     "default": [{
-      "name":"color",
-      "value":"#FFFFFF"
-    }],
-    "pressed": [],
-    "hover": []
+        "name": "background-color",
+        "value": "#262A30"
+      },
+      {
+        "name": "border-radius",
+        "value": "10px"
+      }
+    ]
   },
-  "settingsElement": {
-    "states": ["default", "pressed", "hover"],
-    "default": [],
-    "pressed": [],
-    "hover": []
-  },
-
-  "settingsState": {
-    "states": ["default", "pressed", "hover"],
-    "default": [],
-    "pressed": [],
-    "hover": []
-  },
-
-  "settingsWidget": {
+  "": {
     "states": ["default", "pressed", "hover"],
     "default": [{
       "name":"background-color",
