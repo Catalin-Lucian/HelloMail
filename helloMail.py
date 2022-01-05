@@ -126,6 +126,7 @@ class HelloMail(QMainWindow):
 
         self.customLabelList.setSettings(self.settings)
         self.customLabelList.click_signal.connect(lambda label_id: self.onCustomLabel(label_id))
+        self.customLabelList.newLabelFrame.create_signal.connect(lambda name: self.onCreateNewLabel(name))
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -205,6 +206,11 @@ class HelloMail(QMainWindow):
         for mail_data in mails:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
+
+    @QtCore.pyqtSlot()
+    def onCreateNewLabel(self, name):
+        newLabel = self.gmailApi.create_custom_label(name)
+        self.customLabelList.addTagElement(newLabel)
 
     @QtCore.pyqtSlot()
     def onActionBarSignal(self, action):

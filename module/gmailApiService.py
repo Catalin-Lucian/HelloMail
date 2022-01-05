@@ -250,3 +250,12 @@ class GmailApi:
 
         except Exception as error:
             print(f"An error occurred: {error}")
+
+    def create_custom_label(self, name):
+        try:
+            created_label = self.service.users().labels().create(userId="me",  body={
+                "name": name
+            }).execute()
+            return  created_label
+        except Exception as error:
+            print(f"An error occurred: {error}")

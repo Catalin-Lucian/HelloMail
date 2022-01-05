@@ -24,18 +24,22 @@ class NewLabelFrame(QFrame):
         self.setupUI()
 
     def setupUI(self):
-        self.setGeometry(QRect(56, 730, 185, 123))
+        self.setGeometry(QRect(45, 730, 185, 110))
         self.setObjectName("newMessageContainer")
 
-        self.nameLabelEdit.setGeometry(QRect(9, 34, 163, 21))
+        self.nameLabelEdit.setGeometry(QRect(11, 34, 163, 21))
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.nameLabelEdit.setFont(font)
         self.nameLabelEdit.setObjectName("newMessageTextEdit")
         self.nameLabelEdit.setPlaceholderText("New Label Name")
 
         self.createButton.setText("Create")
-        self.createButton.setGeometry(QRect(9, 68, 163, 21))
-        self.createButton.setStyleSheet("background-color: #146BE2;"
-                                        "color: #FFFFFF;"
-                                        "border-radius: 10px;")
+        self.createButton.setGeometry(QRect(11, 68, 163, 21))
+        self.createButton.setObjectName("newMessageButton")
 
         self.createButton.click_signal.connect(lambda: self.onClickAction())
 

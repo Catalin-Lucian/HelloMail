@@ -41,6 +41,7 @@ class LabelList(QScrollArea):
                                        "color:#FFFFFF;"
                                        "border-radius:10px;")
         self.createLabel.setText("+ Create new label")
+        self.createLabel.click_signal.connect(lambda: self.createLabelShow())
 
         self.myLabel.setGeometry(QRect(23, 512, 148, 31))
         font = QFont()
@@ -79,9 +80,7 @@ class LabelList(QScrollArea):
         self.setWidget(self.scrollAreaWidgetContents)
         self.setStyleSheet("color: rgba(255, 255, 255)")
 
-        self.createLabel.click_signal.connect(lambda: self.createLabelShow())
-
-        self.newLabelFrame.create_signal.connect(lambda name: self.addTagElement(name))
+        # self.newLabelFrame.create_signal.connect(lambda name: self.addTagElement(name))
 
     def addTagElement(self, label):
         name = label.get('name')
@@ -97,11 +96,11 @@ class LabelList(QScrollArea):
 
             font = QFont()
             font.setFamily("Calibri")
-            font.setPointSize(16)
+            font.setPointSize(14)
             font.setBold(True)
             font.setWeight(75)
             tagButton.setFont(font)
-            tagButton.setText(name)
+            tagButton.setText(f" {name}")
             tagButton.setFlat(True)
             tagButton.setSettings(self.settings)
             tagButton.check_signal.connect(lambda check: self.onCheckButton(tagButton, id_label))

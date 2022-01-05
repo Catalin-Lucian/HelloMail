@@ -1,5 +1,5 @@
 {
-  "elements": ["mainWindow", "mailCover", "mailList", "mailView", "mailItem", "mailItemAvatarIcon", 
+  "elements": ["mainWindow", "mailCover", "mailList", "mailView", "mailItem", "mailItemAvatarIcon",
     "iconClickButton", "mailItemSelectButton", "mailItemCheckButton", "searchButton", "searchInput", "settingPanel", "settingButton",
     "navigationButton", "newMessageContainer", "newMessageTextEdit", "newMessageButton", "textButton",
     "actionBar"
@@ -378,8 +378,12 @@
       "states": ["default"],
       "default": [{
           "name": "background-color",
-          "value": "#929497"
+          "value": "#3B4350"
 
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
         },
         {
           "name": "border-radius",
@@ -389,9 +393,32 @@
     },
     "newMessageButton": {
       "states": ["default", "pressed", "hover"],
-      "default": [],
+      "default": [{
+          "name": "background-color",
+          "value": "#146BE2"
+        },
+        {
+          "name":"color",
+          "value":"#FFFFFF"
+        },
+        {
+          "name":"border-radius",
+          "value":"10px"
+        }
+      ],
       "pressed": [],
-      "hover": []
+      "hover": [{
+        "name": "background-color",
+        "value": "#953bba"
+      },
+      {
+        "name":"color",
+        "value":"#0"
+      },
+      {
+        "name":"border-radius",
+        "value":"10px"
+      }]
     },
     "textButton": {
       "states": ["default", "pressed", "hover"],
@@ -459,8 +486,8 @@
   "settingsInput": {
     "states": ["default", "pressed", "hover"],
     "default": [{
-      "name":"color",
-      "value":"#FFFFFF"
+      "name": "color",
+      "value": "#FFFFFF"
     }],
     "pressed": [],
     "hover": []
@@ -482,8 +509,8 @@
   "settingsWidget": {
     "states": ["default", "pressed", "hover"],
     "default": [{
-      "name":"background-color",
-      "value":"#1D5C2B"
+      "name": "background-color",
+      "value": "#1D5C2B"
     }],
     "pressed": [],
     "hover": []
