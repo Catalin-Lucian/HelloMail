@@ -232,3 +232,12 @@ class GmailApi:
             }).execute()
         except Exception as error:
             print(f"An error occurred: {error}")
+
+    def delete_emails(self, emails_ids):
+        try:
+            self.service.users().messages().batchDelete(userId="me", body={
+                'ids': emails_ids
+            }).execute()
+        except Exception as error:
+            print(f"An error occurred: {error}")
+

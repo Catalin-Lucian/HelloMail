@@ -203,6 +203,8 @@ class HelloMail(QMainWindow):
                     self.mailView.hideMail()
                 selected.unread()
                 mailIds.append(selected.mailData.get('id'))
+            self.mailList.clearSelectedList()
+            self.actionBar.setCheckButton(False)
             self.gmailApi.modify_labels_to_emails(mailIds, ['UNREAD'], [])
         elif action == ACTION.READ_FLAG:
             mailIds = []
@@ -214,7 +216,52 @@ class HelloMail(QMainWindow):
                     self.mailView.hideMail()
                 selected.read()
                 mailIds.append(selected.mailData.get('id'))
+            self.mailList.clearSelectedList()
+            self.actionBar.setCheckButton(False)
             self.gmailApi.modify_labels_to_emails(mailIds, [], ['UNREAD'])
+        elif action == ACTION.TRASH_FLAG:
+            mailIds = []
+            selectedMails = self.mailList.getSelectedMails()
+            selectedMail = self.mailList.getSelected()
+            for selected in selectedMails:
+                if selectedMail and selected == selectedMail:
+                    selectedMail.deselect()
+                    self.mailView.hideMail()
+                self.mailList.removeMailItem(selected)
+                mailIds.append(selected.mailData.get('id'))
+            if self.navigationList.getLabel().replace(" ", "").upper() == "TRASH" or \
+                    self.navigationList.getLabel().replace(" ", "").upper() == "SPAM":
+                self.gmailApi.delete_emails(mailIds)
+            else:
+                self.actionBar.setCheckButton(False)
+                self.gmailApi.modify_labels_to_emails(mailIds, ['TRASH'], ['INBOX', 'STARRED', 'SPAM'])
+            self.mailList.clearSelectedList()
+        elif action == ACTION.ARCHIVE_FLAG:
+            mailIds = []
+            selectedMails = self.mailList.getSelectedMails()
+            selectedMail = self.mailList.getSelected()
+            for selected in selectedMails:
+                if selectedMail and selected == selectedMail:
+                    selectedMail.deselect()
+                    self.mailView.hideMail()
+                self.mailList.removeMailItem(selected)
+                mailIds.append(selected.mailData.get('id'))
+            self.mailList.clearSelectedList()
+            self.actionBar.setCheckButton(False)
+            self.gmailApi.modify_labels_to_emails(mailIds, [], ['INBOX'])
+        elif action == ACTION.WARNING_FLAG:
+            mailIds = []
+            selectedMails = self.mailList.getSelectedMails()
+            selectedMail = self.mailList.getSelected()
+            for selected in selectedMails:
+                if selectedMail and selected == selectedMail:
+                    selectedMail.deselect()
+                    self.mailView.hideMail()
+                self.mailList.removeMailItem(selected)
+                mailIds.append(selected.mailData.get('id'))
+            self.mailList.clearSelectedList()
+            self.actionBar.setCheckButton(False)
+            self.gmailApi.modify_labels_to_emails(mailIds, ['SPAM'], ['INBOX'])
 
     @QtCore.pyqtSlot()
     def onSearch(self, query):

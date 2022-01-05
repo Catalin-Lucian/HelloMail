@@ -113,8 +113,10 @@ class MailList(QtWidgets.QScrollArea):
             widget = self.verticalLayout.takeAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
-
         self.selectedMailItem = None
+
+    def clearSelectedList(self):
+        self.selectedMails.clear()
 
     def notify(self):
         pass
