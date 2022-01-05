@@ -55,7 +55,7 @@ class HelloMail(QMainWindow):
                                                 "new_message.svg")
 
         self.newMessageDialog = NewMessageDialog(self.centralWidget)
-        self.labellist = LabelList(self.centralWidget)
+        self.customLabelList = LabelList(self.centralWidget)
 
         self.settingsPanel = SettingsPanel(self.centralWidget)
 
@@ -72,6 +72,7 @@ class HelloMail(QMainWindow):
         self.setupUi()
         self.setupStyleSheets()
         self.addMailItemsOnStartUp()
+        self.addCustomLabels()
 
     def setupUi(self):
 
@@ -123,7 +124,7 @@ class HelloMail(QMainWindow):
         self.settingsPanel.setObjectName("settingPanel")
         self.settingsPanel.setSettings(self.settings)
 
-        self.labellist.setSettings(self.settings)
+        self.customLabelList.setSettings(self.settings)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -139,6 +140,11 @@ class HelloMail(QMainWindow):
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
+
+    def addCustomLabels(self):
+        labels = self.gmailApi.get_custom_labels()
+        for label in labels:
+            self.customLabelList.addTagElement(label)
 
     @QtCore.pyqtSlot()
     def onMailItemStarChecked(self, checked, mailItem):

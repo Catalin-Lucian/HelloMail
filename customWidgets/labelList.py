@@ -10,7 +10,7 @@ from module.settingsConfig import SettingsConfig
 
 
 class LabelList(QScrollArea):
-    click_signal = pyqtSignal(QFrame)
+    click_signal = pyqtSignal(str)
 
     def __init__(self, parent):
         super(LabelList, self).__init__(parent)
@@ -27,6 +27,8 @@ class LabelList(QScrollArea):
         self.createLabel = IconClickButton(parent)
 
         self.newLabelFrame = NewLabelFrame(parent)
+        self.nameLabelList = []
+
         self.setupUi()
 
     def setupUi(self):
@@ -38,7 +40,6 @@ class LabelList(QScrollArea):
                                        "color:#FFFFFF;"
                                        "border-radius:10px;")
         self.createLabel.setText("+ Create new label")
-
 
         self.myLabel.setGeometry(QRect(23, 512, 148, 31))
         font = QFont()
@@ -77,46 +78,41 @@ class LabelList(QScrollArea):
         self.setWidget(self.scrollAreaWidgetContents)
         self.setStyleSheet("color: rgba(255, 255, 255)")
 
-        self.addTagElement("custom 1")
-        self.addTagElement("custom 2")
-
         self.createLabel.click_signal.connect(lambda: self.createLabelShow())
 
         self.newLabelFrame.create_signal.connect(lambda name: self.addTagElement(name))
 
-    def addTagElement(self, name):
-        self.verticalLayout.removeItem(self.spacerItem)
+    def addTagElement(self, label):
+        name = label.get('name')
 
-        tagButton = IconCheckButton(self.scrollAreaWidgetContents, "tag.svg",
-                                         "tag.svg",
-                                         "tag.svg")
+        if name not in self.nameLabelList:
+            self.nameLabelList.append(name)
 
-        tagButton.setObjectName("navigationButton")
+            self.verticalLayout.removeItem(self.spacerItem)
 
-        tagButton.setStyleSheet("text-align: left;")
-        tagButton.setGeometry(QRect(0, 0, 185, 24))
+            tagButton = IconCheckButton(self.scrollAreaWidgetContents, "tag.svg", "tag.svg", "tag.svg")
+            tagButton.setObjectName("navigationButton")
+            tagButton.setStyleSheet("text-align: left;")
+            tagButton.setGeometry(QRect(0, 0, 185, 24))
 
-        font = QFont()
-        font.setFamily("Calibri")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        tagButton.setFont(font)
-        tagButton.setText(f" {name}")
-        tagButton.setFlat(True)
+            font = QFont()
+            font.setFamily("Calibri")
+            font.setPointSize(16)
+            font.setBold(True)
+            font.setWeight(75)
+            tagButton.setFont(font)
+            tagButton.setText(name)
+            tagButton.setFlat(True)
+            tagButton.setObjectName("navigationButton")
 
-        tagButton.setObjectName("navigationButton")
+            self.verticalLayout.addWidget(tagButton, 0, Qt.AlignLeft)
+            self.tagList.append(tagButton)
+            self.verticalLayout.addSpacerItem(self.spacerItem)
 
+            self.setSettings(self.settings)
 
-        self.verticalLayout.addWidget(tagButton, 0, Qt.AlignLeft)
-        self.tagList.append(tagButton)
-        self.verticalLayout.addSpacerItem(self.spacerItem)
-
-        self.setSettings(self.settings)
     def createLabelShow(self):
         self.newLabelFrame.show()
-
-
 
     def setSettings(self, settings: SettingsConfig):
         self.settings = settings

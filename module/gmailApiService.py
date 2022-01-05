@@ -241,3 +241,12 @@ class GmailApi:
         except Exception as error:
             print(f"An error occurred: {error}")
 
+    def get_custom_labels(self):
+        try:
+            response = self.service.users().labels().list(userid="me")
+            labels = response.get('labels')
+            if labels:
+                return [label for label in labels if label.get('type') == 'user']
+
+        except Exception as error:
+            print(f"An error occurred: {error}")
