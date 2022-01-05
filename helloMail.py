@@ -62,6 +62,7 @@ class HelloMail(QMainWindow):
         # logo
         self.logoImage = QtWidgets.QLabel(self.centralWidget)
         self.logoImage.setGeometry(QtCore.QRect(3, 40, 260, 59))
+        self.logoImage.setStyleSheet("border-radius:10px")
         pixmap = QPixmap("customWidgets" + os.path.sep + "icons" + os.path.sep + "logo.png")
         self.logoImage.setPixmap(pixmap)
 

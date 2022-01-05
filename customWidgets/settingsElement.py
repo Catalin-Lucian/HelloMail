@@ -15,6 +15,8 @@ class CustomStyleElement(QFrame):
         self.setupUI()
 
     def setupUI(self):
+        self.setGeometry(0, 0, 777, 39)
+
         self.elementName.setGeometry(QRect(0, 0, 218, 39))
         # setare font
         self.elementName.setObjectName("settingsInput")
@@ -168,7 +170,7 @@ class CustomStyleWindow(QScrollArea):
         self.setWidgetResizable(False)
         self.setAlignment(Qt.AlignCenter)
 
-        self.scrollAreaWidgetContents.setGeometry(QRect(125, 0, 777, 115))
+        self.scrollAreaWidgetContents.setGeometry(QRect(174, 0, 902, 369))
 
         self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)

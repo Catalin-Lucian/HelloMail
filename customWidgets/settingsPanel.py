@@ -30,8 +30,6 @@ class SettingsPanel(QFrame):
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setGeometry(20, 20, 1400, 860)
 
-
-
         self.cancelButton.setGeometry(QRect(1346, 12, 35, 35))
         self.cancelButton.click_signal.connect(self.closeSettings)
 
@@ -49,7 +47,7 @@ class SettingsPanel(QFrame):
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.scrollArea.setSizePolicy(sizePolicy)
         self.scrollArea.setMinimumSize(QSize(1076, 751))
-        self.scrollArea.setMaximumSize(QSize(1076, 16777215))
+        self.scrollArea.setMaximumSize(QSize(1076, 751))
         self.scrollArea.setFrameShape(QFrame.NoFrame)
         self.scrollArea.setLineWidth(0)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -80,15 +78,12 @@ class SettingsPanel(QFrame):
             self.settings.applyStylesheet(self)
 
     def uploadCustomDesignData(self):
-        # if self.settings:
-        #     data = self.settings.getTheme()
-        #     elements = data.get('elements')
-        #     for element in elements:
-        #         elementValue = data.get("values").get(element)
-        #         self.addCustomStyleWindow(element, elementValue)
-
-        pass
-
+        if self.settings:
+            data = self.settings.getTheme()
+            elements = data.get('elements')
+            for element in elements:
+                elementValue = data.get("values").get(element)
+                self.addCustomStyleWindow(element, elementValue)
 
     def addCustomStyleWindow(self, name, value):
         self.verticalLayout.removeItem(self.spacerItem)

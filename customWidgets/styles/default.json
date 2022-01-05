@@ -458,7 +458,10 @@
   },
   "settingsInput": {
     "states": ["default", "pressed", "hover"],
-    "default": [],
+    "default": [{
+      "name":"color",
+      "value":"#FFFFFF"
+    }],
     "pressed": [],
     "hover": []
   },
@@ -476,9 +479,12 @@
     "hover": []
   },
 
-  "settingsWindowState": {
+  "settingsWidget": {
     "states": ["default", "pressed", "hover"],
-    "default": [],
+    "default": [{
+      "name":"background-color",
+      "value":"#1D5C2B"
+    }],
     "pressed": [],
     "hover": []
   }
