@@ -1,16 +1,25 @@
 import json
 import logging
 
+from PyQt5.QtCore import pyqtSignal
+
+from customWidgets.settingsPanel import SettingsPanel
+
 
 class SettingsConfig:
+
     def __init__(self):
         self.subs = []
-        self.theme = self.initTheme("default.json")
+        self.theme = self.initTheme("default")
 
     def initTheme(self, filename):
-        with open(f"customWidgets/styles/{filename}") as file_object:
+        with open(f"customWidgets/styles/{filename}.json") as file_object:
             # store file data in object
             return json.load(file_object)
+
+    def setTheme(self, newTheme):
+        self.theme = self.initTheme(newTheme)
+        self.notify()
 
     def getThemeValues(self, element):
         if self.theme:

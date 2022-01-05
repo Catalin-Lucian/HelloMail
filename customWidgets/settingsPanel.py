@@ -12,13 +12,14 @@ from PyQt5.QtWidgets import QFrame, QScrollArea, QWidget, QVBoxLayout, QSpacerIt
 from customWidgets.buttons.iconClickButton import IconClickButton
 from customWidgets.buttons.settingsButton import SettingsButton
 from customWidgets.jsonViewer import JsonModel
+from module import settingsConfig
 
 
 class SettingsPanel(QFrame):
 
     def __init__(self, parent):
         super(SettingsPanel, self).__init__(parent)
-        self.settings = None
+        self.settings: settingsConfig = None
         self.cancelButton = IconClickButton(self, "exit_chat_unselected.svg",
                                             "exit_chat_selected.svg",
                                             "exit_chat_selected.svg")
@@ -133,6 +134,12 @@ class SettingsPanel(QFrame):
         self.applyButton.setGeometry(QRect(402, 774, 78, 29))
         self.applyButton.setText("Apply")
         self.applyButton.setObjectName("saveButton")
+        self.applyButton.click_signal.connect(lambda: self.onApplyButton())
+
+    def onApplyButton(self):
+        if self.settings:
+            themeName = self.themeSelect.currentText()
+            self.settings.setTheme(themeName)
 
     def setSettings(self, settings):
         self.settings = settings
