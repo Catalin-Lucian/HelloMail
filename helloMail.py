@@ -125,6 +125,7 @@ class HelloMail(QMainWindow):
         self.settingsPanel.setSettings(self.settings)
 
         self.customLabelList.setSettings(self.settings)
+        self.customLabelList.click_signal.connect(lambda label_id: self.onCustomLabel(label_id))
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -136,7 +137,7 @@ class HelloMail(QMainWindow):
         self.mailCover.setStyleSheet(self.settings.getStyleSheet("mailCover"))
 
     def addMailItemsOnStartUp(self):
-        mails_data = self.gmailApi.get_emails_by_tags(["INBOX"], 5)
+        mails_data = self.gmailApi.get_emails_by_tags(["INBOX"], 20)
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
@@ -178,6 +179,7 @@ class HelloMail(QMainWindow):
         mails = None
         self.mailView.hideMail()
         self.mailList.clearMailList()
+        self.customLabelList.deselect()
         if label == BUTTON.INBOX:
             mails = self.gmailApi.get_emails_by_tags(['INBOX'], 20)
         elif label == BUTTON.STARRED:
@@ -190,6 +192,16 @@ class HelloMail(QMainWindow):
             mails = self.gmailApi.get_emails_by_tags(['DRAFT'], 20)
         elif label == BUTTON.TRASH:
             mails = self.gmailApi.get_emails_by_tags(['TRASH'], 20)
+        for mail_data in mails:
+            mailItem = self.mailList.addMailItem(mail_data)
+            mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
+
+    @QtCore.pyqtSlot()
+    def onCustomLabel(self, label_id):
+        self.mailView.hideMail()
+        self.mailList.clearMailList()
+        self.navigationList.deselect()
+        mails = self.gmailApi.get_emails_by_tags([label_id], 20)
         for mail_data in mails:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))

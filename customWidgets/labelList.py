@@ -17,6 +17,7 @@ class LabelList(QScrollArea):
         self.settings = None
 
         self.tagList = []
+        self.selected = None
 
         self.myLabel = QLabel(parent)
 
@@ -84,7 +85,7 @@ class LabelList(QScrollArea):
 
     def addTagElement(self, label):
         name = label.get('name')
-
+        id_label = label.get('id')
         if name not in self.nameLabelList:
             self.nameLabelList.append(name)
 
@@ -92,8 +93,7 @@ class LabelList(QScrollArea):
 
             tagButton = IconCheckButton(self.scrollAreaWidgetContents, "tag.svg", "tag.svg", "tag.svg")
             tagButton.setObjectName("navigationButton")
-            tagButton.setStyleSheet("text-align: left;")
-            tagButton.setGeometry(QRect(0, 0, 185, 24))
+            tagButton.setGeometry(QRect(0, 0, 200, 24))
 
             font = QFont()
             font.setFamily("Calibri")
@@ -103,13 +103,24 @@ class LabelList(QScrollArea):
             tagButton.setFont(font)
             tagButton.setText(name)
             tagButton.setFlat(True)
-            tagButton.setObjectName("navigationButton")
+            tagButton.setSettings(self.settings)
+            tagButton.check_signal.connect(lambda check: self.onCheckButton(tagButton, id_label))
 
             self.verticalLayout.addWidget(tagButton, 0, Qt.AlignLeft)
             self.tagList.append(tagButton)
             self.verticalLayout.addSpacerItem(self.spacerItem)
 
-            self.setSettings(self.settings)
+    def onCheckButton(self, button, id_label):
+        if self.selected:
+            self.selected.uncheck()
+        button.check()
+        self.selected = button
+        self.click_signal.emit(id_label)
+
+    def deselect(self):
+        if self.selected:
+            self.selected.uncheck()
+        self.selected = None
 
     def createLabelShow(self):
         self.newLabelFrame.show()

@@ -243,7 +243,7 @@ class GmailApi:
 
     def get_custom_labels(self):
         try:
-            response = self.service.users().labels().list(userid="me")
+            response = self.service.users().labels().list(userId="me").execute()
             labels = response.get('labels')
             if labels:
                 return [label for label in labels if label.get('type') == 'user']

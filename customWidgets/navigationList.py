@@ -189,6 +189,11 @@ class NavigationList(QWidget):
     def getLabel(self):
         return self.selected.text()
 
+    def deselect(self):
+        if self.selected:
+            self.selected.uncheck()
+        self.selected = None
+
 
 class BUTTON:
     INBOX = 0
