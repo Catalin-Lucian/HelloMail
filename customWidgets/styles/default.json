@@ -1,26 +1,30 @@
 {
   "elements": ["mainWindow", "mailCover", "mailList", "mailView", "mailItem", "mailItemAvatarIcon", "iconCheckButton",
-    "iconClickButton", "mailItemSelectButton", "mailItemCheckButton",  "searchButton", "searchInput", "settingPanel", "settingButton",
+    "iconClickButton", "mailItemSelectButton", "mailItemCheckButton", "searchButton", "searchInput", "settingPanel", "settingButton",
     "navigationButton", "newMessageContainer", "newMessageTextEdit", "newMessageButton", "textButton",
     "actionBar"
   ],
   "values": {
     "mainWindow": {
+      "states": ["default"],
       "default": [{
         "name": "background-color",
         "value": "rgb(24, 29, 35)"
       }]
     },
     "mailCover": {
+      "states": ["default"],
       "default": [{
         "name": "background-color",
         "value": "qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.4 rgba(24, 29, 35, 255), stop:1 rgba(255, 255, 255, 0))"
       }]
     },
     "mailList": {
+      "states": ["default"],
       "default": []
     },
     "mailView": {
+      "states": ["default"],
       "default": [{
           "name": "background-color",
           "value": "rgb(59, 67, 80)"
@@ -32,6 +36,7 @@
       ]
     },
     "mailContentView": {
+      "states": ["default"],
       "default": [{
           "name": "border-color",
           "value": "rgb(58, 110, 255)"
@@ -48,6 +53,7 @@
       ]
     },
     "mailViewAvatarIcon": {
+      "states": ["default"],
       "default": [{
           "name": "background-color",
           "value": "rgb(255, 255, 255)"
@@ -63,6 +69,7 @@
       ]
     },
     "label": {
+      "states": ["default"],
       "default": [{
           "name": "background-color",
           "value": "rgba(0, 0, 0, 0)"
@@ -75,6 +82,7 @@
     },
 
     "mailItem": {
+      "states": ["default", "default_deep", "pressed", "hover"],
       "default": [{
           "name": "background-color",
           "value": " qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(45, 50, 66, 255),stop:1 rgba(34, 38, 49, 255))"
@@ -113,6 +121,7 @@
       ]
     },
     "mailItemAvatarIcon": {
+      "states": ["default"],
       "default": [{
           "name": "background-color",
           "value": "rgb(255, 255, 255)"
@@ -128,6 +137,7 @@
       ]
     },
     "mailItemLabel": {
+      "states": ["default", "default_deep", "pressed", "hover"],
       "default": [{
           "name": "background-color",
           "value": "rgba(255, 255, 255, 0)"
@@ -150,6 +160,7 @@
       "hover": []
     },
     "mailItemSelectButton": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "background-color",
           "value": "rgba(255, 255, 255, 0)"
@@ -191,6 +202,7 @@
       ]
     },
     "mailItemCheckButton": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
         "name": "background-color",
         "value": "rgba(255, 255, 255, 0)"
@@ -205,6 +217,7 @@
       }]
     },
     "iconClickButton": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
         "name": "background-color",
         "value": "rgba(255, 255, 255, 0)"
@@ -219,6 +232,7 @@
       }]
     },
     "searchBar": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "background-color",
           "value": "rgba(59, 67, 80, 255)"
@@ -252,11 +266,13 @@
       ]
     },
     "searchButton": {
+      "states": ["default", "pressed", "hover"],
       "default": [],
       "pressed": [],
       "hover": []
     },
     "searchInput": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "color",
           "value": "#FFFFFF"
@@ -273,19 +289,21 @@
       "hover": []
     },
     "settingPanel": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "background-color",
           "value": "#146BE2"
         },
         {
-          "name":"border-radius",
-          "value":"10px"
+          "name": "border-radius",
+          "value": "10px"
         }
       ],
       "pressed": [],
       "hover": []
     },
     "settingButton": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "background-color",
           "value": "rgba(20, 107, 226, 255)"
@@ -310,12 +328,8 @@
       "pressed": [],
       "hover": []
     },
-    "": {
-      "default": [],
-      "pressed": [],
-      "hover": []
-    },
     "navigationButton": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "background-color",
           "value": "rgba(255, 255, 255, 0)"
@@ -349,6 +363,7 @@
       ]
     },
     "newMessageContainer": {
+      "states": ["default"],
       "default": [{
           "name": "background-color",
           "value": "#262A30"
@@ -360,6 +375,7 @@
       ]
     },
     "newMessageTextEdit": {
+      "states": ["default"],
       "default": [{
           "name": "background-color",
           "value": "#929497"
@@ -372,11 +388,13 @@
       ]
     },
     "newMessageButton": {
+      "states": ["default", "pressed", "hover"],
       "default": [],
       "pressed": [],
       "hover": []
     },
     "textButton": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "background-color",
           "value": "#146BE2"
@@ -418,6 +436,7 @@
       ]
     },
     "actionBar": {
+      "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "background-color",
           "value": "rgba(196, 196, 196, 0.08)"
@@ -431,9 +450,37 @@
       "hover": []
     },
     "actionButton": {
+      "states": ["default", "pressed", "hover"],
       "default": [],
       "pressed": [],
       "hover": []
     }
+  },
+  "settingsInput": {
+    "states": ["default", "pressed", "hover"],
+    "default": [],
+    "pressed": [],
+    "hover": []
+  },
+  "settingsElement": {
+    "states": ["default", "pressed", "hover"],
+    "default": [],
+    "pressed": [],
+    "hover": []
+  },
+
+  "settingsState": {
+    "states": ["default", "pressed", "hover"],
+    "default": [],
+    "pressed": [],
+    "hover": []
+  },
+
+  "settingsWindowState": {
+    "states": ["default", "pressed", "hover"],
+    "default": [],
+    "pressed": [],
+    "hover": []
   }
+
 }
