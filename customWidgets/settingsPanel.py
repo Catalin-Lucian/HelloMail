@@ -7,7 +7,7 @@ from shlex import join
 from PyQt5.QtCore import Qt, QRect, QPoint, QSize, QFileInfo
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QFrame, QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, QComboBox, \
-    QLabel, QTextEdit, QTreeView, QHeaderView
+    QLabel, QTextEdit, QTreeView, QHeaderView, QLineEdit
 
 from customWidgets.buttons.iconClickButton import IconClickButton
 from customWidgets.buttons.settingsButton import SettingsButton
@@ -37,7 +37,12 @@ class SettingsPanel(QFrame):
         self.view = QTreeView(self)
         self.model = JsonModel(self)
 
-        self.view
+        self.saveButton = IconClickButton(self)
+
+        self.nameFileEdit = QLineEdit(self)
+
+        # self.successLabelInfo = QLabel(self)
+        self.applyButton = IconClickButton(self)
 
         self.hide()
 
@@ -116,11 +121,27 @@ class SettingsPanel(QFrame):
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
 
+        self.saveButton.setGeometry(QRect(508, 774, 78, 29))
+        self.saveButton.setText("Save")
+        self.saveButton.setObjectName("saveButton")
+        self.saveButton.click_signal.connect(lambda: self.saveJson())
+
+        self.nameFileEdit.setGeometry(QRect(64, 774, 232, 29))
+        self.nameFileEdit.setPlaceholderText("New File Name")
+        self.nameFileEdit.setObjectName("saveButton")
+
+        self.applyButton.setGeometry(QRect(402, 774, 78, 29))
+        self.applyButton.setText("Apply")
+        self.applyButton.setObjectName("saveButton")
+
+
+
     def setSettings(self, settings):
         self.settings = settings
         if settings:
             settings.subscribe(self)
             self.cancelButton.setSettings(settings)
+            self.saveButton.setSettings(settings)
             self.settingsButton.setSettings(settings)
             self.applyStyleSheets()
 
@@ -133,8 +154,10 @@ class SettingsPanel(QFrame):
             self.settings.applyStylesheet(self.languageSelect)
             self.settings.applyStylesheet(self.themeSelect)
             self.settings.applyStylesheet(self.view)
+            self.settings.applyStylesheet(self.nameFileEdit)
             # self.settings.applyStylesheet(self.customEdit)
             self.settings.applyStylesheet(self.titleText)
+            self.settings.applyStylesheet(self.applyButton)
 
     def resizeContent(self, difSize):
         self.resize(difSize.width() + self.size().width(), difSize.height() + self.size().height())
@@ -173,4 +196,10 @@ class SettingsPanel(QFrame):
         self.view.setObjectName("settingsComboBox")
 
 
-        # os.path.abspath(os.getcwd()
+    def saveJson(self):
+        if self.nameFileEdit.text() != "":
+            print(QFileInfo(__file__).absoluteDir().filePath("styles/"+self.nameFileEdit.text()+".json"))
+            f = open(str(QFileInfo(__file__).absoluteDir().filePath("styles/"+self.nameFileEdit.text()+".json")), 'w+')
+            json.dump(self.model.to_json(), f)
+
+
