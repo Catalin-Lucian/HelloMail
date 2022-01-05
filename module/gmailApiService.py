@@ -64,71 +64,26 @@ class GmailApi:
             os.remove(os.path.join(working_dir, token_dir, pickle_file))
             self.service = None
 
-    def add_attachment(self, message, filename):
-        content_type, encoding = guess_mime_type(filename)
-        if content_type is None or encoding is not None:
-            content_type = 'application/octet-stream'
-        main_type, sub_type = content_type.split('/', 1)
-        if main_type == 'text':
-            fp = open(filename, 'rb')
-            msg = MIMEText(fp.read().decode(), _subtype=sub_type)
-            fp.close()
-        elif main_type == 'image':
-            fp = open(filename, 'rb')
-            msg = MIMEImage(fp.read(), _subtype=sub_type)
-            fp.close()
-        elif main_type == 'audio':
-            fp = open(filename, 'rb')
-            msg = MIMEAudio(fp.read(), _subtype=sub_type)
-            fp.close()
-        else:
-            fp = open(filename, 'rb')
-            msg = MIMEBase(main_type, sub_type)
-            msg.set_payload(fp.read())
-            fp.close()
-        filename = os.path.basename(filename)
-        msg.add_header('Content-Disposition', 'attachment', filename=filename)
-        message.attach(msg)
-
-    def build_message(self, our_email, destination, subject, body, attachments=[]):
-        if not attachments:  # no attachments given
-            message = MIMEText(body)
-            message['to'] = destination
-            message['from'] = our_email
-            message['subject'] = subject
-        else:
-            message = MIMEMultipart()
-            message['to'] = destination
-            message['from'] = our_email
-            message['subject'] = subject
-            message.attach(MIMEText(body))
-            for filename in attachments:
-                self.add_attachment(message, filename)
-        return {'raw': urlsafe_b64encode(message.as_bytes()).decode()}
-
-    def send_message(self, our_email, destination, subject, body, attachments=[]):
-        return self.service.users().messages().send(
-            userId="me",
-            body=self.build_message(our_email, destination, subject, body, attachments)
-        ).execute()
-
-    def search_messages(self, query):
-        result = self.service.users().messages().list(userId='me', q=query).execute()
-        print(result)
+    def search_messages(self, query, maxResults):
+        result = self.service.users().messages().list(userId='me', q=query, maxResults=maxResults).execute()
         messages = []
         if 'messages' in result:
             messages.extend(result['messages'])
-        while 'nextPageToken' in result:
-            page_token = result['nextPageToken']
-            result = self.service.users().messages().list(userId='me', q=query, pageToken=page_token).execute()
-            if 'messages' in result:
-                messages.extend(result['messages'])
-        return messages
+        # while 'nextPageToken' in result:
+        #     page_token = result['nextPageToken']
+        #     result = self.service.users().messages().list(userId='me', q=query, pageToken=page_token).execute()
+        #     if 'messages' in result:
+        #         messages.extend(result['messages'])
+        resultEmails = []
+        for email in messages:
+            email = self.service.users().messages().get(userId="me", id=email["id"], format='full').execute()
+            resultEmail = self.process_email(email)
+            resultEmails.append(resultEmail)
+        return resultEmails
 
     def getAllLabels(self):
         return self.service.users().labels().list(userId="me").execute()
 
-    # ------------------------------------------------------------------------------------------
     def download_attachment(self, attachment_id, message_id):
         attachment = self.service.users().messages() \
             .attachments().get(id=attachment_id, userId='me', messageId=message_id).execute()
@@ -253,9 +208,57 @@ class GmailApi:
 
     def create_custom_label(self, name):
         try:
-            created_label = self.service.users().labels().create(userId="me",  body={
+            created_label = self.service.users().labels().create(userId="me", body={
                 "name": name
             }).execute()
-            return  created_label
+            return created_label
         except Exception as error:
             print(f"An error occurred: {error}")
+
+    def add_attachment(self, message, filename):
+        content_type, encoding = guess_mime_type(filename)
+        if content_type is None or encoding is not None:
+            content_type = 'application/octet-stream'
+        main_type, sub_type = content_type.split('/', 1)
+        if main_type == 'text':
+            fp = open(filename, 'rb')
+            msg = MIMEText(fp.read().decode(), _subtype=sub_type)
+            fp.close()
+        elif main_type == 'image':
+            fp = open(filename, 'rb')
+            msg = MIMEImage(fp.read(), _subtype=sub_type)
+            fp.close()
+        elif main_type == 'audio':
+            fp = open(filename, 'rb')
+            msg = MIMEAudio(fp.read(), _subtype=sub_type)
+            fp.close()
+        else:
+            fp = open(filename, 'rb')
+            msg = MIMEBase(main_type, sub_type)
+            msg.set_payload(fp.read())
+            fp.close()
+        filename = os.path.basename(filename)
+        msg.add_header('Content-Disposition', 'attachment', filename=filename)
+        message.attach(msg)
+
+    def build_message(self, our_email, destination, subject, body, attachments=[]):
+        if not attachments:  # no attachments given
+            message = MIMEText(body)
+            message['to'] = destination
+            message['from'] = our_email
+            message['subject'] = subject
+        else:
+            message = MIMEMultipart()
+            message['to'] = destination
+            message['from'] = our_email
+            message['subject'] = subject
+            message.attach(MIMEText(body))
+            for filename in attachments:
+                self.add_attachment(message, filename)
+        return {'raw': urlsafe_b64encode(message.as_bytes()).decode()}
+
+    def send_message(self, our_email, destination, subject, body, attachments=[]):
+        return self.service.users().messages().send(
+            userId="me",
+            body=self.build_message(our_email, destination, subject, body, attachments)
+        ).execute()

@@ -134,8 +134,6 @@ class SettingsPanel(QFrame):
         self.applyButton.setText("Apply")
         self.applyButton.setObjectName("saveButton")
 
-
-
     def setSettings(self, settings):
         self.settings = settings
         if settings:
@@ -160,8 +158,9 @@ class SettingsPanel(QFrame):
             self.settings.applyStylesheet(self.applyButton)
 
     def resizeContent(self, difSize):
-        self.resize(difSize.width() + self.size().width(), difSize.height() + self.size().height())
-        self.cancelButton.move(difSize.width() + self.cancelButton.pos().x(), self.cancelButton.pos().y())
+        self.move(difSize.width() + self.pos().x(), self.pos().y())
+        self.resize(self.size().width(), self.size().height() + difSize.height())
+        # self.cancelButton.move(difSize.width() + self.cancelButton.pos().x(), self.cancelButton.pos().y())
         self.settingsButton.move(QPoint(self.settingsButton.pos().x() + difSize.width(), self.settingsButton.pos().y()))
 
     def openSettings(self):
@@ -195,11 +194,9 @@ class SettingsPanel(QFrame):
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
 
-
     def saveJson(self):
         if self.nameFileEdit.text() != "":
-            print(QFileInfo(__file__).absoluteDir().filePath("styles/"+self.nameFileEdit.text()+".json"))
-            f = open(str(QFileInfo(__file__).absoluteDir().filePath("styles/"+self.nameFileEdit.text()+".json")), 'w+')
+            print(QFileInfo(__file__).absoluteDir().filePath("styles/" + self.nameFileEdit.text() + ".json"))
+            f = open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + self.nameFileEdit.text() + ".json")),
+                     'w+')
             json.dump(self.model.to_json(), f)
-
-

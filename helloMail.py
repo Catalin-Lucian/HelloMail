@@ -290,7 +290,14 @@ class HelloMail(QMainWindow):
 
     @QtCore.pyqtSlot()
     def onSearch(self, query):
-        print(query)
+        self.mailView.hideMail()
+        self.mailList.clearMailList()
+        self.navigationList.deselect()
+        self.customLabelList.deselect()
+        mails = self.gmailApi.search_messages(query, 20)
+        for mail_data in mails:
+            mailItem = self.mailList.addMailItem(mail_data)
+            mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
