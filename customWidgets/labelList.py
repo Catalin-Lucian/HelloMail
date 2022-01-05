@@ -33,13 +33,11 @@ class LabelList(QScrollArea):
         self.setupUi()
 
     def setupUi(self):
-
+        self.setObjectName("label")
         self.newLabelFrame.hide()
 
         self.createLabel.setGeometry(56, 757, 160, 26)
-        self.createLabel.setStyleSheet("background-color: #2D3242;"
-                                       "color:#FFFFFF;"
-                                       "border-radius:10px;")
+        self.createLabel.setObjectName("createButton")
         self.createLabel.setText("+ Create new label")
         self.createLabel.click_signal.connect(lambda: self.createLabelShow())
 
@@ -129,6 +127,7 @@ class LabelList(QScrollArea):
         if settings:
             self.settings.subscribe(self)
             self.newLabelFrame.setSettings(self.settings)
+            self.createLabel.setSettings(self.settings)
 
             for tag in self.tagList:
                 tag.setSettings(settings)
