@@ -31,13 +31,7 @@ class CustomStyleElement(QFrame):
             self.settings.subscribe(self)
             self.applyStylesheets()
 
-    def getInput(self):
-        inputValuesJson = {"name": self.elementName.text(), "value": self.elementValue.text()}
-        return inputValuesJson
 
-    def setInput(self, inputValuesJson):
-        self.elementName.setText(inputValuesJson.get("name"))
-        self.elementValue.setText(inputValuesJson.get("value"))
 
     def applyStylesheets(self):
         self.settings.applyStylesheet(self)
@@ -94,23 +88,7 @@ class CustomStyleState(QScrollArea):
 
         self.setWidget(self.scrollAreaWidgetContents)
 
-    def setStateValue(self, stateName, stateValues):
-        self.stateName.setText(stateName)
 
-        for stateValue in stateValues:
-            self.addCustomStyleElement(stateValue)
-
-    def addCustomStyleElement(self, stateValue):
-        self.verticalLayout.removeItem(self.spacerItem)
-
-        customStyleElement = CustomStyleElement(self.scrollAreaWidgetContents)
-        customStyleElement.setObjectName("settingsElement")
-        customStyleElement.setSettings(self.settings)
-        customStyleElement.setInput(stateValue)
-
-        self.elementList.append(customStyleElement)
-
-        self.verticalLayout.addSpacerItem(self.spacerItem)
 
     def setSettings(self, settings: SettingsConfig):
         self.settings = settings
@@ -125,11 +103,7 @@ class CustomStyleState(QScrollArea):
     def notify(self):
         self.applyStylesheets()
 
-    def getValues(self):
-        listJson = []
-        for element in self.elementList:
-            listJson.append(element.getInput())
-        return self.stateName.text(), listJson
+
 
 
 class CustomStyleWindow(QScrollArea):
