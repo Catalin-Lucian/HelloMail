@@ -56,7 +56,7 @@
       "states": ["default"],
       "default": [{
           "name": "background-color",
-          "value": "rgb(255, 255, 255)"
+          "value": "rgba(255, 255, 255, 0)"
         },
         {
           "name": "border",
@@ -124,7 +124,7 @@
       "states": ["default"],
       "default": [{
           "name": "background-color",
-          "value": "rgb(255, 255, 255)"
+          "value": "rgba(255, 255, 255, 0)"
         },
         {
           "name": "border",
@@ -456,27 +456,19 @@
       "hover": []
     }
   },
-  "settingsInput": {
-    "states": ["default", "pressed", "hover"],
-    "default": [],
-    "pressed": [],
-    "hover": []
+  "settingsComboBox": {
+    "states": ["default"],
+    "default": [{
+        "name": "background-color",
+        "value": "#262A30"
+      },
+      {
+        "name": "border-radius",
+        "value": "10px"
+      }
+    ]
   },
-  "settingsElement": {
-    "states": ["default", "pressed", "hover"],
-    "default": [],
-    "pressed": [],
-    "hover": []
-  },
-
-  "settingsState": {
-    "states": ["default", "pressed", "hover"],
-    "default": [],
-    "pressed": [],
-    "hover": []
-  },
-
-  "settingsWindowState": {
+  "": {
     "states": ["default", "pressed", "hover"],
     "default": [],
     "pressed": [],

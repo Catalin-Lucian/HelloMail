@@ -54,9 +54,8 @@ class MailView(QFrame):
         self.mailContentView.setWindowFlag(Qt.WindowStaysOnBottomHint)
         self.mailContentView.hide()
 
-
         self.avatarIcon.setObjectName("mailViewAvatarIcon")
-        self.avatarIcon.setGeometry(QRect(30, 30, 50, 50))
+        self.avatarIcon.setGeometry(QRect(30, 30, 40, 40))
         self.avatarIcon.hide()
 
         self.senderNameLabel.setObjectName("label")
@@ -107,7 +106,6 @@ class MailView(QFrame):
         self.starButton.hide()
         self.starButton.check_signal.connect(lambda ch: self.onStarClicked(ch))
 
-
     def setSettings(self, settings):
         if settings:
             self.settings = settings
@@ -134,6 +132,7 @@ class MailView(QFrame):
         self.mailContentView.show()
         if mailData.get('body'):
             self.mailContentView.setHtml(mailData.get('body'))
+        self.avatarIcon.setImage(mailData.get('from').get('email')[0] + ".png")
         self.avatarIcon.show()
         self.senderNameLabel.setText(mailData.get('from').get('name'))
         self.senderEmailLabel.setText(mailData.get('from').get('email'))
@@ -152,6 +151,9 @@ class MailView(QFrame):
                                     self.mailContentView.size().height() + e.height())
         self.dateTimeLabel.move(QPoint(self.dateTimeLabel.pos().x() + e.width(), self.dateTimeLabel.pos().y()))
         self.subjectLabel.resize(QSize(self.subjectLabel.size().width() + e.width(), self.subjectLabel.size().height()))
+
+        self.buttonsContainer.move(QPoint(self.buttonsContainer.pos().x()+e.width(), self.buttonsContainer.pos().y()))
+        self.starButton.move(QPoint(self.starButton.pos().x()+e.width(), self.starButton.pos().y()))
 
     def notify(self):
         self.applyStyleSheets()
@@ -175,6 +177,7 @@ class MailView(QFrame):
         self.subjectLabel.setText("")
         self.buttonsContainer.hide()
         self.starButton.hide()
+
 
 class CustomWebPage(QWebEnginePage):
     def __init__(self, parent):

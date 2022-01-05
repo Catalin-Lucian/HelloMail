@@ -54,7 +54,7 @@ class NewMessageDialog(QDialog):
         self.setGeometry(QRect(0, 0, 601, 456))
         self.setStyleSheet("background-color: rgba(0,0,0,0);")
 
-        self.container.setObjectName("newMessageContainer")
+        self.container.setObjectName("C")
         self.container.setGeometry(QRect(0, 0, 601, 456))
 
         self.titleLabel.setGeometry(QRect(247, 11, 127, 22))

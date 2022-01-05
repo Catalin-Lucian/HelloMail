@@ -1,7 +1,8 @@
 import logging
+import os
 import sys
 
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize, QPoint, QRect, Qt
 
@@ -58,14 +59,22 @@ class HelloMail(QMainWindow):
 
         self.settingsPanel = SettingsPanel(self.centralWidget)
 
+        # logo
+        self.logoImage = QtWidgets.QLabel(self.centralWidget)
+        self.logoImage.setGeometry(QtCore.QRect(3, 40, 260, 59))
+        pixmap = QPixmap("customWidgets" + os.path.sep + "icons" + os.path.sep + "logo.png")
+        self.logoImage.setPixmap(pixmap)
+
+        # icon
+        self.setWindowIcon(QtGui.QIcon("customWidgets" + os.path.sep + "icons" + os.path.sep + "icon.png"))
+
         self.setupUi()
         self.setupStyleSheets()
         self.addMailItemsOnStartUp()
 
     def setupUi(self):
 
-
-        self.setWindowTitle("HelloMail")
+        self.setWindowTitle("helloMail")
         self.resize(1440, 900)
         self.setMinimumSize(QtCore.QSize(1440, 900))
         self.setCentralWidget(self.centralWidget)
@@ -125,7 +134,7 @@ class HelloMail(QMainWindow):
         self.mailCover.setStyleSheet(self.settings.getStyleSheet("mailCover"))
 
     def addMailItemsOnStartUp(self):
-        mails_data = self.googleApi.get_emails_by_tags(["INBOX"], 5)
+        mails_data = self.gmailApi.get_emails_by_tags(["INBOX"], 5)
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
@@ -194,6 +203,8 @@ class HelloMail(QMainWindow):
                     self.mailView.hideMail()
                 selected.unread()
                 mailIds.append(selected.mailData.get('id'))
+            self.mailList.clearSelectedList()
+            self.actionBar.setCheckButton(False)
             self.gmailApi.modify_labels_to_emails(mailIds, ['UNREAD'], [])
         elif action == ACTION.READ_FLAG:
             mailIds = []
@@ -205,8 +216,52 @@ class HelloMail(QMainWindow):
                     self.mailView.hideMail()
                 selected.read()
                 mailIds.append(selected.mailData.get('id'))
+            self.mailList.clearSelectedList()
+            self.actionBar.setCheckButton(False)
             self.gmailApi.modify_labels_to_emails(mailIds, [], ['UNREAD'])
-
+        elif action == ACTION.TRASH_FLAG:
+            mailIds = []
+            selectedMails = self.mailList.getSelectedMails()
+            selectedMail = self.mailList.getSelected()
+            for selected in selectedMails:
+                if selectedMail and selected == selectedMail:
+                    selectedMail.deselect()
+                    self.mailView.hideMail()
+                self.mailList.removeMailItem(selected)
+                mailIds.append(selected.mailData.get('id'))
+            if self.navigationList.getLabel().replace(" ", "").upper() == "TRASH" or \
+                    self.navigationList.getLabel().replace(" ", "").upper() == "SPAM":
+                self.gmailApi.delete_emails(mailIds)
+            else:
+                self.actionBar.setCheckButton(False)
+                self.gmailApi.modify_labels_to_emails(mailIds, ['TRASH'], ['INBOX', 'STARRED', 'SPAM'])
+            self.mailList.clearSelectedList()
+        elif action == ACTION.ARCHIVE_FLAG:
+            mailIds = []
+            selectedMails = self.mailList.getSelectedMails()
+            selectedMail = self.mailList.getSelected()
+            for selected in selectedMails:
+                if selectedMail and selected == selectedMail:
+                    selectedMail.deselect()
+                    self.mailView.hideMail()
+                self.mailList.removeMailItem(selected)
+                mailIds.append(selected.mailData.get('id'))
+            self.mailList.clearSelectedList()
+            self.actionBar.setCheckButton(False)
+            self.gmailApi.modify_labels_to_emails(mailIds, [], ['INBOX'])
+        elif action == ACTION.WARNING_FLAG:
+            mailIds = []
+            selectedMails = self.mailList.getSelectedMails()
+            selectedMail = self.mailList.getSelected()
+            for selected in selectedMails:
+                if selectedMail and selected == selectedMail:
+                    selectedMail.deselect()
+                    self.mailView.hideMail()
+                self.mailList.removeMailItem(selected)
+                mailIds.append(selected.mailData.get('id'))
+            self.mailList.clearSelectedList()
+            self.actionBar.setCheckButton(False)
+            self.gmailApi.modify_labels_to_emails(mailIds, ['SPAM'], ['INBOX'])
 
     @QtCore.pyqtSlot()
     def onSearch(self, query):

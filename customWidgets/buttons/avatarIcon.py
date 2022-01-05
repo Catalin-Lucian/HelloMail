@@ -1,6 +1,8 @@
+import os
+
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import QRect, pyqtSignal, Qt
-from PyQt5.QtGui import QMouseEvent, QCursor
+from PyQt5.QtGui import QMouseEvent, QCursor, QPixmap
 import logging
 
 
@@ -35,3 +37,8 @@ class AvatarIcon(QLabel):
 
     def notify(self):
         self.applyStyleSheets()
+
+    def setImage(self, name):
+        pixmap = QPixmap("customWidgets" + os.path.sep + "icons" + os.path.sep + "avatars" + os.path.sep + name)
+        pixmap = pixmap.scaled(self.size().width(), self.size().height(), Qt.KeepAspectRatio)
+        self.setPixmap(pixmap)
