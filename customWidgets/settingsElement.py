@@ -103,8 +103,8 @@ class CustomStyleState(QScrollArea):
 
         customStyleElement = CustomStyleElement(self.scrollAreaWidgetContents)
         customStyleElement.setObjectName("settingsElement")
-        customStyleElement.setInput(stateValue)
         customStyleElement.setSettings(self.settings)
+        customStyleElement.setInput(stateValue)
 
         self.elementList.append(customStyleElement)
 
@@ -199,8 +199,8 @@ class CustomStyleWindow(QScrollArea):
 
         customStyleState = CustomStyleState(self.scrollAreaWidgetContents)
         customStyleState.setObjectName("settingsState")
-        customStyleState.setStateValue(name, value)
         customStyleState.setSettings(self.settings)
+        customStyleState.setStateValue(name, value)
 
         self.elementList.append(customStyleState)
         self.verticalLayout.addSpacerItem(self.spacerItem)
@@ -217,4 +217,3 @@ class CustomStyleWindow(QScrollArea):
 
     def notify(self):
         self.applyStylesheets()
-

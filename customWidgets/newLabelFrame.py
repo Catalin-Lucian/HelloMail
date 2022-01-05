@@ -29,7 +29,7 @@ class NewLabelFrame(QFrame):
 
         self.nameLabelEdit.setGeometry(QRect(9, 34, 163, 21))
         self.nameLabelEdit.setObjectName("newMessageTextEdit")
-        self.nameLabelEdit.setText("New Label Name")
+        self.nameLabelEdit.setPlaceholderText("New Label Name")
 
         self.createButton.setText("Create")
         self.createButton.setGeometry(QRect(9, 68, 163, 21))
