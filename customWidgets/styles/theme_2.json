@@ -9,7 +9,7 @@
       "states": ["default"],
       "default": [{
         "name": "background-color",
-        "value": "rgb(24, 29, 35)"
+        "value": "rgb(0, 0, 0)"
       }]
     },
     "mailCover": {
