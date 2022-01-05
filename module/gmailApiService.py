@@ -17,7 +17,7 @@ from email.mime.base import MIMEBase
 from mimetypes import guess_type as guess_mime_type
 
 
-class GoogleApi:
+class GmailApi:
 
     def __init__(self, credentials_file, api_name, api_version, *scopes, prefix=''):
         self.CREDENTIALS = credentials_file
@@ -232,3 +232,12 @@ class GoogleApi:
             }).execute()
         except Exception as error:
             print(f"An error occurred: {error}")
+
+    def delete_emails(self, emails_ids):
+        try:
+            self.service.users().messages().batchDelete(userId="me", body={
+                'ids': emails_ids
+            }).execute()
+        except Exception as error:
+            print(f"An error occurred: {error}")
+

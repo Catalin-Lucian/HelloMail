@@ -15,6 +15,8 @@ class CustomStyleElement(QFrame):
         self.setupUI()
 
     def setupUI(self):
+        self.setGeometry(0, 0, 777, 39)
+
         self.elementName.setGeometry(QRect(0, 0, 218, 39))
         # setare font
         self.elementName.setObjectName("settingsInput")
@@ -73,7 +75,7 @@ class CustomStyleState(QScrollArea):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setMinimumSize(QSize(902, 303))
+        self.setMinimumSize(QSize(902, 39))
         self.setMaximumSize(QSize(902, 303))
         self.setFrameShape(QFrame.NoFrame)
         self.setLineWidth(0)
@@ -103,8 +105,8 @@ class CustomStyleState(QScrollArea):
 
         customStyleElement = CustomStyleElement(self.scrollAreaWidgetContents)
         customStyleElement.setObjectName("settingsElement")
-        customStyleElement.setInput(stateValue)
         customStyleElement.setSettings(self.settings)
+        customStyleElement.setInput(stateValue)
 
         self.elementList.append(customStyleElement)
 
@@ -159,7 +161,7 @@ class CustomStyleWindow(QScrollArea):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setMinimumSize(QSize(1076, 458))
+        self.setMinimumSize(QSize(1076, 304))
         self.setMaximumSize(QSize(1076, 458))
         self.setFrameShape(QFrame.NoFrame)
         self.setLineWidth(0)
@@ -168,7 +170,7 @@ class CustomStyleWindow(QScrollArea):
         self.setWidgetResizable(False)
         self.setAlignment(Qt.AlignCenter)
 
-        self.scrollAreaWidgetContents.setGeometry(QRect(125, 0, 777, 115))
+        self.scrollAreaWidgetContents.setGeometry(QRect(174, 0, 902, 369))
 
         self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -199,8 +201,8 @@ class CustomStyleWindow(QScrollArea):
 
         customStyleState = CustomStyleState(self.scrollAreaWidgetContents)
         customStyleState.setObjectName("settingsState")
-        customStyleState.setStateValue(name, value)
         customStyleState.setSettings(self.settings)
+        customStyleState.setStateValue(name, value)
 
         self.elementList.append(customStyleState)
         self.verticalLayout.addSpacerItem(self.spacerItem)
@@ -217,4 +219,3 @@ class CustomStyleWindow(QScrollArea):
 
     def notify(self):
         self.applyStylesheets()
-

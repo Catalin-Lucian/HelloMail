@@ -9,6 +9,7 @@ from customWidgets.mailItem import MailItem
 
 class MailList(QtWidgets.QScrollArea):
     mailItemChange = pyqtSignal(QtWidgets.QFrame)
+    firstLastSelectSignal = pyqtSignal(bool)
 
     def __init__(self, container):
         super(MailList, self).__init__(container)
@@ -67,6 +68,7 @@ class MailList(QtWidgets.QScrollArea):
 
     def removeMailItem(self, mailItem):
         mailItem.settings.unsubscribe(mailItem)
+        mailItem.setParent(None)
         self.verticalLayout.removeWidget(mailItem)
 
     @QtCore.pyqtSlot()
@@ -77,9 +79,13 @@ class MailList(QtWidgets.QScrollArea):
     @QtCore.pyqtSlot()
     def onMailChecked(self, checked, mailItem):
         if checked:
+            if len(self.selectedMails) == 0:
+                self.firstLastSelectSignal.emit(True)
             self.selectedMails.append(mailItem)
         else:
             self.selectedMails.remove(mailItem)
+            if len(self.selectedMails) == 0:
+                self.firstLastSelectSignal.emit(False)
 
     def selectMailItem(self, mailItem):
         if self.selectedMailItem:
@@ -107,8 +113,29 @@ class MailList(QtWidgets.QScrollArea):
             widget = self.verticalLayout.takeAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
-
         self.selectedMailItem = None
+
+    def clearSelectedList(self):
+        self.selectedMails.clear()
 
     def notify(self):
         pass
+
+    def selectAll(self):
+        for item in self.mailItems:
+            item.checkItem(True)
+            self.selectedMails.append(item)
+
+    def unselectAll(self):
+        copySelectedMail = []
+        for item in self.selectedMails:
+            copySelectedMail.append(item)
+        for item in copySelectedMail:
+            item.checkItem(False)
+            self.selectedMails.remove(item)
+
+    def getSelectedMails(self):
+        if len(self.selectedMails) == 0 and self.selectedMailItem:
+            return [self.selectedMailItem]
+        return self.selectedMails
+

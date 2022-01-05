@@ -30,8 +30,6 @@ class SettingsPanel(QFrame):
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setGeometry(20, 20, 1400, 860)
 
-
-
         self.cancelButton.setGeometry(QRect(1346, 12, 35, 35))
         self.cancelButton.click_signal.connect(self.closeSettings)
 
@@ -48,8 +46,8 @@ class SettingsPanel(QFrame):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.scrollArea.setSizePolicy(sizePolicy)
-        self.scrollArea.setMinimumSize(QSize(422, 741))
-        self.scrollArea.setMaximumSize(QSize(422, 16777215))
+        self.scrollArea.setMinimumSize(QSize(1076, 751))
+        self.scrollArea.setMaximumSize(QSize(1076, 751))
         self.scrollArea.setFrameShape(QFrame.NoFrame)
         self.scrollArea.setLineWidth(0)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -57,8 +55,8 @@ class SettingsPanel(QFrame):
         self.scrollArea.setWidgetResizable(False)
         self.scrollArea.setAlignment(Qt.AlignCenter)
 
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 422, 911))
-        self.scrollAreaWidgetContents.setStyleSheet("background-color:#262B32;")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1076, 751))
+        self.scrollAreaWidgetContents.setStyleSheet("background-color:#FFFFFF;")
         self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(10)
@@ -92,11 +90,9 @@ class SettingsPanel(QFrame):
 
         customStyleWindow = CustomStyleWindow(self.scrollAreaWidgetContents)
         customStyleWindow.setObjectName("settingsWidget")
-        customStyleWindow.setWindowValues(name, value)
         customStyleWindow.setSettings(self.settings)
+        customStyleWindow.setWindowValues(name, value)
         self.elementList.append(customStyleWindow)
-
-        self.verticalLayout.addWidget(customStyleWindow)
 
         self.verticalLayout.addSpacerItem(self.spacerItem)
 
