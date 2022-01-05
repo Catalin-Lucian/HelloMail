@@ -292,7 +292,7 @@
       "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "background-color",
-          "value": "#146be2"
+          "value": "qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #953bba ,stop:1 #146be2)"
         },
         {
           "name": "border-radius",
@@ -378,12 +378,8 @@
       "states": ["default"],
       "default": [{
           "name": "background-color",
-          "value": "#3B4350"
+          "value": "#929497"
 
-        },
-        {
-          "name": "color",
-          "value": "#FFFFFF"
         },
         {
           "name": "border-radius",
@@ -393,32 +389,9 @@
     },
     "newMessageButton": {
       "states": ["default", "pressed", "hover"],
-      "default": [{
-          "name": "background-color",
-          "value": "#146BE2"
-        },
-        {
-          "name":"color",
-          "value":"#FFFFFF"
-        },
-        {
-          "name":"border-radius",
-          "value":"10px"
-        }
-      ],
+      "default": [],
       "pressed": [],
-      "hover": [{
-        "name": "background-color",
-        "value": "#953bba"
-      },
-      {
-        "name":"color",
-        "value":"#0"
-      },
-      {
-        "name":"border-radius",
-        "value":"10px"
-      }]
+      "hover": []
     },
     "textButton": {
       "states": ["default", "pressed", "hover"],
@@ -548,56 +521,7 @@
           "value": "#FFFFFF"
         }
       ]
-    },
-    "saveButton": {
-      "states": ["default", "pressed", "hover"],
-      "default": [{
-          "name": "background-color",
-          "value": "#953BBA"
-        },
-        {
-          "name": "color",
-          "value": "#FFFFFF"
-        },
-        {
-          "name": "border-radius",
-          "value": "10px"
-        },
-        {
-          "name": "color",
-          "value": "#FFFFFF"
-        }
-      ],
-      "pressed": [{
-          "name": "background-color",
-          "value": "#953BBA"
-        },
-        {
-          "name": "color",
-          "value": "#FFFFFF"
-        },
-        {
-          "name": "border-radius",
-          "value": "10px"
-        }
-      ],
-      "hover": [{
-          "name": "background-color",
-          "value": "#953BBA"
-        },
-        {
-          "name": "color",
-          "value": "#FFFFFF"
-        },
-        {
-          "name": "border-radius",
-          "value": "10px"
-        },
-        {
-          "name": "color",
-          "value": "#FFFFFF"
-        }
-      ]
     }
+
   }
 }

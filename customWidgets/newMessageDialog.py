@@ -1,7 +1,7 @@
 import logging
 
-from PyQt5.QtCore import Qt, QRect
-from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt, QRect, QSize
+from PyQt5.QtGui import QFont, QResizeEvent
 from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit
 
 from customWidgets.buttons.iconClickButton import IconClickButton
@@ -25,6 +25,7 @@ class NewMessageDialog(QDialog):
 
         self.pressed = False
         self.lastPos = None
+        self.hasFirstResize =False
 
         self.exitIcon = IconClickButton(self.container, "exit_chat_unselected.svg",
                                         "exit_chat_selected.svg",
@@ -54,7 +55,7 @@ class NewMessageDialog(QDialog):
         self.setGeometry(QRect(0, 0, 601, 456))
         self.setStyleSheet("background-color: rgba(0,0,0,0);")
 
-        self.container.setObjectName("C")
+        self.container.setObjectName("newMessageContainer")
         self.container.setGeometry(QRect(0, 0, 601, 456))
 
         self.titleLabel.setGeometry(QRect(247, 11, 127, 22))
@@ -183,6 +184,15 @@ class NewMessageDialog(QDialog):
         self.settings.applyStylesheet(self.toLabel)
         self.settings.applyStylesheet(self.subjectLabel)
         self.settings.applyStylesheet(self.richTextEdit)
+
+    # def resizeEvent(self, e: QResizeEvent) -> None:
+    #     if self.hasFirstResize:
+    #         difH = e.size().height() - e.oldSize().height()
+    #         difW = e.size().width() - e.oldSize().width()
+    #         print(f"{difW} {difH}")
+    #         self.resize(QSize(self.size().width()+difW, self.size().height()+difH))
+    #     self.hasFirstResize = True
+    #     super(NewMessageDialog, self).resizeEvent(e)
 
     def notify(self):
         self.applyStyleSheets()
