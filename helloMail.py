@@ -74,7 +74,6 @@ class HelloMail(QMainWindow):
 
     def setupUi(self):
 
-
         self.setWindowTitle("HelloMail")
         self.resize(1440, 900)
         self.setMinimumSize(QtCore.QSize(1440, 900))
@@ -104,6 +103,7 @@ class HelloMail(QMainWindow):
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
         self.mailView.star_check_signal.connect(lambda ch: self.onMailViewStarChecked(ch))
+        self.mailView.reply_check_signal.connect(lambda: self.onReplyMailViewClicked())
 
         self.navigationList.setSettings(self.settings)
         self.navigationList.label_change_signal.connect(lambda button: self.onLabelChange(button))
@@ -263,6 +263,13 @@ class HelloMail(QMainWindow):
             self.mailList.clearSelectedList()
             self.actionBar.setCheckButton(False)
             self.gmailApi.modify_labels_to_emails(mailIds, ['SPAM'], ['INBOX'])
+
+    @QtCore.pyqtSlot()
+    def onReplyMailViewClicked(self):
+        print("test")
+        self.newMessageDialog.setSubject("RE: " + self.mailList.selectedMailItem.getEmailSubject())
+        self.newMessageDialog.setEmail(self.mailList.selectedMailItem.getEmailAddress())
+        self.newMessageDialog.show()
 
     @QtCore.pyqtSlot()
     def onSearch(self, query):

@@ -123,6 +123,12 @@ class NewMessageDialog(QDialog):
         if fileName:
             print(fileName)
 
+    def setSubject(self, subject):
+        self.subjectTextEdit.setText(subject)
+
+    def setEmail(self, email):
+        self.toTextEdit.setText(email)
+
     def mousePressEvent(self, event):
         self.__mousePressPos = None
         self.__mouseMovePos = None
