@@ -54,7 +54,6 @@ class HelloMail(QMainWindow):
         self.newMessageButton = IconClickButton(self.centralWidget, "new_message.svg", "new_message.svg",
                                                 "new_message.svg")
 
-        self.newMessageDialog = NewMessageDialog(self.centralWidget)
         self.customLabelList = LabelList(self.centralWidget)
 
         self.settingsPanel = SettingsPanel(self.centralWidget)
@@ -109,8 +108,7 @@ class HelloMail(QMainWindow):
         self.navigationList.setSettings(self.settings)
         self.navigationList.label_change_signal.connect(lambda button: self.onLabelChange(button))
 
-        self.newMessageDialog.setSettings(self.settings)
-        self.newMessageButton.click_signal.connect(lambda: self.newMessageDialog.show())
+        self.newMessageButton.click_signal.connect(lambda: self.onNewMessageDialog())
         self.newMessageButton.setWindowFlags(Qt.WindowStaysOnBottomHint)
 
         self.searchBar.setObjectName('searchBar')
@@ -147,6 +145,15 @@ class HelloMail(QMainWindow):
         labels = self.gmailApi.get_custom_labels()
         for label in labels:
             self.customLabelList.addTagElement(label)
+
+    @QtCore.pyqtSlot()
+    def onNewMessageDialog(self):
+        newMessageDialog = NewMessageDialog(self.centralWidget)
+        newMessageDialog.setSettings(self.settings)
+        newMessageDialog.finish_signal.connect(
+            lambda destination, subject, messageText, attachment:
+            self.onSendMessage(destination, subject, messageText, attachment))
+        newMessageDialog.show()
 
     @QtCore.pyqtSlot()
     def onMailItemStarChecked(self, checked, mailItem):
@@ -298,6 +305,12 @@ class HelloMail(QMainWindow):
         for mail_data in mails:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
+
+    @QtCore.pyqtSlot()
+    def onSendMessage(self, destination, subject, messageText, attachment):
+        rez = self.gmailApi.get_profile()
+        myEmail=rez['emailAddress']
+        self.gmailApi.send_message(myEmail, destination, subject, messageText, attachment)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
