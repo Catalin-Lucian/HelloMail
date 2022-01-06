@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from os import listdir
 from os.path import isfile
 from shlex import join
@@ -45,12 +46,14 @@ class SettingsPanel(QFrame):
         # self.successLabelInfo = QLabel(self)
         self.applyButton = IconClickButton(self)
 
+        self.logOutButton = IconClickButton(self)
+
         self.hide()
+        self.numberMessage = 5
 
         self.setupUI()
 
     def setupUI(self):
-
         self.messageNumberText.setGeometry(64, 190, 355, 22)
         font = QFont()
         font.setFamily("Calibri")
@@ -136,17 +139,29 @@ class SettingsPanel(QFrame):
         self.applyButton.setObjectName("saveButton")
         self.applyButton.click_signal.connect(lambda: self.onApplyButton())
 
+        self.logOutButton.setGeometry(QRect(14, 824, 60, 60))
+        self.logOutButton.setText("Log Out")
+        self.logOutButton.setObjectName("logOut")
+        self.logOutButton.click_signal.connect(lambda: self.onDisconnect())
+
+    def onDisconnect(self):
+        tokenPath = QFileInfo(__file__).absoluteDir().currentPath()+"/token/token.pickle"
+        print(QFileInfo(__file__).absoluteDir().currentPath()+"/token/token.pickle")
+        os.remove(tokenPath)
+        os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
+
     def onApplyButton(self):
         if self.settings:
             themeName = self.themeSelect.currentText()
             print(themeName+"------")
             self.settings.setTheme(themeName)
 
-            if self.messageNumberSelect.text().isnumeric() and self.messageNumberSelect.text()!= "":
+            if self.messageNumberSelect.text().isnumeric() and not self.messageNumberSelect.text().isspace() \
+                    and self.messageNumberSelect.text() != "":
                 self.settings.setMessageNumber(self.messageNumberSelect.text())
-            else:
-                self.messageNumberSelect.setText("")
-                self.messageNumberSelect.setPlaceholderText(self.settings.getMessageNumber())
+                # self.numberMessage = self.messageNumberSelect.text()
+
+        # self.messageNumberSelect.setText(self.numberMessage)
 
     def setSettings(self, settings):
         self.settings = settings
@@ -156,7 +171,7 @@ class SettingsPanel(QFrame):
             self.cancelButton.setSettings(settings)
             self.saveButton.setSettings(settings)
             self.settingsButton.setSettings(settings)
-            self.messageNumberSelect.setPlaceholderText(str(self.settings.getMessageNumber()))
+            self.messageNumberSelect.setText(str(self.settings.getMessageNumber()))
             self.applyStyleSheets()
 
     def applyStyleSheets(self):
@@ -169,6 +184,7 @@ class SettingsPanel(QFrame):
             self.settings.applyStylesheet(self.themeSelect)
             self.settings.applyStylesheet(self.view)
             self.settings.applyStylesheet(self.nameFileEdit)
+            self.settings.applyStylesheet(self.logOutButton)
             # self.settings.applyStylesheet(self.customEdit)
             self.settings.applyStylesheet(self.titleText)
             self.settings.applyStylesheet(self.applyButton)

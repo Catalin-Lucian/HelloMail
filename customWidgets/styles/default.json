@@ -598,6 +598,56 @@
           "value": "#FFFFFF"
         }
       ]
+    },
+    "logOut": {
+      "states": ["default", "pressed", "hover"],
+      "default": [{
+          "name": "background-color",
+          "value": "#00FB74"
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
+        }
+      ],
+      "pressed": [{
+          "name": "background-color",
+          "value": "#953BBA"
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        }
+      ],
+      "hover": [{
+          "name": "background-color",
+          "value": "#F60A0A"
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
+        },
+        {
+          "name": "border-radius",
+          "value": "10px"
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
+        }
+      ]
     }
   }
 }
