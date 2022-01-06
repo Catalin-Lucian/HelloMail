@@ -367,10 +367,6 @@
       "default": [{
           "name": "background-color",
           "value": "#262A30"
-        },
-        {
-          "name": "border-radius",
-          "value": "10px"
         }
       ]
     },

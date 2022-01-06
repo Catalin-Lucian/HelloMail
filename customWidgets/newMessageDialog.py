@@ -50,9 +50,9 @@ class NewMessageDialog(QDialog):
         self.setWindowFlag(Qt.FramelessWindowHint)
 
     def setupUI(self):
-        self.exitIcon.setObjectName("newMessageButton")
-        self.attachmentIco.setObjectName("newMessageButton")
-        self.trashIco.setObjectName("newMessageButton")
+        self.exitIcon.setObjectName("iconClickButton")
+        self.attachmentIco.setObjectName("iconClickButton")
+        self.trashIco.setObjectName("iconClickButton")
 
         self.setWindowFlag(Qt.WindowStaysOnTopHint)
         self.setGeometry(QRect(0, 0, 601, 456))

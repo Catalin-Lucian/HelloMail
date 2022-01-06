@@ -64,14 +64,16 @@ class GmailApi:
             os.remove(os.path.join(working_dir, token_dir, pickle_file))
             self.service = None
 
-    def build_message(self, our_email, destination, subject, body, replyId, attachments=[]):
+    def build_message(self, our_email, destination, subject, body, messageId, replyId, attachments=[]):
         if not attachments:  # no attachments given
             message = MIMEText(body)
             message['to'] = destination
             message['from'] = our_email
             message['subject'] = subject
             if replyId:
-                message['threadId'] = replyId
+                # message['threadId'] = replyId
+                message['In-Reply-To'] = messageId
+                message['References'] = messageId
         else:
             message = MIMEMultipart()
             message['to'] = destination
@@ -82,12 +84,16 @@ class GmailApi:
             message.attach(MIMEText(body))
             for filename in attachments:
                 self.add_attachment(message, filename)
-        return {'raw': urlsafe_b64encode(message.as_bytes()).decode()}
 
-    def send_message(self, our_email, destination, subject, body, attachments=[], replyId=None):
+        return {
+            'raw': urlsafe_b64encode(message.as_bytes()).decode(),
+            'threadId': replyId
+        }
+
+    def send_message(self, our_email, destination, subject, body, messageId, replyId=None, attachments=[]):
         return self.service.users().messages().send(
             userId="me",
-            body=self.build_message(our_email, destination, subject, body, attachments, replyId)
+            body=self.build_message(our_email, destination, subject, body, messageId, replyId, attachments)
         ).execute()
 
     def search_messages(self, query, maxResults):
