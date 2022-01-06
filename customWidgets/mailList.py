@@ -69,7 +69,6 @@ class MailList(QtWidgets.QScrollArea):
     def removeMailItem(self, mailItem):
         mailItem.settings.unsubscribe(mailItem)
         mailItem.setParent(None)
-
         self.verticalLayout.removeWidget(mailItem)
 
     @QtCore.pyqtSlot()

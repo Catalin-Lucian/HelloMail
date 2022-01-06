@@ -68,7 +68,7 @@ class SearchBar(QFrame):
         else:
             logging.warning(f"{self.objectName()}: settings value noneType")
 
-    def applyStyleSheets(self ):
+    def applyStyleSheets(self):
         if self.settings:
             self.settings.applyStylesheet(self)
             self.settings.applyStylesheet(self.searchInput)

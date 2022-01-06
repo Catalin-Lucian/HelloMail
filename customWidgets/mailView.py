@@ -48,10 +48,6 @@ class MailView(QFrame):
         self.mailContentView.setObjectName("mailContentView")
         self.mailContentView.setGeometry(QRect(20, 145, 705, 647))
         self.mailContentView.setMinimumSize(QSize(705, 647))
-        # self.mailContentView.setStyleSheet("\n"
-        #                                    "border-color:rgb(58, 110, 255)\n"
-        #                                    "border:10px solid black;"
-        #                                    "border-radius:10px;\n")
         self.mailContentView.setPage(self.customPage)
         self.mailContentView.setWindowFlag(Qt.WindowStaysOnBottomHint)
         self.mailContentView.hide()
