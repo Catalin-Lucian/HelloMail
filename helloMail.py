@@ -55,7 +55,7 @@ class HelloMail(QMainWindow):
                                                 "new_message.svg")
 
         self.newMessageDialog = NewMessageDialog(self.centralWidget)
-        self.labellist = LabelList(self.centralWidget)
+        self.customLabelList = LabelList(self.centralWidget)
 
         self.settingsPanel = SettingsPanel(self.centralWidget)
 
@@ -72,6 +72,7 @@ class HelloMail(QMainWindow):
         self.setupUi()
         self.setupStyleSheets()
         self.addMailItemsOnStartUp()
+        self.addCustomLabels()
 
     def setupUi(self):
 
@@ -123,7 +124,9 @@ class HelloMail(QMainWindow):
         self.settingsPanel.setObjectName("settingPanel")
         self.settingsPanel.setSettings(self.settings)
 
-        self.labellist.setSettings(self.settings)
+        self.customLabelList.setSettings(self.settings)
+        self.customLabelList.click_signal.connect(lambda label_id: self.onCustomLabel(label_id))
+        self.customLabelList.newLabelFrame.create_signal.connect(lambda name: self.onCreateNewLabel(name))
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -139,6 +142,11 @@ class HelloMail(QMainWindow):
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
+
+    def addCustomLabels(self):
+        labels = self.gmailApi.get_custom_labels()
+        for label in labels:
+            self.customLabelList.addTagElement(label)
 
     @QtCore.pyqtSlot()
     def onMailItemStarChecked(self, checked, mailItem):
@@ -172,6 +180,7 @@ class HelloMail(QMainWindow):
         mails = None
         self.mailView.hideMail()
         self.mailList.clearMailList()
+        self.customLabelList.deselect()
         if label == BUTTON.INBOX:
             mails = self.gmailApi.get_emails_by_tags(['INBOX'], self.settings.getMessageNumber())
         elif label == BUTTON.STARRED:
@@ -187,6 +196,21 @@ class HelloMail(QMainWindow):
         for mail_data in mails:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
+
+    @QtCore.pyqtSlot()
+    def onCustomLabel(self, label_id):
+        self.mailView.hideMail()
+        self.mailList.clearMailList()
+        self.navigationList.deselect()
+        mails = self.gmailApi.get_emails_by_tags([label_id], 20)
+        for mail_data in mails:
+            mailItem = self.mailList.addMailItem(mail_data)
+            mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
+
+    @QtCore.pyqtSlot()
+    def onCreateNewLabel(self, name):
+        newLabel = self.gmailApi.create_custom_label(name)
+        self.customLabelList.addTagElement(newLabel)
 
     @QtCore.pyqtSlot()
     def onActionBarSignal(self, action):
@@ -266,7 +290,14 @@ class HelloMail(QMainWindow):
 
     @QtCore.pyqtSlot()
     def onSearch(self, query):
-        print(query)
+        self.mailView.hideMail()
+        self.mailList.clearMailList()
+        self.navigationList.deselect()
+        self.customLabelList.deselect()
+        mails = self.gmailApi.search_messages(query, 20)
+        for mail_data in mails:
+            mailItem = self.mailList.addMailItem(mail_data)
+            mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:

@@ -49,7 +49,7 @@ class NavigationList(QWidget):
         self.navigationLabel.setText("Navigation")
 
         self.inboxIcon.setObjectName("navigationButton")
-        self.inboxIcon.setGeometry(QRect(61, 296, 150, 20))
+        self.inboxIcon.setGeometry(QRect(61, 296, 100, 24))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(14)
@@ -61,7 +61,7 @@ class NavigationList(QWidget):
         self.inboxIcon.check_signal.connect(lambda ch: self.onInbox())
 
         self.staredIcon.setObjectName("navigationButton")
-        self.staredIcon.setGeometry(QRect(61, 331, 150, 20))
+        self.staredIcon.setGeometry(QRect(61, 331, 100, 24))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(14)
@@ -73,7 +73,7 @@ class NavigationList(QWidget):
         self.staredIcon.check_signal.connect(lambda ch: self.onStared())
 
         self.sentIcon.setObjectName("navigationButton")
-        self.sentIcon.setGeometry(QRect(61, 364, 150, 20))
+        self.sentIcon.setGeometry(QRect(61, 364, 100, 24))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(14)
@@ -85,7 +85,7 @@ class NavigationList(QWidget):
         self.sentIcon.check_signal.connect(lambda ch: self.onSent())
 
         self.warningIcon.setObjectName("navigationButton")
-        self.warningIcon.setGeometry(QRect(61, 397, 150, 20))
+        self.warningIcon.setGeometry(QRect(61, 397, 100, 24))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(14)
@@ -97,7 +97,7 @@ class NavigationList(QWidget):
         self.warningIcon.check_signal.connect(lambda ch: self.onSpam())
 
         self.draftsIcon.setObjectName("navigationButton")
-        self.draftsIcon.setGeometry(QRect(62, 430, 150, 20))
+        self.draftsIcon.setGeometry(QRect(62, 430, 100, 24))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(14)
@@ -109,7 +109,7 @@ class NavigationList(QWidget):
         self.draftsIcon.check_signal.connect(lambda ch: self.onDraft())
 
         self.trashIcon.setObjectName("navigationButton")
-        self.trashIcon.setGeometry(QRect(62, 462, 150, 20))
+        self.trashIcon.setGeometry(QRect(62, 462, 100, 24))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(14)
@@ -142,7 +142,8 @@ class NavigationList(QWidget):
         if self.selected == self.inboxIcon:
             self.selected.check()
         else:
-            self.selected.uncheck()
+            if self.selected:
+                self.selected.uncheck()
             self.selected = self.inboxIcon
         self.label_change_signal.emit(BUTTON.INBOX)
 
@@ -150,7 +151,8 @@ class NavigationList(QWidget):
         if self.selected == self.staredIcon:
             self.staredIcon.check()
         else:
-            self.selected.uncheck()
+            if self.selected:
+                self.selected.uncheck()
             self.selected = self.staredIcon
         self.label_change_signal.emit(BUTTON.STARRED)
 
@@ -158,7 +160,8 @@ class NavigationList(QWidget):
         if self.selected == self.sentIcon:
             self.sentIcon.check()
         else:
-            self.selected.uncheck()
+            if self.selected:
+                self.selected.uncheck()
             self.selected = self.sentIcon
             self.label_change_signal.emit(BUTTON.SENT)
 
@@ -166,7 +169,8 @@ class NavigationList(QWidget):
         if self.selected == self.warningIcon:
             self.warningIcon.check()
         else:
-            self.selected.uncheck()
+            if self.selected:
+                self.selected.uncheck()
             self.selected = self.warningIcon
             self.label_change_signal.emit(BUTTON.SPAM)
 
@@ -174,7 +178,8 @@ class NavigationList(QWidget):
         if self.selected == self.draftsIcon:
             self.draftsIcon.check()
         else:
-            self.selected.uncheck()
+            if self.selected:
+                self.selected.uncheck()
             self.selected = self.draftsIcon
             self.label_change_signal.emit(BUTTON.DRAFT)
 
@@ -182,12 +187,18 @@ class NavigationList(QWidget):
         if self.selected == self.trashIcon:
             self.trashIcon.check()
         else:
-            self.selected.uncheck()
+            if self.selected:
+                self.selected.uncheck()
             self.selected = self.trashIcon
             self.label_change_signal.emit(BUTTON.TRASH)
 
     def getLabel(self):
         return self.selected.text()
+
+    def deselect(self):
+        if self.selected:
+            self.selected.uncheck()
+        self.selected = None
 
 
 class BUTTON:

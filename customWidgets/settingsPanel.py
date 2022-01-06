@@ -142,7 +142,7 @@ class SettingsPanel(QFrame):
             print(themeName+"------")
             self.settings.setTheme(themeName)
 
-            if self.messageNumberSelect.text().isnumeric():
+            if self.messageNumberSelect.text().isnumeric() and self.messageNumberSelect.text()!= "":
                 self.settings.setMessageNumber(self.messageNumberSelect.text())
             else:
                 self.messageNumberSelect.setText("")
@@ -174,8 +174,9 @@ class SettingsPanel(QFrame):
             self.settings.applyStylesheet(self.applyButton)
 
     def resizeContent(self, difSize):
-        self.resize(difSize.width() + self.size().width(), difSize.height() + self.size().height())
-        self.cancelButton.move(difSize.width() + self.cancelButton.pos().x(), self.cancelButton.pos().y())
+        self.move(difSize.width() + self.pos().x(), self.pos().y())
+        self.resize(self.size().width(), self.size().height() + difSize.height())
+        # self.cancelButton.move(difSize.width() + self.cancelButton.pos().x(), self.cancelButton.pos().y())
         self.settingsButton.move(QPoint(self.settingsButton.pos().x() + difSize.width(), self.settingsButton.pos().y()))
 
     def openSettings(self):
