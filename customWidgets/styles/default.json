@@ -292,7 +292,7 @@
       "states": ["default", "pressed", "hover"],
       "default": [{
           "name": "background-color",
-          "value": "qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #953bba ,stop:1 #146be2)"
+          "value": "#146be2"
         },
         {
           "name": "border-radius",
@@ -378,8 +378,12 @@
       "states": ["default"],
       "default": [{
           "name": "background-color",
-          "value": "#929497"
+          "value": "#3B4350"
 
+        },
+        {
+          "name": "color",
+          "value": "#FFFFFF"
         },
         {
           "name": "border-radius",
@@ -389,9 +393,32 @@
     },
     "newMessageButton": {
       "states": ["default", "pressed", "hover"],
-      "default": [],
+      "default": [{
+          "name": "background-color",
+          "value": "#146BE2"
+        },
+        {
+          "name":"color",
+          "value":"#FFFFFF"
+        },
+        {
+          "name":"border-radius",
+          "value":"10px"
+        }
+      ],
       "pressed": [],
-      "hover": []
+      "hover": [{
+        "name": "background-color",
+        "value": "#953bba"
+      },
+      {
+        "name":"color",
+        "value":"#0"
+      },
+      {
+        "name":"border-radius",
+        "value":"10px"
+      }]
     },
     "textButton": {
       "states": ["default", "pressed", "hover"],
@@ -572,6 +599,5 @@
         }
       ]
     }
-
   }
 }

@@ -11,15 +11,21 @@ class SettingsConfig:
     def __init__(self):
         self.subs = []
         self.theme = self.initTheme("default")
+        self.numberMessage = 5
 
     def initTheme(self, filename):
         with open(f"customWidgets/styles/{filename}.json") as file_object:
             # store file data in object
-            return json.load(file_object)
+            data = json.load(file_object)
+            print(data)
+            return data
 
     def setTheme(self, newTheme):
         self.theme = self.initTheme(newTheme)
         self.notify()
+
+    def getTheme(self):
+        return self.theme
 
     def getThemeValues(self, element):
         if self.theme:
@@ -27,7 +33,13 @@ class SettingsConfig:
         else:
             return None
 
-    def getStyleSheet(self, element, state='default'):
+    def getMessageNumber(self):
+        return self.numberMessage
+
+    def setMessageNumber(self, nr):
+        self.numberMessage = nr
+
+    def getStyleSheet(self, element, state="default"):
         styleSheet = ""
         elementValues = self.getThemeValues(element)
         if elementValues:
@@ -39,6 +51,7 @@ class SettingsConfig:
 
     def applyStylesheet(self, widget, state="default"):
         name = widget.objectName()
+        #uita te aici
         style = self.getStyleSheet(name, state)
         if style:
             widget.setStyleSheet(style)
@@ -58,5 +71,6 @@ class SettingsConfig:
         for sub in self.subs:
             try:
                 sub.notify()
-            except:
+            except Exception  as es:
+                print(es)
                 self.subs.remove(sub)

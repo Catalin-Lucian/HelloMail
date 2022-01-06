@@ -19,19 +19,19 @@ class SettingsPanel(QFrame):
 
     def __init__(self, parent):
         super(SettingsPanel, self).__init__(parent)
-        self.settings: settingsConfig = None
+        self.settings = None
         self.cancelButton = IconClickButton(self, "exit_chat_unselected.svg",
                                             "exit_chat_selected.svg",
                                             "exit_chat_selected.svg")
 
         self.settingsButton = SettingsButton(parent)
         # self.element = SettingElement(self, 642, 251)
-        self.languageText = QLabel(self)
+        self.messageNumberText = QLabel(self)
         self.themeText = QLabel(self)
         self.customDesignText = QLabel(self)
         self.titleText = QLabel(self)
 
-        self.languageSelect = QComboBox(self)
+        self.messageNumberSelect = QLineEdit(self)
         self.themeSelect = QComboBox(self)
         # self.customEdit = QTextEdit(self)
 
@@ -51,15 +51,15 @@ class SettingsPanel(QFrame):
 
     def setupUI(self):
 
-        self.languageText.setGeometry(31, 130, 235, 30)
+        self.messageNumberText.setGeometry(64, 190, 355, 22)
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(18)
         font.setBold(True)
         font.setWeight(75)
-        self.languageText.setFont(font)
-        self.languageText.setText("Language")
-        self.languageText.setObjectName("label")
+        self.messageNumberText.setFont(font)
+        self.messageNumberText.setText("Numer of message shown")
+        self.messageNumberText.setObjectName("label")
 
         font.setPointSize(25)
 
@@ -75,7 +75,7 @@ class SettingsPanel(QFrame):
         self.themeText.setText("Theme")
         self.themeText.setObjectName("label")
 
-        self.customDesignText.setGeometry(31, 363, 235, 30)
+        self.customDesignText.setGeometry(31, 363, 235, 34)
         self.customDesignText.setFont(font)
         self.customDesignText.setText("Custom Design")
         self.customDesignText.setObjectName("label")
@@ -95,9 +95,9 @@ class SettingsPanel(QFrame):
 
         font.setPointSize(13)
 
-        self.languageSelect.setGeometry(QRect(64, 170, 515, 28))
-        self.languageSelect.setFont(font)
-        self.languageSelect.setObjectName("settingsComboBox")
+        self.messageNumberSelect.setGeometry(QRect(420, 190, 148, 30))
+        self.messageNumberSelect.setFont(font)
+        self.messageNumberSelect.setObjectName("settingsComboBox")
 
         self.themeSelect.setGeometry(QRect(64, 288, 515, 28))
         self.themeSelect.setFont(font)
@@ -127,11 +127,11 @@ class SettingsPanel(QFrame):
         self.saveButton.setObjectName("saveButton")
         self.saveButton.click_signal.connect(lambda: self.saveJson())
 
-        self.nameFileEdit.setGeometry(QRect(64, 774, 232, 29))
+        self.nameFileEdit.setGeometry(QRect(64, 774, 436, 29))
         self.nameFileEdit.setPlaceholderText("New File Name")
         self.nameFileEdit.setObjectName("saveButton")
 
-        self.applyButton.setGeometry(QRect(402, 774, 78, 29))
+        self.applyButton.setGeometry(QRect(508, 843, 78, 29))
         self.applyButton.setText("Apply")
         self.applyButton.setObjectName("saveButton")
         self.applyButton.click_signal.connect(lambda: self.onApplyButton())
@@ -139,24 +139,33 @@ class SettingsPanel(QFrame):
     def onApplyButton(self):
         if self.settings:
             themeName = self.themeSelect.currentText()
+            print(themeName+"------")
             self.settings.setTheme(themeName)
+
+            if self.messageNumberSelect.text().isnumeric():
+                self.settings.setMessageNumber(self.messageNumberSelect.text())
+            else:
+                self.messageNumberSelect.setText("")
+                self.messageNumberSelect.setPlaceholderText(self.settings.getMessageNumber())
 
     def setSettings(self, settings):
         self.settings = settings
         if settings:
+            print(self.settings.getTheme())
             settings.subscribe(self)
             self.cancelButton.setSettings(settings)
             self.saveButton.setSettings(settings)
             self.settingsButton.setSettings(settings)
+            self.messageNumberSelect.setPlaceholderText(str(self.settings.getMessageNumber()))
             self.applyStyleSheets()
 
     def applyStyleSheets(self):
         if self.settings:
             self.settings.applyStylesheet(self)
-            self.settings.applyStylesheet(self.languageText)
+            self.settings.applyStylesheet(self.messageNumberText)
             self.settings.applyStylesheet(self.themeText)
             self.settings.applyStylesheet(self.customDesignText)
-            self.settings.applyStylesheet(self.languageSelect)
+            self.settings.applyStylesheet(self.messageNumberSelect)
             self.settings.applyStylesheet(self.themeSelect)
             self.settings.applyStylesheet(self.view)
             self.settings.applyStylesheet(self.nameFileEdit)
@@ -200,11 +209,19 @@ class SettingsPanel(QFrame):
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
 
-
     def saveJson(self):
-        if self.nameFileEdit.text() != "":
-            print(QFileInfo(__file__).absoluteDir().filePath("styles/"+self.nameFileEdit.text()+".json"))
-            f = open(str(QFileInfo(__file__).absoluteDir().filePath("styles/"+self.nameFileEdit.text()+".json")), 'w+')
+
+        nameFile = self.nameFileEdit.text()
+        if nameFile != "" and nameFile != "default":
+            print(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json"))
+            f = open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json")), 'w+')
             json.dump(self.model.to_json(), f)
-
-
+            self.nameFileEdit.setText("")
+            self.nameFileEdit.setPlaceholderText("Save successfully")
+            self.themeSelect.addItem(nameFile)
+        elif nameFile == "default":
+            self.nameFileEdit.setText("")
+            self.nameFileEdit.setPlaceholderText("Cannot modify default file")
+        else:
+            self.nameFileEdit.setText("")
+            self.nameFileEdit.setPlaceholderText("Please chose a name")

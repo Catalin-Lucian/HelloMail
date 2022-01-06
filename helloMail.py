@@ -135,7 +135,7 @@ class HelloMail(QMainWindow):
         self.mailCover.setStyleSheet(self.settings.getStyleSheet("mailCover"))
 
     def addMailItemsOnStartUp(self):
-        mails_data = self.gmailApi.get_emails_by_tags(["INBOX"], 5)
+        mails_data = self.gmailApi.get_emails_by_tags(["INBOX"], self.settings.getMessageNumber())
         for mail_data in mails_data:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
@@ -173,17 +173,17 @@ class HelloMail(QMainWindow):
         self.mailView.hideMail()
         self.mailList.clearMailList()
         if label == BUTTON.INBOX:
-            mails = self.gmailApi.get_emails_by_tags(['INBOX'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['INBOX'], self.settings.getMessageNumber())
         elif label == BUTTON.STARRED:
-            mails = self.gmailApi.get_emails_by_tags(['STARRED'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['STARRED'], self.settings.getMessageNumber())
         elif label == BUTTON.SENT:
-            mails = self.gmailApi.get_emails_by_tags(['SENT'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['SENT'], self.settings.getMessageNumber())
         elif label == BUTTON.SPAM:
-            mails = self.gmailApi.get_emails_by_tags(['SPAM'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['SPAM'], self.settings.getMessageNumber())
         elif label == BUTTON.DRAFT:
-            mails = self.gmailApi.get_emails_by_tags(['DRAFT'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['DRAFT'], self.settings.getMessageNumber())
         elif label == BUTTON.TRASH:
-            mails = self.gmailApi.get_emails_by_tags(['TRASH'], 20)
+            mails = self.gmailApi.get_emails_by_tags(['TRASH'], self.settings.getMessageNumber())
         for mail_data in mails:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
