@@ -198,5 +198,11 @@ class MailItem(QtWidgets.QFrame):
         if 'UNREAD' not in self.mailData['labelIds']:
             self.mailData['labelIds'].append("UNREAD")
 
+    def getEmailSubject(self):
+        return self.mailData.get('subject')
+
+    def getEmailAddress(self):
+        return self.mailData.get('from').get('email')
+
     def notify(self):
         pass

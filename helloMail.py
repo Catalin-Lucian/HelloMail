@@ -75,7 +75,7 @@ class HelloMail(QMainWindow):
 
     def setupUi(self):
 
-        self.setWindowTitle("helloMail")
+        self.setWindowTitle("HelloMail")
         self.resize(1440, 900)
         self.setMinimumSize(QtCore.QSize(1440, 900))
         self.setCentralWidget(self.centralWidget)
@@ -104,6 +104,7 @@ class HelloMail(QMainWindow):
         self.mailView.setObjectName("mailView")
         self.mailView.setSettings(self.settings)
         self.mailView.star_check_signal.connect(lambda ch: self.onMailViewStarChecked(ch))
+        self.mailView.reply_check_signal.connect(lambda: self.onReplyMailViewClicked())
 
         self.navigationList.setSettings(self.settings)
         self.navigationList.label_change_signal.connect(lambda button: self.onLabelChange(button))
@@ -152,7 +153,7 @@ class HelloMail(QMainWindow):
         newMessageDialog.setSettings(self.settings)
         newMessageDialog.finish_signal.connect(
             lambda destination, subject, messageText, attachment:
-            self.onSendMessage(destination, subject, messageText, attachment))
+            self.onSendMessage(destination, subject, messageText, None, attachment))
         newMessageDialog.show()
 
     @QtCore.pyqtSlot()
@@ -296,6 +297,20 @@ class HelloMail(QMainWindow):
             self.gmailApi.modify_labels_to_emails(mailIds, ['SPAM'], ['INBOX'])
 
     @QtCore.pyqtSlot()
+    def onReplyMailViewClicked(self):
+        threadId = self.mailList.getSelected().mailData.get('threadId')
+        messageId = self.mailList.getSelected().mailData.get('id')
+        print(threadId)
+        newMessageDialog = NewMessageDialog(self.centralWidget)
+        newMessageDialog.setSettings(self.settings)
+        newMessageDialog.setSubject("Re: " + self.mailList.selectedMailItem.getEmailSubject())
+        newMessageDialog.setEmail(self.mailList.selectedMailItem.getEmailAddress())
+        newMessageDialog.finish_signal.connect(
+            lambda destination, subject, messageText, attachment:
+            self.onSendMessage(destination, subject, messageText, messageId, threadId, attachment))
+        newMessageDialog.show()
+
+    @QtCore.pyqtSlot()
     def onSearch(self, query):
         self.mailView.hideMail()
         self.mailList.clearMailList()
@@ -307,10 +322,10 @@ class HelloMail(QMainWindow):
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
 
     @QtCore.pyqtSlot()
-    def onSendMessage(self, destination, subject, messageText, attachment):
+    def onSendMessage(self, destination, subject, messageText, messageId, threadId=None, attachment=[]):
         rez = self.gmailApi.get_profile()
-        myEmail=rez['emailAddress']
-        self.gmailApi.send_message(myEmail, destination, subject, messageText, attachment)
+        myEmail = rez['emailAddress']
+        self.gmailApi.send_message(myEmail, destination, subject, messageText, messageId, threadId, attachment)
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:

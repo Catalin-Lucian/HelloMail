@@ -1,4 +1,5 @@
 import logging
+import string
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QRect, QSize, Qt, QPoint, QUrl, pyqtSignal
@@ -13,6 +14,7 @@ from customWidgets.buttons.iconClickButton import IconClickButton
 
 class MailView(QFrame):
     star_check_signal = pyqtSignal(bool)
+    reply_check_signal = pyqtSignal(bool)
 
     def __init__(self, container):
         super(MailView, self).__init__(container)
@@ -95,7 +97,11 @@ class MailView(QFrame):
         self.buttonsContainer.hide()
 
         self.forwardButton.setGeometry(QRect(8, 4, 30, 30))
+
+
         self.replyButton.setGeometry(QRect(52, 4, 30, 30))
+        self.replyButton.click_signal.connect(lambda: self.onReplyClicked())
+
         self.trashButton.setGeometry(QRect(92, 4, 30, 30))
 
         self.starButton.setGeometry(QRect(700, 30, 30, 30))
@@ -163,6 +169,10 @@ class MailView(QFrame):
     @QtCore.pyqtSlot()
     def onStarClicked(self, check):
         self.star_check_signal.emit(check)
+
+    @QtCore.pyqtSlot()
+    def onReplyClicked(self):
+        self.reply_check_signal.emit(True)
 
     def hideMail(self):
         self.mailContentView.hide()

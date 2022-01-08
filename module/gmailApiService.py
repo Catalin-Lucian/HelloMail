@@ -64,6 +64,38 @@ class GmailApi:
             os.remove(os.path.join(working_dir, token_dir, pickle_file))
             self.service = None
 
+    def build_message(self, our_email, destination, subject, body, messageId, replyId, attachments=[]):
+        if not attachments:  # no attachments given
+            message = MIMEText(body)
+            message['to'] = destination
+            message['from'] = our_email
+            message['subject'] = subject
+            if replyId:
+                # message['threadId'] = replyId
+                message['In-Reply-To'] = messageId
+                message['References'] = messageId
+        else:
+            message = MIMEMultipart()
+            message['to'] = destination
+            message['from'] = our_email
+            message['subject'] = subject
+            if replyId:
+                message['threadId'] = replyId
+            message.attach(MIMEText(body))
+            for filename in attachments:
+                self.add_attachment(message, filename)
+
+        return {
+            'raw': urlsafe_b64encode(message.as_bytes()).decode(),
+            'threadId': replyId
+        }
+
+    def send_message(self, our_email, destination, subject, body, messageId, replyId=None, attachments=[]):
+        return self.service.users().messages().send(
+            userId="me",
+            body=self.build_message(our_email, destination, subject, body, messageId, replyId, attachments)
+        ).execute()
+
     def search_messages(self, query, maxResults):
         result = self.service.users().messages().list(userId='me', q=query, maxResults=maxResults).execute()
         messages = []
@@ -121,7 +153,7 @@ class GmailApi:
         return [my_body, my_attachments]
 
     def process_email(self, email):
-        resultEmail = {'id': email['id'], 'labelIds': email['labelIds']}
+        resultEmail = {'id': email['id'], 'labelIds': email['labelIds'], 'threadId': email['threadId']}
 
         payload = email['payload']
         mimeType = payload['mimeType']
@@ -240,28 +272,6 @@ class GmailApi:
         filename = os.path.basename(filename)
         msg.add_header('Content-Disposition', 'attachment', filename=filename)
         message.attach(msg)
-
-    def build_message(self, our_email, destination, subject, body, attachments=[]):
-        if not attachments:  # no attachments given
-            message = MIMEText(body)
-            message['to'] = destination
-            message['from'] = our_email
-            message['subject'] = subject
-        else:
-            message = MIMEMultipart()
-            message['to'] = destination
-            message['from'] = our_email
-            message['subject'] = subject
-            message.attach(MIMEText(body))
-            for filename in attachments:
-                self.add_attachment(message, filename)
-        return {'raw': urlsafe_b64encode(message.as_bytes()).decode()}
-
-    def send_message(self, our_email, destination, subject, body, attachments=[]):
-        return self.service.users().messages().send(
-            userId="me",
-            body=self.build_message(our_email, destination, subject, body, attachments)
-        ).execute()
 
     def get_profile(self):
         return self.service.users().getProfile(userId="me").execute()
