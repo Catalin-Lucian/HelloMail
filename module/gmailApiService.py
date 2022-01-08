@@ -166,11 +166,17 @@ class GmailApi:
                 value = header.get('value')
 
                 if name.lower() == 'from':
-                    index = value.index('<')
-                    resultEmail['from'] = {
-                        'name': value[:index],
-                        'email': value[index + 1:-1]
-                    }
+                    try:
+                        index = value.index('<')
+                        resultEmail['from'] = {
+                            'name': value[:index],
+                            'email': value[index + 1:-1]
+                        }
+                    except:
+                        resultEmail['from'] = {
+                            'name': "",
+                            'email': value
+                        }
                 if name.lower() == "subject":
                     resultEmail['subject'] = value
                 if name.lower() == "date":
