@@ -262,3 +262,6 @@ class GmailApi:
             userId="me",
             body=self.build_message(our_email, destination, subject, body, attachments)
         ).execute()
+
+    def get_profile(self):
+        return self.service.users().getProfile(userId="me").execute()

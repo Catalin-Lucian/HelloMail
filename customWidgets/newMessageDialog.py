@@ -1,6 +1,6 @@
 import logging
 
-from PyQt5.QtCore import Qt, QRect, QSize
+from PyQt5.QtCore import Qt, QRect, QSize, pyqtSignal
 from PyQt5.QtGui import QFont, QResizeEvent
 from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit
 
@@ -8,6 +8,8 @@ from customWidgets.buttons.iconClickButton import IconClickButton
 
 
 class NewMessageDialog(QDialog):
+    finish_signal = pyqtSignal(str, str, str, list)
+
     def __init__(self, container):
         super().__init__(container)
         self.setWindowTitle("New Message")
@@ -26,12 +28,13 @@ class NewMessageDialog(QDialog):
         self.pressed = False
         self.lastPos = None
         self.hasFirstResize =False
+        self.attachmentList = []
 
         self.exitIcon = IconClickButton(self.container, "exit_chat_unselected.svg",
                                         "exit_chat_selected.svg",
                                         "exit_chat_selected.svg")
 
-        self.atachmentIco = IconClickButton(self.container, "attachment_popup_unselected.svg",
+        self.attachmentIco = IconClickButton(self.container, "attachment_popup_unselected.svg",
                                             "attachment_popup_selected.svg",
                                             "attachment_popup_selected.svg")
 
@@ -48,7 +51,7 @@ class NewMessageDialog(QDialog):
 
     def setupUI(self):
         self.exitIcon.setObjectName("newMessageButton")
-        self.atachmentIco.setObjectName("newMessageButton")
+        self.attachmentIco.setObjectName("newMessageButton")
         self.trashIco.setObjectName("newMessageButton")
 
         self.setWindowFlag(Qt.WindowStaysOnTopHint)
@@ -100,8 +103,8 @@ class NewMessageDialog(QDialog):
         self.exitIcon.setGeometry(QRect(574, 11, 14, 14))
         self.exitIcon.click_signal.connect(self.close)
 
-        self.atachmentIco.setGeometry(QRect(26, 409, 20, 18))
-        self.atachmentIco.click_signal.connect(self.openFileNameDialog)
+        self.attachmentIco.setGeometry(QRect(26, 409, 20, 18))
+        self.attachmentIco.click_signal.connect(self.openFileNameDialog)
 
         self.trashIco.setGeometry(QRect(70, 409, 20, 19))
 
@@ -115,6 +118,23 @@ class NewMessageDialog(QDialog):
         self.sendIco.setText(" Send")
         self.sendIco.setFlat(True)
         self.sendIco.setObjectName("textButton")
+        self.sendIco.click_signal.connect(lambda: self.onSendSignal())
+
+    def onSendSignal(self):
+        destination = self.toTextEdit.text()
+        subject = self.subjectTextEdit.text()
+        messageText = self.richTextEdit.toPlainText()
+        if "@gmail.com" in destination:
+            self.finish_signal.emit(destination, subject, messageText, self.attachmentList)
+            self.toTextEdit.setStyleSheet(self.toTextEdit.styleSheet() + "color: white;")
+            self.close()
+        else:
+            self.toTextEdit.setStyleSheet(self.toTextEdit.styleSheet() + "color: red;")
+
+    def close(self) -> bool:
+        self.attachmentList.clear()
+        self.setParent(None)
+        return super(NewMessageDialog, self).close()
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -122,7 +142,7 @@ class NewMessageDialog(QDialog):
         fileName, _ = QFileDialog.getOpenFileName(self, "Select a file", "",
                                                   "All Files (*);;Python Files (*.py)")
         if fileName:
-            print(fileName)
+            self.attachmentList.append(fileName)
 
     def mousePressEvent(self, event):
         self.__mousePressPos = None
@@ -159,7 +179,7 @@ class NewMessageDialog(QDialog):
         self.settings = settings
         if settings:
             self.exitIcon.setSettings(self.settings)
-            self.atachmentIco.setSettings(self.settings)
+            self.attachmentIco.setSettings(self.settings)
             self.trashIco.setSettings(self.settings)
             self.sendIco.setSettings(self.settings)
             self.applyStyleSheets()
