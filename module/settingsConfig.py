@@ -10,15 +10,25 @@ class SettingsConfig:
 
     def __init__(self):
         self.subs = []
-        self.theme = self.initTheme("default")
+        self.theme = None
+        self.settingsData = None
         self.numberMessage = 5
+        self.initSettings()
+
+    def initSettings(self):
+        with open(f"customWidgets/settings/settings.json") as file_object:
+            self.settingsData = json.load(file_object)
+            self.theme = self.initTheme(self.settingsData["theme"])
+            self.numberMessage = self.settingsData["nr_mess"]
 
     def initTheme(self, filename):
         with open(f"customWidgets/styles/{filename}.json") as file_object:
             # store file data in object
             data = json.load(file_object)
-            print(data)
             return data
+
+    def getData(self):
+        return self.settingsData
 
     def setTheme(self, newTheme):
         self.theme = self.initTheme(newTheme)

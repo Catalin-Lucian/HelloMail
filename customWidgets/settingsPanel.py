@@ -21,6 +21,7 @@ class SettingsPanel(QFrame):
     def __init__(self, parent):
         super(SettingsPanel, self).__init__(parent)
         self.settings = None
+        self.savedSettings = {}
         self.cancelButton = IconClickButton(self, "exit_chat_unselected.svg",
                                             "exit_chat_selected.svg",
                                             "exit_chat_selected.svg")
@@ -54,7 +55,7 @@ class SettingsPanel(QFrame):
         self.setupUI()
 
     def setupUI(self):
-        self.messageNumberText.setGeometry(64, 190, 355, 22)
+        self.messageNumberText.setGeometry(31, 190, 355, 22)
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(18)
@@ -98,7 +99,7 @@ class SettingsPanel(QFrame):
 
         font.setPointSize(13)
 
-        self.messageNumberSelect.setGeometry(QRect(420, 190, 148, 30))
+        self.messageNumberSelect.setGeometry(QRect(420, 190, 158, 30))
         self.messageNumberSelect.setFont(font)
         self.messageNumberSelect.setObjectName("settingsComboBox")
 
@@ -145,21 +146,28 @@ class SettingsPanel(QFrame):
         self.logOutButton.click_signal.connect(lambda: self.onDisconnect())
 
     def onDisconnect(self):
-        tokenPath = QFileInfo(__file__).absoluteDir().currentPath()+"/token/token.pickle"
-        print(QFileInfo(__file__).absoluteDir().currentPath()+"/token/token.pickle")
+        tokenPath = QFileInfo(__file__).absoluteDir().currentPath() + "/token/token.pickle"
+        print(QFileInfo(__file__).absoluteDir().currentPath() + "/token/token.pickle")
         os.remove(tokenPath)
         os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
 
     def onApplyButton(self):
         if self.settings:
             themeName = self.themeSelect.currentText()
-            print(themeName+"------")
+            print(themeName + "------")
             self.settings.setTheme(themeName)
 
             if self.messageNumberSelect.text().isnumeric() and not self.messageNumberSelect.text().isspace() \
                     and self.messageNumberSelect.text() != "":
                 self.settings.setMessageNumber(self.messageNumberSelect.text())
+                self.savedSettings["nr_mess"] = self.messageNumberSelect.text()
                 # self.numberMessage = self.messageNumberSelect.text()
+
+            self.savedSettings["theme"] = self.themeSelect.currentText()
+            print(self.savedSettings["theme"])
+            f = open(str(QFileInfo(__file__).absoluteDir().filePath("settings/settings.json")), 'w+')
+            json.dump(self.savedSettings, f)
+
 
         # self.messageNumberSelect.setText(self.numberMessage)
 
@@ -171,8 +179,14 @@ class SettingsPanel(QFrame):
             self.cancelButton.setSettings(settings)
             self.saveButton.setSettings(settings)
             self.settingsButton.setSettings(settings)
-            self.messageNumberSelect.setText(str(self.settings.getMessageNumber()))
+
             self.applyStyleSheets()
+            self.savedSettings = self.settings.getData()
+            self.messageNumberSelect.setText(str(self.settings.getMessageNumber()))
+
+            print(self.savedSettings["theme"])
+            self.themeSelect.setCurrentText(self.savedSettings["theme"])
+
 
     def applyStyleSheets(self):
         if self.settings:
@@ -226,11 +240,14 @@ class SettingsPanel(QFrame):
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
 
+        # f = open(str(QFileInfo(__file__).absoluteDir().filePath(f"customWidgets/settings/settings.json")), 'w+')
+        # json.dump(self.model.to_json(), f)
+
     def saveJson(self):
 
         nameFile = self.nameFileEdit.text()
         if nameFile != "" and nameFile != "default":
-            print(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json"))
+            # print(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json"))
             f = open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json")), 'w+')
             json.dump(self.model.to_json(), f)
             self.nameFileEdit.setText("")
