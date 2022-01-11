@@ -24,7 +24,6 @@ class SettingsPanel(QFrame):
                                             "exit_chat_selected.svg")
 
         self.settingsButton = SettingsButton(parent)
-        # self.element = SettingElement(self, 642, 251)
         self.messageNumberText = QLabel(self)
         self.themeText = QLabel(self)
         self.customDesignText = QLabel(self)
@@ -32,16 +31,12 @@ class SettingsPanel(QFrame):
 
         self.messageNumberSelect = QLineEdit(self)
         self.themeSelect = QComboBox(self)
-        # self.customEdit = QTextEdit(self)
 
         self.view = QTreeView(self)
         self.model = JsonModel(self)
 
         self.saveButton = IconClickButton(self)
-
         self.nameFileEdit = QLineEdit(self)
-
-        # self.successLabelInfo = QLabel(self)
         self.applyButton = IconClickButton(self)
 
         self.logOutButton = IconClickButton(self)
@@ -108,22 +103,16 @@ class SettingsPanel(QFrame):
 
         self.themeSelect.currentTextChanged.connect(lambda: self.themeEventComboBox())
 
-        # self.customEdit.setGeometry(QRect(64, 412, 522, 346))
-        # self.customEdit.setFont(font)
-        # self.customEdit.setObjectName("settingsComboBox")
-
         self.view.setModel(self.model)
         json_path = QFileInfo(__file__).absoluteDir().filePath("styles/default.json")
         with open(json_path) as file:
             document = json.load(file)
             self.model.load(document)
         self.view.header().setSectionResizeMode(0, QHeaderView.Stretch)
-        # self.view.setAlternatingRowColors(True)
         self.view.resize(522, 346)
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
-        self.view.expandAll()
-
+        self.view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.saveButton.setGeometry(QRect(508, 774, 78, 29))
         self.saveButton.setText("Save")
@@ -161,7 +150,6 @@ class SettingsPanel(QFrame):
                     and self.messageNumberSelect.text() != "":
                 self.settings.setMessageNumber(self.messageNumberSelect.text())
                 self.savedSettings["nr_mess"] = self.messageNumberSelect.text()
-                # self.numberMessage = self.messageNumberSelect.text()
 
             self.savedSettings["theme"] = self.themeSelect.currentText()
             f = open(str(QFileInfo(__file__).absoluteDir().filePath("settings/settings.json")), 'w+')
@@ -202,13 +190,12 @@ class SettingsPanel(QFrame):
         self.resize(self.size().width(), self.size().height() + difSize.height())
         self.settingsButton.move(QPoint(self.settingsButton.pos().x() + difSize.width(), self.settingsButton.pos().y()))
 
-        self.logOutButton.move(QPoint(self.logOutButton.pos().x(), self.logOutButton.pos().y()+difSize.height()))
-        self.applyButton.move(QPoint(self.applyButton.pos().x(), self.applyButton.pos().y()+difSize.height()))
+        self.logOutButton.move(QPoint(self.logOutButton.pos().x(), self.logOutButton.pos().y() + difSize.height()))
+        self.applyButton.move(QPoint(self.applyButton.pos().x(), self.applyButton.pos().y() + difSize.height()))
 
     def openSettings(self):
         self.show()
         self.settingsButton.hide()
-        self.view.expandAll()
         # self.uploadCustomDesignData()
 
     def closeSettings(self):
@@ -236,13 +223,8 @@ class SettingsPanel(QFrame):
         self.view.resize(522, 346)
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
-        self.view.expandAll()
-
-        # f = open(str(QFileInfo(__file__).absoluteDir().filePath(f"customWidgets/settings/settings.json")), 'w+')
-        # json.dump(self.model.to_json(), f)
 
     def saveJson(self):
-
         nameFile = self.nameFileEdit.text()
         if nameFile != "" and nameFile != "default":
             # print(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json"))
