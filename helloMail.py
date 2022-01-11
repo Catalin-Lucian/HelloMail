@@ -47,25 +47,22 @@ class HelloMail(QMainWindow):
         self.mailCover = QtWidgets.QFrame(self.centralWidget)
         self.searchBar = SearchBar(self.centralWidget)
         self.actionBar = ActionBar(self.centralWidget)
-        # self.settingsButton = SettingsButton(self.centralWidget)
+        self.refreshButton = IconClickButton(self.centralWidget, "refresh_unselected", "refresh_unselected",
+                                             "refresh_hover")
 
         self.navigationList = NavigationList(self.centralWidget)
-
         self.newMessageButton = IconClickButton(self.centralWidget, "new_message.svg", "new_message.svg",
                                                 "new_message.svg")
 
         self.customLabelList = LabelList(self.centralWidget)
-
         self.settingsPanel = SettingsPanel(self.centralWidget)
 
-        # logo
         self.logoImage = QtWidgets.QLabel(self.centralWidget)
         self.logoImage.setGeometry(QtCore.QRect(3, 40, 260, 59))
         self.logoImage.setStyleSheet("border-radius:10px")
         pixmap = QPixmap("customWidgets" + os.path.sep + "icons" + os.path.sep + "logo.png")
         self.logoImage.setPixmap(pixmap)
 
-        # icon
         self.setWindowIcon(QtGui.QIcon("customWidgets" + os.path.sep + "icons" + os.path.sep + "icon.png"))
 
         self.setupUi()
@@ -126,6 +123,11 @@ class HelloMail(QMainWindow):
         self.customLabelList.setSettings(self.settings)
         self.customLabelList.click_signal.connect(lambda label_id: self.onCustomLabel(label_id))
         self.customLabelList.newLabelFrame.create_signal.connect(lambda name: self.onCreateNewLabel(name))
+
+        self.refreshButton.setObjectName("refreshButton")
+        self.refreshButton.setSettings(self.settings)
+        self.refreshButton.setGeometry(QRect(12, 850, 40, 40))
+        self.refreshButton.click_signal.connect(lambda: self.onRefresh())
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -210,7 +212,7 @@ class HelloMail(QMainWindow):
         self.mailView.hideMail()
         self.mailList.clearMailList()
         self.navigationList.deselect()
-        mails = self.gmailApi.get_emails_by_tags([label_id], 20)
+        mails = self.gmailApi.get_emails_by_tags([label_id], self.settings.getMessageNumber())
         for mail_data in mails:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
@@ -316,7 +318,7 @@ class HelloMail(QMainWindow):
         self.mailList.clearMailList()
         self.navigationList.deselect()
         self.customLabelList.deselect()
-        mails = self.gmailApi.search_messages(query, 20)
+        mails = self.gmailApi.search_messages(query, self.settings.getMessageNumber())
         for mail_data in mails:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
@@ -326,6 +328,23 @@ class HelloMail(QMainWindow):
         rez = self.gmailApi.get_profile()
         myEmail = rez['emailAddress']
         self.gmailApi.send_message(myEmail, destination, subject, messageText, messageId, threadId, attachment)
+
+    @QtCore.pyqtSlot()
+    def onRefresh(self):
+        self.mailView.hideMail()
+        self.mailList.clearMailList()
+        mails = []
+        if self.navigationList.last_label_id:
+            self.customLabelList.deselect()
+            mails = self.gmailApi.get_emails_by_tags([self.navigationList.last_label_id],
+                                                     self.settings.getMessageNumber())
+        if self.customLabelList.last_label_id:
+            self.navigationList.deselect()
+            mails = self.gmailApi.get_emails_by_tags([self.customLabelList.last_label_id],
+                                                     self.settings.getMessageNumber())
+        for mail_data in mails:
+            mailItem = self.mailList.addMailItem(mail_data)
+            mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -338,6 +357,8 @@ class HelloMail(QMainWindow):
 
             self.searchBar.move(QPoint(self.searchBar.pos().x() + difW, self.searchBar.pos().y()))
             self.settingsPanel.resizeContent(QSize(difW, difH))
+
+            self.refreshButton.move(QPoint(self.refreshButton.pos().x(), self.refreshButton.pos().y() + difH))
 
         if not self.hasFirstResize:
             self.hasFirstResize = True

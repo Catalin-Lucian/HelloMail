@@ -2,7 +2,7 @@
   "elements": ["mainWindow", "mailCover", "mailList", "mailView", "mailItem", "mailItemAvatarIcon",
     "iconClickButton", "mailItemSelectButton", "mailItemCheckButton", "searchButton", "searchInput", "settingPanel", "settingButton",
     "navigationButton", "newMessageContainer", "newMessageTextEdit", "newMessageButton", "textButton",
-    "actionBar"
+    "actionBar", "refreshButton"
   ],
   "values": {
     "mainWindow": {
@@ -644,6 +644,31 @@
           "value": "#FFFFFF"
         }
       ]
+    },
+    "refreshButton": {
+      "default": [{
+         "name": "background-color",
+          "value": "#262A30"
+      },{
+          "name": "border-radius",
+          "value": "10px"
+        }],
+      "pressed": [{
+         "name": "background-color",
+          "value": "#262A30"
+      },
+      {
+          "name": "border-radius",
+          "value": "10px"
+        }],
+      "hover": [{
+         "name": "background-color",
+          "value": "#262A30"
+      },
+      {
+          "name": "border-radius",
+          "value": "10px"
+        }]
     }
   }
 }

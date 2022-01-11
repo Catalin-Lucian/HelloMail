@@ -13,6 +13,7 @@ class NavigationList(QWidget):
         self.container = container
         self.settings = None
         self.selected = None
+        self.last_label_id = None
 
         self.navigationLabel = QLabel(container)
         self.inboxIcon = IconCheckButton(self.container, "inbox_navigation_unselected.svg",
@@ -145,6 +146,7 @@ class NavigationList(QWidget):
             if self.selected:
                 self.selected.uncheck()
             self.selected = self.inboxIcon
+        self.last_label_id = "INBOX"
         self.label_change_signal.emit(BUTTON.INBOX)
 
     def onStared(self):
@@ -154,6 +156,7 @@ class NavigationList(QWidget):
             if self.selected:
                 self.selected.uncheck()
             self.selected = self.staredIcon
+        self.last_label_id = "STARRED"
         self.label_change_signal.emit(BUTTON.STARRED)
 
     def onSent(self):
@@ -163,7 +166,8 @@ class NavigationList(QWidget):
             if self.selected:
                 self.selected.uncheck()
             self.selected = self.sentIcon
-            self.label_change_signal.emit(BUTTON.SENT)
+        self.last_label_id = "SENT"
+        self.label_change_signal.emit(BUTTON.SENT)
 
     def onSpam(self):
         if self.selected == self.warningIcon:
@@ -172,7 +176,8 @@ class NavigationList(QWidget):
             if self.selected:
                 self.selected.uncheck()
             self.selected = self.warningIcon
-            self.label_change_signal.emit(BUTTON.SPAM)
+        self.last_label_id = "SPAM"
+        self.label_change_signal.emit(BUTTON.SPAM)
 
     def onDraft(self):
         if self.selected == self.draftsIcon:
@@ -181,7 +186,8 @@ class NavigationList(QWidget):
             if self.selected:
                 self.selected.uncheck()
             self.selected = self.draftsIcon
-            self.label_change_signal.emit(BUTTON.DRAFT)
+        self.last_label_id = "DRAFT"
+        self.label_change_signal.emit(BUTTON.DRAFT)
 
     def onTrash(self):
         if self.selected == self.trashIcon:
@@ -190,7 +196,8 @@ class NavigationList(QWidget):
             if self.selected:
                 self.selected.uncheck()
             self.selected = self.trashIcon
-            self.label_change_signal.emit(BUTTON.TRASH)
+        self.last_label_id = "TRASH"
+        self.label_change_signal.emit(BUTTON.TRASH)
 
     def getLabel(self):
         return self.selected.text()
@@ -199,6 +206,7 @@ class NavigationList(QWidget):
         if self.selected:
             self.selected.uncheck()
         self.selected = None
+        self.last_label_id = None
 
 
 class BUTTON:

@@ -18,6 +18,7 @@ class LabelList(QScrollArea):
 
         self.tagList = []
         self.selected = None
+        self.last_label_id = None
 
         self.myLabel = QLabel(parent)
 
@@ -112,12 +113,14 @@ class LabelList(QScrollArea):
             self.selected.uncheck()
         button.check()
         self.selected = button
+        self.last_label_id = id_label
         self.click_signal.emit(id_label)
 
     def deselect(self):
         if self.selected:
             self.selected.uncheck()
         self.selected = None
+        self.last_label_id = None
 
     def createLabelShow(self):
         self.newLabelFrame.show()
