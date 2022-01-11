@@ -2,10 +2,8 @@ import json
 import os
 import sys
 from os import listdir
-from os.path import isfile
-from shlex import join
 
-from PyQt5.QtCore import Qt, QRect, QPoint, QSize, QFileInfo
+from PyQt5.QtCore import Qt, QRect, QPoint, QFileInfo
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QFrame, QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, QComboBox, \
     QLabel, QTextEdit, QTreeView, QHeaderView, QLineEdit, QColorDialog, QGraphicsColorizeEffect
@@ -13,7 +11,6 @@ from PyQt5.QtWidgets import QFrame, QScrollArea, QWidget, QVBoxLayout, QSpacerIt
 from customWidgets.buttons.iconClickButton import IconClickButton
 from customWidgets.buttons.settingsButton import SettingsButton
 from customWidgets.jsonViewer import JsonModel
-from module import settingsConfig
 
 
 class SettingsPanel(QFrame):
@@ -27,7 +24,6 @@ class SettingsPanel(QFrame):
                                             "exit_chat_selected.svg")
 
         self.settingsButton = SettingsButton(parent)
-        # self.element = SettingElement(self, 642, 251)
         self.messageNumberText = QLabel(self)
         self.themeText = QLabel(self)
         self.customDesignText = QLabel(self)
@@ -35,16 +31,12 @@ class SettingsPanel(QFrame):
 
         self.messageNumberSelect = QLineEdit(self)
         self.themeSelect = QComboBox(self)
-        # self.customEdit = QTextEdit(self)
 
         self.view = QTreeView(self)
         self.model = JsonModel(self)
 
         self.saveButton = IconClickButton(self)
-
         self.nameFileEdit = QLineEdit(self)
-
-        # self.successLabelInfo = QLabel(self)
         self.applyButton = IconClickButton(self)
 
         self.logOutButton = IconClickButton(self)
@@ -81,7 +73,7 @@ class SettingsPanel(QFrame):
 
         font.setPointSize(25)
 
-        self.titleText.setGeometry(241, 32, 235, 45)
+        self.titleText.setGeometry(260, 32, 235, 45)
         self.titleText.setFont(font)
         self.titleText.setText("Settings")
         self.titleText.setObjectName("label")
@@ -125,20 +117,16 @@ class SettingsPanel(QFrame):
 
         self.themeSelect.currentTextChanged.connect(lambda: self.themeEventComboBox())
 
-        # self.customEdit.setGeometry(QRect(64, 412, 522, 346))
-        # self.customEdit.setFont(font)
-        # self.customEdit.setObjectName("settingsComboBox")
-
         self.view.setModel(self.model)
         json_path = QFileInfo(__file__).absoluteDir().filePath("styles/default.json")
         with open(json_path) as file:
             document = json.load(file)
             self.model.load(document)
         self.view.header().setSectionResizeMode(0, QHeaderView.Stretch)
-        # self.view.setAlternatingRowColors(True)
         self.view.resize(522, 346)
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
+        self.view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.saveButton.setGeometry(QRect(508, 774, 78, 29))
         self.saveButton.setText("Save")
@@ -187,14 +175,10 @@ class SettingsPanel(QFrame):
                     and self.messageNumberSelect.text() != "":
                 self.settings.setMessageNumber(self.messageNumberSelect.text())
                 self.savedSettings["nr_mess"] = self.messageNumberSelect.text()
-                # self.numberMessage = self.messageNumberSelect.text()
 
             self.savedSettings["theme"] = self.themeSelect.currentText()
             f = open(str(QFileInfo(__file__).absoluteDir().filePath("settings/settings.json")), 'w+')
             json.dump(self.savedSettings, f)
-
-
-        # self.messageNumberSelect.setText(self.numberMessage)
 
     def setSettings(self, settings):
         self.settings = settings
@@ -212,7 +196,6 @@ class SettingsPanel(QFrame):
             print(self.savedSettings["theme"])
             self.themeSelect.setCurrentText(self.savedSettings["theme"])
 
-
     def applyStyleSheets(self):
         if self.settings:
             self.settings.applyStylesheet(self)
@@ -224,7 +207,6 @@ class SettingsPanel(QFrame):
             self.settings.applyStylesheet(self.view)
             self.settings.applyStylesheet(self.nameFileEdit)
             self.settings.applyStylesheet(self.logOutButton)
-            # self.settings.applyStylesheet(self.customEdit)
             self.settings.applyStylesheet(self.titleText)
             self.settings.applyStylesheet(self.applyButton)
             self.settings.applyStylesheet(self.colorEdit)
@@ -233,8 +215,10 @@ class SettingsPanel(QFrame):
     def resizeContent(self, difSize):
         self.move(difSize.width() + self.pos().x(), self.pos().y())
         self.resize(self.size().width(), self.size().height() + difSize.height())
-        # self.cancelButton.move(difSize.width() + self.cancelButton.pos().x(), self.cancelButton.pos().y())
         self.settingsButton.move(QPoint(self.settingsButton.pos().x() + difSize.width(), self.settingsButton.pos().y()))
+
+        self.logOutButton.move(QPoint(self.logOutButton.pos().x(), self.logOutButton.pos().y() + difSize.height()))
+        self.applyButton.move(QPoint(self.applyButton.pos().x(), self.applyButton.pos().y() + difSize.height()))
 
     def openSettings(self):
         self.show()
@@ -267,15 +251,11 @@ class SettingsPanel(QFrame):
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
 
-        # f = open(str(QFileInfo(__file__).absoluteDir().filePath(f"customWidgets/settings/settings.json")), 'w+')
-        # json.dump(self.model.to_json(), f)
-
     def saveJson(self):
-
         nameFile = self.nameFileEdit.text()
         if nameFile != "" and nameFile != "default":
             # print(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json"))
-            with  open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json")), 'w+') as f:
+            with open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json")), 'w+') as f:
                 json.dump(self.model.to_json(), f)
             self.nameFileEdit.setText("")
             self.nameFileEdit.setPlaceholderText("Save successfully")
