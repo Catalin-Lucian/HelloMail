@@ -2,7 +2,8 @@ import logging
 
 from PyQt5.QtCore import Qt, QRect, QSize, pyqtSignal
 from PyQt5.QtGui import QFont, QResizeEvent
-from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit
+from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit, QWidget, QVBoxLayout, \
+    QSpacerItem, QSizePolicy, QScrollArea, QLayout
 
 from customWidgets.buttons.iconClickButton import IconClickButton
 
@@ -27,7 +28,7 @@ class NewMessageDialog(QDialog):
 
         self.pressed = False
         self.lastPos = None
-        self.hasFirstResize =False
+        self.hasFirstResize = False
         self.attachmentList = []
 
         self.exitIcon = IconClickButton(self.container, "exit_chat_unselected.svg",
@@ -35,8 +36,8 @@ class NewMessageDialog(QDialog):
                                         "exit_chat_selected.svg")
 
         self.attachmentIco = IconClickButton(self.container, "attachment_popup_unselected.svg",
-                                            "attachment_popup_selected.svg",
-                                            "attachment_popup_selected.svg")
+                                             "attachment_popup_selected.svg",
+                                             "attachment_popup_selected.svg")
 
         self.trashIco = IconClickButton(self.container, "trash_popup_unselected.svg",
                                         "trash_popup_selected.svg",
@@ -45,6 +46,11 @@ class NewMessageDialog(QDialog):
         self.sendIco = IconClickButton(self.container, "send_popup_selected.svg",
                                        "send_popup_selected.svg",
                                        "send_popup_selected.svg")
+
+        self.attachmentScrollArea = QScrollArea(self)
+        self.scrollAreaWidgetContents = QWidget(self.attachmentScrollArea)
+        self.orizontalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.setupUI()
         self.setWindowFlag(Qt.FramelessWindowHint)
@@ -97,7 +103,7 @@ class NewMessageDialog(QDialog):
         self.subjectTextEdit.setGeometry(QRect(95, 86, 473, 25))
         self.subjectTextEdit.setObjectName("newMessageTextEdit")
 
-        self.richTextEdit.setGeometry(QRect(16, 125, 555, 262))
+        self.richTextEdit.setGeometry(QRect(16, 125, 555, 210))
         self.richTextEdit.setObjectName("newMessageTextEdit")
 
         self.exitIcon.setGeometry(QRect(574, 11, 14, 14))
@@ -119,6 +125,32 @@ class NewMessageDialog(QDialog):
         self.sendIco.setFlat(True)
         self.sendIco.setObjectName("textButton")
         self.sendIco.click_signal.connect(lambda: self.onSendSignal())
+
+        self.attachmentScrollArea.setObjectName("newMessageAttachmentArea")
+        self.attachmentScrollArea.setEnabled(True)
+        self.attachmentScrollArea.setGeometry(QRect(16, 345, 555, 30))
+        sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.attachmentScrollArea.setSizePolicy(sizePolicy)
+        self.attachmentScrollArea.setMinimumSize(QSize(555, 30))
+        self.attachmentScrollArea.setMaximumSize(QSize(555, 30))
+        self.attachmentScrollArea.setFrameShape(QFrame.NoFrame)
+        self.attachmentScrollArea.setLineWidth(0)
+        self.attachmentScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.attachmentScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.attachmentScrollArea.setWidgetResizable(False)
+
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 555, 30))
+
+        self.orizontalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
+        self.orizontalLayout.setContentsMargins(0, 0, 0, 0)
+
+    def addAttachment(self):
+        self.orizontalLayout.removeItem(self.spacerItem)
+
+        self.orizontalLayout.addSpacerItem(self.spacerItem)
 
     def onSendSignal(self):
         destination = self.toTextEdit.text()
@@ -191,16 +223,6 @@ class NewMessageDialog(QDialog):
             self.applyStyleSheets()
             self.settings.subscribe(self)
 
-    def applyStyleSheet(self, state):
-        if self.settings:
-            style = self.settings.getStyleSheet(self.objectName(), state)
-            if style:
-                self.setStyleSheet(style)
-            else:
-                logging.warning(f"!! {self.objectName()} styleSheet:{state} did not load !!")
-        else:
-            logging.warning("-- settings value noneType")
-
     def applyStyleSheets(self):
         self.settings.applyStylesheet(self)
         self.settings.applyStylesheet(self.container)
@@ -210,6 +232,7 @@ class NewMessageDialog(QDialog):
         self.settings.applyStylesheet(self.toLabel)
         self.settings.applyStylesheet(self.subjectLabel)
         self.settings.applyStylesheet(self.richTextEdit)
+        self.settings.applyStylesheet(self.attachmentScrollArea)
 
     # def resizeEvent(self, e: QResizeEvent) -> None:
     #     if self.hasFirstResize:
