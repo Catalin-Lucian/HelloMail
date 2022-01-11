@@ -153,8 +153,9 @@ class SettingsPanel(QFrame):
 
     def onApplyButton(self):
         if self.settings:
+            self.nameFileEdit.setText("")
+            self.saveJson()
             themeName = self.themeSelect.currentText()
-            print(themeName + "------")
             self.settings.setTheme(themeName)
 
             if self.messageNumberSelect.text().isnumeric() and not self.messageNumberSelect.text().isspace() \
@@ -164,7 +165,6 @@ class SettingsPanel(QFrame):
                 # self.numberMessage = self.messageNumberSelect.text()
 
             self.savedSettings["theme"] = self.themeSelect.currentText()
-            print(self.savedSettings["theme"])
             f = open(str(QFileInfo(__file__).absoluteDir().filePath("settings/settings.json")), 'w+')
             json.dump(self.savedSettings, f)
 
@@ -248,14 +248,16 @@ class SettingsPanel(QFrame):
         nameFile = self.nameFileEdit.text()
         if nameFile != "" and nameFile != "default":
             # print(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json"))
-            f = open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json")), 'w+')
-            json.dump(self.model.to_json(), f)
+            with  open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json")), 'w+') as f:
+                json.dump(self.model.to_json(), f)
             self.nameFileEdit.setText("")
             self.nameFileEdit.setPlaceholderText("Save successfully")
             self.themeSelect.addItem(nameFile)
+            self.themeSelect.setCurrentText(nameFile)
         elif nameFile == "default":
             self.nameFileEdit.setText("")
             self.nameFileEdit.setPlaceholderText("Cannot modify default file")
         else:
-            self.nameFileEdit.setText("")
-            self.nameFileEdit.setPlaceholderText("Please chose a name")
+            nameFile = self.themeSelect.currentText()
+            with  open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json")), 'w+') as f:
+                json.dump(self.model.to_json(), f)
