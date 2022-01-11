@@ -13,7 +13,7 @@ class NavigationList(QWidget):
         self.container = container
         self.settings = None
         self.selected = None
-        self.last_label_id = None
+        self.last_label_id = "INBOX"
 
         self.navigationLabel = QLabel(container)
         self.inboxIcon = IconCheckButton(self.container, "inbox_navigation_unselected.svg",
