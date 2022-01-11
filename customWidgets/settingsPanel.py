@@ -2,18 +2,15 @@ import json
 import os
 import sys
 from os import listdir
-from os.path import isfile
-from shlex import join
 
-from PyQt5.QtCore import Qt, QRect, QPoint, QSize, QFileInfo
+from PyQt5.QtCore import Qt, QRect, QPoint, QFileInfo
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QFrame, QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, QComboBox, \
-    QLabel, QTextEdit, QTreeView, QHeaderView, QLineEdit
+from PyQt5.QtWidgets import QFrame, QComboBox, \
+    QLabel, QTreeView, QHeaderView, QLineEdit
 
 from customWidgets.buttons.iconClickButton import IconClickButton
 from customWidgets.buttons.settingsButton import SettingsButton
 from customWidgets.jsonViewer import JsonModel
-from module import settingsConfig
 
 
 class SettingsPanel(QFrame):
@@ -67,7 +64,7 @@ class SettingsPanel(QFrame):
 
         font.setPointSize(25)
 
-        self.titleText.setGeometry(241, 32, 235, 45)
+        self.titleText.setGeometry(260, 32, 235, 45)
         self.titleText.setFont(font)
         self.titleText.setText("Settings")
         self.titleText.setObjectName("label")
@@ -125,6 +122,8 @@ class SettingsPanel(QFrame):
         self.view.resize(522, 346)
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
+        self.view.expandAll()
+
 
         self.saveButton.setGeometry(QRect(508, 774, 78, 29))
         self.saveButton.setText("Save")
@@ -195,19 +194,21 @@ class SettingsPanel(QFrame):
             self.settings.applyStylesheet(self.view)
             self.settings.applyStylesheet(self.nameFileEdit)
             self.settings.applyStylesheet(self.logOutButton)
-            # self.settings.applyStylesheet(self.customEdit)
             self.settings.applyStylesheet(self.titleText)
             self.settings.applyStylesheet(self.applyButton)
 
     def resizeContent(self, difSize):
         self.move(difSize.width() + self.pos().x(), self.pos().y())
         self.resize(self.size().width(), self.size().height() + difSize.height())
-        # self.cancelButton.move(difSize.width() + self.cancelButton.pos().x(), self.cancelButton.pos().y())
         self.settingsButton.move(QPoint(self.settingsButton.pos().x() + difSize.width(), self.settingsButton.pos().y()))
+
+        self.logOutButton.move(QPoint(self.logOutButton.pos().x(), self.logOutButton.pos().y()+difSize.height()))
+        self.applyButton.move(QPoint(self.applyButton.pos().x(), self.applyButton.pos().y()+difSize.height()))
 
     def openSettings(self):
         self.show()
         self.settingsButton.hide()
+        self.view.expandAll()
         # self.uploadCustomDesignData()
 
     def closeSettings(self):
@@ -235,6 +236,7 @@ class SettingsPanel(QFrame):
         self.view.resize(522, 346)
         self.view.move(QPoint(64, 412))
         self.view.setObjectName("settingsComboBox")
+        self.view.expandAll()
 
         # f = open(str(QFileInfo(__file__).absoluteDir().filePath(f"customWidgets/settings/settings.json")), 'w+')
         # json.dump(self.model.to_json(), f)

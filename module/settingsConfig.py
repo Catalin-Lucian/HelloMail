@@ -39,7 +39,7 @@ class SettingsConfig:
 
     def getThemeValues(self, element):
         if self.theme:
-            return self.theme.get('values').get(element)
+            return self.theme.get(element)
         else:
             return None
 
