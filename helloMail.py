@@ -366,7 +366,7 @@ class HelloMail(QMainWindow):
         super(HelloMail, self).resizeEvent(e)
 
     def notify(self):
-        # ---------------------- get notification from settings -----------------
+
         pass
 
 

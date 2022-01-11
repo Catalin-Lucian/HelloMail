@@ -168,9 +168,6 @@ class SettingsPanel(QFrame):
             f = open(str(QFileInfo(__file__).absoluteDir().filePath("settings/settings.json")), 'w+')
             json.dump(self.savedSettings, f)
 
-
-        # self.messageNumberSelect.setText(self.numberMessage)
-
     def setSettings(self, settings):
         self.settings = settings
         if settings:
@@ -186,7 +183,6 @@ class SettingsPanel(QFrame):
 
             print(self.savedSettings["theme"])
             self.themeSelect.setCurrentText(self.savedSettings["theme"])
-
 
     def applyStyleSheets(self):
         if self.settings:
@@ -248,11 +244,12 @@ class SettingsPanel(QFrame):
         nameFile = self.nameFileEdit.text()
         if nameFile != "" and nameFile != "default":
             # print(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json"))
-            f = open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json")), 'w+')
-            json.dump(self.model.to_json(), f)
+            with open(str(QFileInfo(__file__).absoluteDir().filePath("styles/" + nameFile + ".json")), 'w+') as f:
+                json.dump(self.model.to_json(), f)
             self.nameFileEdit.setText("")
             self.nameFileEdit.setPlaceholderText("Save successfully")
             self.themeSelect.addItem(nameFile)
+            self.themeSelect.setCurrentText(nameFile)
         elif nameFile == "default":
             self.nameFileEdit.setText("")
             self.nameFileEdit.setPlaceholderText("Cannot modify default file")
