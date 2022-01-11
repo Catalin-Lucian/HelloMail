@@ -5,6 +5,7 @@ from PyQt5.QtGui import QFont, QResizeEvent
 from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit, QWidget, QVBoxLayout, \
     QSpacerItem, QSizePolicy, QScrollArea, QLayout
 
+from customWidgets.buttons.iconCheckButton import IconCheckButton
 from customWidgets.buttons.iconClickButton import IconClickButton
 
 
@@ -146,9 +147,19 @@ class NewMessageDialog(QDialog):
 
         self.orizontalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
         self.orizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.attachmentScrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.addAttachment()
+        self.addAttachment()
+        self.addAttachment()
+        self.addAttachment()
 
     def addAttachment(self):
         self.orizontalLayout.removeItem(self.spacerItem)
+
+        tagButton = IconCheckButton(self.scrollAreaWidgetContents, "tag.svg", "tag.svg", "tag.svg")
+        tagButton.setObjectName("navigationButton")
+        tagButton.setGeometry(QRect(0, 0, 0, 0))
 
         self.orizontalLayout.addSpacerItem(self.spacerItem)
 

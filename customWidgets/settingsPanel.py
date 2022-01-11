@@ -8,7 +8,7 @@ from shlex import join
 from PyQt5.QtCore import Qt, QRect, QPoint, QSize, QFileInfo
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QFrame, QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, QComboBox, \
-    QLabel, QTextEdit, QTreeView, QHeaderView, QLineEdit
+    QLabel, QTextEdit, QTreeView, QHeaderView, QLineEdit, QColorDialog, QGraphicsColorizeEffect
 
 from customWidgets.buttons.iconClickButton import IconClickButton
 from customWidgets.buttons.settingsButton import SettingsButton
@@ -52,9 +52,23 @@ class SettingsPanel(QFrame):
         self.hide()
         self.numberMessage = 5
 
+        self.colorEdit = QTextEdit(self)
+        self.labelShowColor = IconClickButton(self)
+
         self.setupUI()
 
     def setupUI(self):
+        self.colorEdit.setGeometry(QRect(468, 371, 110, 26))
+        self.colorEdit.setObjectName("saveButton")
+        self.colorEdit.setReadOnly(True)
+        self.colorEdit.setText("#000000")
+
+        self.labelShowColor.setGeometry(QRect(560, 371, 26, 26))
+        self.labelShowColor.setStyleSheet("background: #000000;border-radius: 10px;")
+
+
+        self.labelShowColor.click_signal.connect(lambda: self.colorChose())
+
         self.messageNumberText.setGeometry(31, 190, 355, 22)
         font = QFont()
         font.setFamily("Calibri")
@@ -145,6 +159,17 @@ class SettingsPanel(QFrame):
         self.logOutButton.setObjectName("logOut")
         self.logOutButton.click_signal.connect(lambda: self.onDisconnect())
 
+    def colorChose(self):
+        color = QColorDialog.getColor()
+
+
+        self.colorEdit.setText(str(color.name()))
+        self.labelShowColor.setStyleSheet(f"background: {color.name()};border-radius: 10px;")
+        #
+        # graphic = QGraphicsColorizeEffect(self)
+        # graphic.setColor(color)
+        # self.labelShowColor.setGraphicsEffect(graphic)
+
     def onDisconnect(self):
         tokenPath = QFileInfo(__file__).absoluteDir().currentPath() + "/token/token.pickle"
         print(QFileInfo(__file__).absoluteDir().currentPath() + "/token/token.pickle")
@@ -202,6 +227,8 @@ class SettingsPanel(QFrame):
             # self.settings.applyStylesheet(self.customEdit)
             self.settings.applyStylesheet(self.titleText)
             self.settings.applyStylesheet(self.applyButton)
+            self.settings.applyStylesheet(self.colorEdit)
+
 
     def resizeContent(self, difSize):
         self.move(difSize.width() + self.pos().x(), self.pos().y())
