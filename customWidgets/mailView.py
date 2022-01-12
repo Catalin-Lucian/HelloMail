@@ -46,7 +46,7 @@ class MailView(QFrame):
         self.setStyleSheet("background-color: rgb(59, 67, 80)")
 
         self.mailContentView.setObjectName("mailContentView")
-        self.mailContentView.setGeometry(QRect(20, 145, 705, 647))
+        self.mailContentView.setGeometry(QRect(20, 180, 705, 647))
         self.mailContentView.setMinimumSize(QSize(705, 647))
         self.mailContentView.setPage(self.customPage)
         self.mailContentView.setWindowFlag(Qt.WindowStaysOnBottomHint)
@@ -82,7 +82,7 @@ class MailView(QFrame):
         self.dateTimeLabel.setFont(font)
 
         self.subjectLabel.setObjectName("label")
-        self.subjectLabel.setGeometry(QRect(20, 100, 705, 35))
+        self.subjectLabel.setGeometry(QRect(20, 140, 705, 35))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(18)
