@@ -31,6 +31,7 @@ class NewMessageDialog(QDialog):
         self.lastPos = None
         self.hasFirstResize = False
         self.attachmentList = []
+        self.attachmentReffList = []
 
         self.exitIcon = IconClickButton(self.container, "exit_chat_unselected.svg",
                                         "exit_chat_selected.svg",
@@ -49,9 +50,9 @@ class NewMessageDialog(QDialog):
                                        "send_popup_selected.svg")
 
         self.attachmentScrollArea = QScrollArea(self)
-        self.scrollAreaWidgetContents = QWidget(self.attachmentScrollArea)
-        self.orizontalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
-        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.scrollAreaWidgetContents = QWidget()
+        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.setupUI()
         self.setWindowFlag(Qt.FramelessWindowHint)
@@ -129,39 +130,46 @@ class NewMessageDialog(QDialog):
 
         self.attachmentScrollArea.setObjectName("newMessageAttachmentArea")
         self.attachmentScrollArea.setEnabled(True)
-        self.attachmentScrollArea.setGeometry(QRect(16, 345, 555, 30))
+        self.attachmentScrollArea.setGeometry(QRect(16, 345, 555, 50))
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.attachmentScrollArea.setSizePolicy(sizePolicy)
-        self.attachmentScrollArea.setMinimumSize(QSize(555, 30))
-        self.attachmentScrollArea.setMaximumSize(QSize(555, 30))
+        self.attachmentScrollArea.setMinimumSize(QSize(555, 50))
+        self.attachmentScrollArea.setMaximumSize(QSize(555, 50))
         self.attachmentScrollArea.setFrameShape(QFrame.NoFrame)
         self.attachmentScrollArea.setLineWidth(0)
         self.attachmentScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.attachmentScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.attachmentScrollArea.setWidgetResizable(False)
 
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 555, 30))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 555, 50))
 
-        self.orizontalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
-        self.orizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(5)
+
         self.attachmentScrollArea.setWidget(self.scrollAreaWidgetContents)
+        # self.attachmentScrollArea.setStyleSheet("background-color: #FFFFFF;")
 
-        self.addAttachment()
-        self.addAttachment()
-        self.addAttachment()
-        self.addAttachment()
+    def addAttachment(self, path):
+        self.verticalLayout.removeItem(self.spacerItem)
+        # aici mai e o pb nu afiseaza continutul
+        elButton = AttachmentItem(self.scrollAreaWidgetContents,"close_attachment.svg","close_attachment.svg","close_attachment.svg")
+        elButton.setObjectName("navigationButton")
+        elButton.setStyleSheet("background-color: #C4C4C4; border-radius: 10px")
+        elButton.setGeometry(QRect(0, 0, 555, 20))
+        elButton.setPath(path)
+        elButton.click_signal.connect(lambda: self.closeAttachment(elButton))
+        self.verticalLayout.addWidget(elButton)
 
-    def addAttachment(self):
-        self.orizontalLayout.removeItem(self.spacerItem)
+        self.verticalLayout.addSpacerItem(self.spacerItem)
 
-        tagButton = IconCheckButton(self.scrollAreaWidgetContents, "tag.svg", "tag.svg", "tag.svg")
-        tagButton.setObjectName("navigationButton")
-        tagButton.setGeometry(QRect(0, 0, 0, 0))
-
-        self.orizontalLayout.addSpacerItem(self.spacerItem)
+    def closeAttachment(self, elButton):
+        self.attachmentList.remove(elButton.path)
+        elButton.setParent(None)
+        self.verticalLayout.removeWidget(elButton)
 
     def onSendSignal(self):
         destination = self.toTextEdit.text()
@@ -186,6 +194,7 @@ class NewMessageDialog(QDialog):
                                                   "All Files (*);;Python Files (*.py)")
         if fileName:
             self.attachmentList.append(fileName)
+            self.addAttachment(fileName)
 
     def setSubject(self, subject):
         self.subjectTextEdit.setText(subject)
@@ -234,6 +243,8 @@ class NewMessageDialog(QDialog):
             self.applyStyleSheets()
             self.settings.subscribe(self)
 
+
+
     def applyStyleSheets(self):
         self.settings.applyStylesheet(self)
         self.settings.applyStylesheet(self.container)
@@ -256,3 +267,15 @@ class NewMessageDialog(QDialog):
 
     def notify(self):
         self.applyStyleSheets()
+
+
+class AttachmentItem(IconClickButton):
+    def __init__(self, parent,iconUnClicked=None, iconClicked=None, iconHover=None):
+        super(AttachmentItem, self).__init__(parent,iconUnClicked, iconClicked, iconHover)
+        self.name = None
+        self.path = None
+
+    def setPath(self, path):
+        self.name = path.split("/")[-1]
+        self.path = path
+        self.setText(self.name)
