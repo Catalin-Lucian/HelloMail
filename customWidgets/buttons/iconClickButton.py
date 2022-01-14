@@ -52,6 +52,8 @@ class IconClickButton(QPushButton):
                 self.settings.applyStylesheet(self, 'pressed')
         super(IconClickButton, self).mousePressEvent(e)
 
+
+
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         if e.button() == Qt.LeftButton:
             if self.onTop:

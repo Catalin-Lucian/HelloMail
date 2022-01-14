@@ -155,7 +155,7 @@ class HelloMail(QMainWindow):
         newMessageDialog.setSettings(self.settings)
         newMessageDialog.finish_signal.connect(
             lambda destination, subject, messageText, attachment:
-            self.onSendMessage(destination, subject, messageText, None, attachment))
+            self.onSendMessage(destination, subject, messageText, None, None, attachment))
         newMessageDialog.show()
 
     @QtCore.pyqtSlot()
@@ -327,6 +327,7 @@ class HelloMail(QMainWindow):
     def onSendMessage(self, destination, subject, messageText, messageId, threadId=None, attachment=[]):
         rez = self.gmailApi.get_profile()
         myEmail = rez['emailAddress']
+        print(threadId)
         self.gmailApi.send_message(myEmail, destination, subject, messageText, messageId, threadId, attachment)
 
     @QtCore.pyqtSlot()

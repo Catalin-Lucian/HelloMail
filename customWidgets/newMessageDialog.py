@@ -6,7 +6,6 @@ from PyQt5.QtGui import QFont, QResizeEvent
 from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit, QWidget, QVBoxLayout, \
     QSpacerItem, QSizePolicy, QScrollArea, QLayout
 
-
 from customWidgets.buttons.iconCheckButton import IconCheckButton
 from customWidgets.buttons.iconClickButton import IconClickButton
 
@@ -66,13 +65,14 @@ class NewMessageDialog(QDialog):
 
         font = QFont()
         font.setFamily("Calibri")
-        font.setPointSize(14)
+        font.setPointSize(10)
         font.setBold(True)
-        font.setWeight(75)
+        font.setWeight(35)
         self.memoryShow.setFont(font)
-        self.memoryShow.setText("0 MB")
-        self.memoryShow.setGeometry(QRect(260, 404, 181, 21))
+        self.memoryShow.setText("")
+        self.memoryShow.setGeometry(QRect(0, 400, 601, 21))
         self.memoryShow.setStyleSheet("color: #15F346")
+        self.memoryShow.setAlignment(Qt.AlignCenter)
 
         self.exitIcon.setObjectName("iconClickButton")
         self.attachmentIco.setObjectName("iconClickButton")
@@ -121,7 +121,7 @@ class NewMessageDialog(QDialog):
         self.subjectTextEdit.setGeometry(QRect(95, 86, 473, 25))
         self.subjectTextEdit.setObjectName("newMessageTextEdit")
 
-        self.richTextEdit.setGeometry(QRect(16, 125, 555, 210))
+        self.richTextEdit.setGeometry(QRect(16, 125, 555, 260))
         self.richTextEdit.setObjectName("newMessageTextEdit")
 
         self.exitIcon.setGeometry(QRect(574, 11, 14, 14))
@@ -172,27 +172,29 @@ class NewMessageDialog(QDialog):
     def addAttachment(self, path):
         self.verticalLayout.removeItem(self.spacerItem)
         # aici mai e o pb nu afiseaza continutul
-        elButton = AttachmentItem(self.scrollAreaWidgetContents) #,"close_attachment.svg","close_attachment.svg","close_attachment.svg")
-        elButton.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        elButton = AttachmentItem(
+            self.scrollAreaWidgetContents)  # ,"close_attachment.svg","close_attachment.svg","close_attachment.svg")
         elButton.setObjectName("navigationButton")
         elButton.setStyleSheet("background-color: #C4C4C4; border-radius: 10px")
-        elButton.setGeometry(QRect(0, 0, 11, 20))
         elButton.setMinimumSize(25, 25)
         elButton.setPath(path)
         elButton.click_signal.connect(lambda: self.closeAttachment(elButton))
-
-
+        elButton.adjustSize()
         self.verticalLayout.addWidget(elButton)
+
+        if self.memoryCount == 0:
+            self.richTextEdit.setGeometry(QRect(16, 125, 555, 210))
+
         self.memoryCount += elButton.getMem()
 
         if self.memoryCount < 1000:
-            self.memoryShow.setText(str(self.memoryCount)+" bytes")
+            self.memoryShow.setText(str(self.memoryCount) + " bytes")
         elif self.memoryCount < 1000000:
-            self.memoryShow.setText(str(self.memoryCount/1000) + " Kb")
+            self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000) + " KB")
         elif self.memoryCount < 25000000:
-            self.memoryShow.setText(str(self.memoryCount / 1000000) + " Mb")
+            self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000000) + " MB")
         else:
-            self.memoryShow.setText(str(self.memoryCount/1000000) + " Mb")
+            self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000000) + " MB")
             self.memoryShow.setStyleSheet("color: #F60D0D")
             self.sendIco.setDisabled(True)
 
@@ -204,23 +206,25 @@ class NewMessageDialog(QDialog):
         elButton.setParent(None)
         self.verticalLayout.removeWidget(elButton)
 
-
-        if self.memoryCount < 1000:
-            self.memoryShow.setText(str(self.memoryCount) + " bytes")
-            self.sendIco.setDisabled(False)
-            self.memoryShow.setStyleSheet("color: #15F346")
-        elif self.memoryCount < 1000000:
-            self.memoryShow.setText(str(self.memoryCount / 1000) + " Kb")
-            self.sendIco.setDisabled(False)
-            self.memoryShow.setStyleSheet("color: #15F346")
-        elif self.memoryCount < 25000000:
-            self.sendIco.setDisabled(False)
-            self.memoryShow.setStyleSheet("color: #15F346")
-            self.memoryShow.setText(str(self.memoryCount / 1000000) + " Mb")
-        else:
-            self.memoryShow.setText(str(self.memoryCount / 1000000) + " Mb")
-            self.memoryShow.setStyleSheet("color: #F60D0D")
-
+        if self.memoryCount == 0:
+            self.memoryShow.setText("")
+            self.richTextEdit.setGeometry(QRect(16, 125, 555, 260))
+        if self.memoryCount > 0:
+            if self.memoryCount < 1000:
+                self.memoryShow.setText(str(self.memoryCount) + " bytes")
+                self.sendIco.setDisabled(False)
+                self.memoryShow.setStyleSheet("color: #15F346")
+            elif self.memoryCount < 1000000:
+                self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000) + " KB")
+                self.sendIco.setDisabled(False)
+                self.memoryShow.setStyleSheet("color: #15F346")
+            elif self.memoryCount < 25000000:
+                self.sendIco.setDisabled(False)
+                self.memoryShow.setStyleSheet("color: #15F346")
+                self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000000) + " MB")
+            else:
+                self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000000) + " MB")
+                self.memoryShow.setStyleSheet("color: #F60D0D")
 
     def onSendSignal(self):
         destination = self.toTextEdit.text()
@@ -294,8 +298,6 @@ class NewMessageDialog(QDialog):
             self.applyStyleSheets()
             self.settings.subscribe(self)
 
-
-
     def applyStyleSheets(self):
         self.settings.applyStylesheet(self)
         self.settings.applyStylesheet(self.container)
@@ -321,8 +323,8 @@ class NewMessageDialog(QDialog):
 
 
 class AttachmentItem(IconClickButton):
-    def __init__(self, parent,iconUnClicked=None, iconClicked=None, iconHover=None):
-        super(AttachmentItem, self).__init__(parent,iconUnClicked, iconClicked, iconHover)
+    def __init__(self, parent, iconUnClicked=None, iconClicked=None, iconHover=None):
+        super(AttachmentItem, self).__init__(parent, iconUnClicked, iconClicked, iconHover)
         self.name = None
         self.path = None
         self.memory = 0
@@ -330,9 +332,14 @@ class AttachmentItem(IconClickButton):
     def setPath(self, path):
         self.name = path.split("/")[-1]
         self.path = path
-
-        self.setText(self.name+" ("+str(os.path.getsize(path))+" bytes)")
         self.memory = os.path.getsize(path)
+
+        if self.memory < 1000:
+            self.setText(self.name + "(" + str(self.memory) + " bytes)")
+        elif self.memory < 1000000:
+            self.setText(self.name + "({:.2f}".format(self.memory / 1000) + " KB)")
+        else:
+            self.setText(self.name + "({:.2f}".format(self.memory / 1000000) + " MB)")
 
     def getMem(self):
         return self.memory

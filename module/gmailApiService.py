@@ -91,13 +91,14 @@ class GmailApi:
         }
 
     def send_message(self, our_email, destination, subject, body, messageId, replyId=None, attachments=[]):
+
         try:
             return self.service.users().messages().send(
                 userId="me",
                 body=self.build_message(our_email, destination, subject, body, messageId, replyId, attachments)
             ).execute()
-        except:
-            print("email invalid")
+        except Exception as error:
+            print(f"An error occurred: {error}")
 
     def search_messages(self, query, maxResults):
         result = self.service.users().messages().list(userId='me', q=query, maxResults=maxResults).execute()
