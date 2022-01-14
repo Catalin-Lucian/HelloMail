@@ -135,14 +135,14 @@ class SettingsPanel(QFrame):
 
         self.nameFileEdit.setGeometry(QRect(64, 774, 436, 29))
         self.nameFileEdit.setPlaceholderText("New File Name")
-        self.nameFileEdit.setObjectName("saveButton")
+        self.nameFileEdit.setObjectName("fileNameEdit")
 
         self.applyButton.setGeometry(QRect(508, 843, 78, 29))
         self.applyButton.setText("Apply")
-        self.applyButton.setObjectName("saveButton")
+        self.applyButton.setObjectName("applyButton")
         self.applyButton.click_signal.connect(lambda: self.onApplyButton())
 
-        self.logOutButton.setGeometry(QRect(14, 824, 60, 60))
+        self.logOutButton.setGeometry(QRect(14, 843, 211, 41))
         self.logOutButton.setText("Log Out")
         self.logOutButton.setObjectName("logOut")
         self.logOutButton.click_signal.connect(lambda: self.onDisconnect())

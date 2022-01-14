@@ -79,7 +79,7 @@
     "logOut": {
         "default": [{
             "name": "background-color",
-            "value": "#00FB74"
+            "value": "#FF0A0A"
         }, {
             "name": "color",
             "value": "#FFFFFF"
@@ -92,7 +92,7 @@
         }],
         "hover": [{
             "name": "background-color",
-            "value": "#F60A0A"
+            "value": "#FF0A0A"
         }, {
             "name": "color",
             "value": "#FFFFFF"
@@ -105,7 +105,7 @@
         }],
         "pressed": [{
             "name": "background-color",
-            "value": "#953BBA"
+            "value": "#792222"
         }, {
             "name": "color",
             "value": "#FFFFFF"
@@ -361,7 +361,7 @@
     "saveButton": {
         "default": [{
             "name": "background-color",
-            "value": "#953BBA"
+            "value": "#1D5C2B"
         }, {
             "name": "color",
             "value": "#FFFFFF"
@@ -374,7 +374,7 @@
         }],
         "hover": [{
             "name": "background-color",
-            "value": "#953BBA"
+            "value": "#1D5C2B"
         }, {
             "name": "color",
             "value": "#FFFFFF"
@@ -387,7 +387,7 @@
         }],
         "pressed": [{
             "name": "background-color",
-            "value": "#953BBA"
+            "value": "#1D5C2B"
         }, {
             "name": "color",
             "value": "#FFFFFF"
@@ -509,6 +509,82 @@
         "pressed": [{
             "name": "background-color",
             "value": "#146BE2"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }, {
+            "name": "border-radius",
+            "value": "10px"
+        }]
+    },
+    "fileNameEdit": {
+        "default": [{
+            "name": "background-color",
+            "value": "#1D5C2B"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }, {
+            "name": "border-radius",
+            "value": "10px"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }],
+        "hover": [{
+            "name": "background-color",
+            "value": "#1D5C2B"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }, {
+            "name": "border-radius",
+            "value": "10px"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }],
+        "pressed": [{
+            "name": "background-color",
+            "value": "#1D5C2B"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }, {
+            "name": "border-radius",
+            "value": "10px"
+        }]
+    },
+    "applyButton": {
+        "default": [{
+            "name": "background-color",
+            "value": "#953BBA"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }, {
+            "name": "border-radius",
+            "value": "10px"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }],
+        "hover": [{
+            "name": "background-color",
+            "value": "#953BBA"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }, {
+            "name": "border-radius",
+            "value": "10px"
+        }, {
+            "name": "color",
+            "value": "#FFFFFF"
+        }],
+        "pressed": [{
+            "name": "background-color",
+            "value": "#953BBA"
         }, {
             "name": "color",
             "value": "#FFFFFF"
