@@ -1,9 +1,11 @@
 import logging
+import os
 
 from PyQt5.QtCore import Qt, QRect, QSize, pyqtSignal
 from PyQt5.QtGui import QFont, QResizeEvent
 from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit, QWidget, QVBoxLayout, \
     QSpacerItem, QSizePolicy, QScrollArea, QLayout
+
 
 from customWidgets.buttons.iconCheckButton import IconCheckButton
 from customWidgets.buttons.iconClickButton import IconClickButton
@@ -17,6 +19,9 @@ class NewMessageDialog(QDialog):
         self.setWindowTitle("New Message")
         self.settings = None
         self.container = QFrame(self)
+
+        self.memoryCount = 0
+        self.memoryShow = QLabel(self.container)
 
         self.titleLabel = QLabel(self.container)
         self.toLabel = QLabel(self.container)
@@ -58,6 +63,17 @@ class NewMessageDialog(QDialog):
         self.setWindowFlag(Qt.FramelessWindowHint)
 
     def setupUI(self):
+
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.memoryShow.setFont(font)
+        self.memoryShow.setText("0 MB")
+        self.memoryShow.setGeometry(QRect(260, 404, 181, 21))
+        self.memoryShow.setStyleSheet("color: #15F346")
+
         self.exitIcon.setObjectName("iconClickButton")
         self.attachmentIco.setObjectName("iconClickButton")
         self.trashIco.setObjectName("iconClickButton")
@@ -156,20 +172,55 @@ class NewMessageDialog(QDialog):
     def addAttachment(self, path):
         self.verticalLayout.removeItem(self.spacerItem)
         # aici mai e o pb nu afiseaza continutul
-        elButton = AttachmentItem(self.scrollAreaWidgetContents,"close_attachment.svg","close_attachment.svg","close_attachment.svg")
+        elButton = AttachmentItem(self.scrollAreaWidgetContents) #,"close_attachment.svg","close_attachment.svg","close_attachment.svg")
+        elButton.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         elButton.setObjectName("navigationButton")
         elButton.setStyleSheet("background-color: #C4C4C4; border-radius: 10px")
-        elButton.setGeometry(QRect(0, 0, 555, 20))
+        elButton.setGeometry(QRect(0, 0, 11, 20))
+        elButton.setMinimumSize(25, 25)
         elButton.setPath(path)
         elButton.click_signal.connect(lambda: self.closeAttachment(elButton))
+
+
         self.verticalLayout.addWidget(elButton)
+        self.memoryCount += elButton.getMem()
+
+        if self.memoryCount < 1000:
+            self.memoryShow.setText(str(self.memoryCount)+" bytes")
+        elif self.memoryCount < 1000000:
+            self.memoryShow.setText(str(self.memoryCount/1000) + " Kb")
+        elif self.memoryCount < 25000000:
+            self.memoryShow.setText(str(self.memoryCount / 1000000) + " Mb")
+        else:
+            self.memoryShow.setText(str(self.memoryCount/1000000) + " Mb")
+            self.memoryShow.setStyleSheet("color: #F60D0D")
+            self.sendIco.setDisabled(True)
 
         self.verticalLayout.addSpacerItem(self.spacerItem)
 
     def closeAttachment(self, elButton):
         self.attachmentList.remove(elButton.path)
+        self.memoryCount -= elButton.getMem()
         elButton.setParent(None)
         self.verticalLayout.removeWidget(elButton)
+
+
+        if self.memoryCount < 1000:
+            self.memoryShow.setText(str(self.memoryCount) + " bytes")
+            self.sendIco.setDisabled(False)
+            self.memoryShow.setStyleSheet("color: #15F346")
+        elif self.memoryCount < 1000000:
+            self.memoryShow.setText(str(self.memoryCount / 1000) + " Kb")
+            self.sendIco.setDisabled(False)
+            self.memoryShow.setStyleSheet("color: #15F346")
+        elif self.memoryCount < 25000000:
+            self.sendIco.setDisabled(False)
+            self.memoryShow.setStyleSheet("color: #15F346")
+            self.memoryShow.setText(str(self.memoryCount / 1000000) + " Mb")
+        else:
+            self.memoryShow.setText(str(self.memoryCount / 1000000) + " Mb")
+            self.memoryShow.setStyleSheet("color: #F60D0D")
+
 
     def onSendSignal(self):
         destination = self.toTextEdit.text()
@@ -274,8 +325,14 @@ class AttachmentItem(IconClickButton):
         super(AttachmentItem, self).__init__(parent,iconUnClicked, iconClicked, iconHover)
         self.name = None
         self.path = None
+        self.memory = 0
 
     def setPath(self, path):
         self.name = path.split("/")[-1]
         self.path = path
-        self.setText(self.name)
+
+        self.setText(self.name+" ("+str(os.path.getsize(path))+" bytes)")
+        self.memory = os.path.getsize(path)
+
+    def getMem(self):
+        return self.memory
