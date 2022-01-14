@@ -41,7 +41,7 @@ class SearchBar(QFrame):
         self.setupUi()
 
     def setupUi(self):
-        self.setGeometry(QRect(968, 50, 388, 24))
+        self.setGeometry(QRect(968, 50, 450, 24))
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
 

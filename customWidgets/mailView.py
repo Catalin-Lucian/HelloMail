@@ -2,7 +2,7 @@ import logging
 import string
 
 from PyQt5 import QtCore
-from PyQt5.QtCore import QRect, QSize, Qt, QPoint, QUrl, pyqtSignal
+from PyQt5.QtCore import QRect, QSize, Qt, QPoint, QUrl, pyqtSignal, QEvent
 from PyQt5.QtGui import QFont, QDesktopServices
 from PyQt5.QtWidgets import QFrame, QLabel, QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, \
     QHBoxLayout
@@ -20,6 +20,8 @@ class MailView(QFrame):
     def __init__(self, container):
         super(MailView, self).__init__(container)
         self.settings = None
+
+        self.last_time_move = 0
 
         self.mailContentView = QWebEngineView(self)
         self.customPage = CustomWebPage(self.mailContentView)
@@ -40,7 +42,7 @@ class MailView(QFrame):
                                           "star_view_hover.svg")
 
         self.attachmentsScrollArea = QScrollArea(self)
-        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents = QWidget(self.attachmentsScrollArea)
         self.verticalLayout = QHBoxLayout(self.scrollAreaWidgetContents)
         self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -88,13 +90,14 @@ class MailView(QFrame):
         self.dateTimeLabel.setFont(font)
 
         self.subjectLabel.setObjectName("label")
-        self.subjectLabel.setGeometry(QRect(20, 140, 705, 35))
+        self.subjectLabel.setGeometry(QRect(20, 135, 705, 35))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(18)
         self.subjectLabel.setFont(font)
         self.subjectLabel.setAlignment(Qt.AlignCenter)
         self.subjectLabel.setScaledContents(True)
+        self.subjectLabel.setWordWrap(True)
 
         self.buttonsContainer.setGeometry(QRect(563, 26, 128, 38))
         self.buttonsContainer.setStyleSheet("background-color: rgb(41, 48, 58);\n""border-radius:10px;")
@@ -114,29 +117,46 @@ class MailView(QFrame):
         self.starButton.check_signal.connect(lambda ch: self.onStarClicked(ch))
 
         self.attachmentsScrollArea.setEnabled(True)
-        self.attachmentsScrollArea.setStyleSheet("background-color: #FFFFFF;")
-        self.attachmentsScrollArea.setGeometry(QtCore.QRect(20, 90, 705, 110))
+        self.attachmentsScrollArea.setGeometry(QtCore.QRect(20, 87, 705, 40))
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.attachmentsScrollArea.setSizePolicy(sizePolicy)
-        self.attachmentsScrollArea.setMinimumSize(QtCore.QSize(705, 110))
-        self.attachmentsScrollArea.setMaximumSize(QtCore.QSize(705, 110))
+        self.attachmentsScrollArea.setMinimumSize(QtCore.QSize(705, 40))
+        self.attachmentsScrollArea.setMaximumSize(QtCore.QSize(705, 40))
         self.attachmentsScrollArea.setFrameShape(QFrame.NoFrame)
         self.attachmentsScrollArea.setLineWidth(0)
-        # self.attachmentsScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.attachmentsScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         # self.attachmentsScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.attachmentsScrollArea.setWidgetResizable(False)
         self.attachmentsScrollArea.setAlignment(Qt.AlignCenter)
 
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 705, 110))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 705, 40))
 
         self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setContentsMargins(0, 0, 5, 5)
         self.verticalLayout.setSpacing(5)
 
         self.attachmentsScrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.scroll_bar = self.attachmentsScrollArea.horizontalScrollBar()
+        self.attachmentsScrollArea.installEventFilter(self)
+
+    def eventFilter(self, source, event):
+        if event.type() == QEvent.MouseMove:
+            print(event.pos().x())
+
+            if self.last_time_move == 0:
+                self.last_time_move = event.pos().x()
+
+            distance = self.last_time_move - event.pos().x()
+            self.scroll_bar.setValue(self.scroll_bar.value() + distance)
+            self.last_time_move = event.pos().x()
+
+        elif event.type() == QEvent.MouseButtonRelease:
+            self.last_time_move = 0
+        return QWidget.eventFilter(self, source, event)
 
     def setSettings(self, settings):
         if settings:
@@ -177,8 +197,9 @@ class MailView(QFrame):
         if attachments:
             for attachment in attachments:
                 attachmentItem = AttachmentButtonIcon(self.scrollAreaWidgetContents)
-                attachmentItem.setGeometry(QRect(0, 0, 5, 5))
-
+                attachmentItem.setGeometry(QRect(0, 0, 123, 30))
+                attachmentItem.setMinimumSize(123, 30)
+                attachmentItem.setObjectName("mailViewAttachment")
                 attachmentItem.setSettings(self.settings)
                 attachmentItem.setAttachment(attachment)
                 self.verticalLayout.addWidget(attachmentItem)
