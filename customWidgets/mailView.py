@@ -4,7 +4,8 @@ import string
 from PyQt5 import QtCore
 from PyQt5.QtCore import QRect, QSize, Qt, QPoint, QUrl, pyqtSignal
 from PyQt5.QtGui import QFont, QDesktopServices
-from PyQt5.QtWidgets import QFrame, QLabel, QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout
+from PyQt5.QtWidgets import QFrame, QLabel, QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout, \
+    QHBoxLayout
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
 from customWidgets.buttons.avatarIcon import AvatarIcon
@@ -40,7 +41,7 @@ class MailView(QFrame):
 
         self.attachmentsScrollArea = QScrollArea(self)
         self.scrollAreaWidgetContents = QWidget()
-        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout = QHBoxLayout(self.scrollAreaWidgetContents)
         self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.setupUi()
@@ -113,6 +114,7 @@ class MailView(QFrame):
         self.starButton.check_signal.connect(lambda ch: self.onStarClicked(ch))
 
         self.attachmentsScrollArea.setEnabled(True)
+        self.attachmentsScrollArea.setStyleSheet("background-color: #FFFFFF;")
         self.attachmentsScrollArea.setGeometry(QtCore.QRect(20, 90, 705, 110))
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -123,8 +125,8 @@ class MailView(QFrame):
         self.attachmentsScrollArea.setMaximumSize(QtCore.QSize(705, 110))
         self.attachmentsScrollArea.setFrameShape(QFrame.NoFrame)
         self.attachmentsScrollArea.setLineWidth(0)
-        self.attachmentsScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.attachmentsScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # self.attachmentsScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # self.attachmentsScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.attachmentsScrollArea.setWidgetResizable(False)
         self.attachmentsScrollArea.setAlignment(Qt.AlignCenter)
 
@@ -176,6 +178,7 @@ class MailView(QFrame):
             for attachment in attachments:
                 attachmentItem = AttachmentButtonIcon(self.scrollAreaWidgetContents)
                 attachmentItem.setGeometry(QRect(0, 0, 5, 5))
+
                 attachmentItem.setSettings(self.settings)
                 attachmentItem.setAttachment(attachment)
                 self.verticalLayout.addWidget(attachmentItem)
