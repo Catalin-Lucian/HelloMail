@@ -17,7 +17,8 @@ class MailView(QFrame):
     star_check_signal = pyqtSignal(bool)
     reply_check_signal = pyqtSignal(bool)
     delete_signal = pyqtSignal()
-    attachment_download_signal = pyqtSignal(str, str)
+    forward_signal = pyqtSignal()
+    attachment_download_signal = pyqtSignal(str, dict)
 
     def __init__(self, container):
         super(MailView, self).__init__(container)
@@ -92,7 +93,7 @@ class MailView(QFrame):
         self.dateTimeLabel.setFont(font)
 
         self.subjectLabel.setObjectName("label")
-        self.subjectLabel.setGeometry(QRect(20, 135, 705, 35))
+        self.subjectLabel.setGeometry(QRect(20, 100, 705, 35))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(18)
@@ -108,6 +109,7 @@ class MailView(QFrame):
         self.buttonsContainer.hide()
 
         self.forwardButton.setGeometry(QRect(8, 4, 30, 30))
+        self.forwardButton.click_signal.connect(lambda: self.forward_signal.emit())
 
         self.replyButton.setGeometry(QRect(52, 4, 30, 30))
         self.replyButton.click_signal.connect(lambda: self.onReplyClicked())
@@ -120,7 +122,7 @@ class MailView(QFrame):
         self.starButton.check_signal.connect(lambda ch: self.onStarClicked(ch))
 
         self.attachmentsScrollArea.setEnabled(True)
-        self.attachmentsScrollArea.setGeometry(QtCore.QRect(20, 90, 705, 40))
+        self.attachmentsScrollArea.setGeometry(QtCore.QRect(20, 140, 705, 40))
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -132,7 +134,7 @@ class MailView(QFrame):
         self.attachmentsScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         # self.attachmentsScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.attachmentsScrollArea.setWidgetResizable(False)
-        self.attachmentsScrollArea.setAlignment(Qt.AlignCenter)
+        self.attachmentsScrollArea.setAlignment(Qt.AlignLeft)
 
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 705, 40))
 
@@ -144,6 +146,7 @@ class MailView(QFrame):
 
         self.scroll_bar = self.attachmentsScrollArea.horizontalScrollBar()
         self.attachmentsScrollArea.installEventFilter(self)
+        self.horizontalLayout.addItem(self.spacerItem)
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.MouseMove:
@@ -193,8 +196,15 @@ class MailView(QFrame):
         self.buttonsContainer.show()
         self.starButton.show()
 
+        for i in reversed(range(self.horizontalLayout.count() - 1)):
+            widget = self.horizontalLayout.takeAt(i).widget()
+            if widget is not None:
+                widget.setParent(None)
+
         attachments = mailData.get("attachments")
         if attachments:
+            self.attachmentsScrollArea.show()
+            self.mailContentView.move(20, 180)
             self.horizontalLayout.removeItem(self.spacerItem)
             for attachment in attachments:
                 attachmentItem = AttachmentButtonIcon(self.scrollAreaWidgetContents)
@@ -204,10 +214,13 @@ class MailView(QFrame):
                 attachmentItem.setAttachment(attachment)
                 attachmentItem.adjustSize()
                 attachmentItem.click_signal.\
-                    connect(lambda: self.attachment_download_signal.emit(mailData["id"], attachment["id"]))
+                    connect(lambda: self.attachment_download_signal.emit(mailData["id"], attachment))
 
                 self.horizontalLayout.addWidget(attachmentItem)
             self.horizontalLayout.addItem(self.spacerItem)
+        else:
+            self.attachmentsScrollArea.hide()
+            self.mailContentView.move(20, 140)
 
         if "STARRED" in mailData.get('labelIds'):
             self.starButton.check()
@@ -256,6 +269,7 @@ class MailView(QFrame):
         self.subjectLabel.setText("")
         self.buttonsContainer.hide()
         self.starButton.hide()
+        self.attachmentsScrollArea.hide()
 
 
 class CustomWebPage(QWebEnginePage):

@@ -23,7 +23,6 @@ class SettingsButton(QFrame):
         self.settingsButton.setObjectName("settingButton")
         self.settingsButton.setGeometry(QRect(0, 2, 188, 59))
         self.settingsButton.setText("Settings")
-        # self.settingsButton.setStyleSheet("color:#FFFFFF;")
         self.settingsButton.click_signal.connect(lambda: self.onClick())
         font = QFont()
         font.setFamily("Calibri")

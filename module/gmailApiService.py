@@ -117,10 +117,13 @@ class GmailApi:
         return self.service.users().labels().list(userId="me").execute()
 
     def download_attachment(self, attachment_id, message_id):
-        attachment = self.service.users().messages() \
-            .attachments().get(id=attachment_id, userId='me', messageId=message_id).execute()
-        data = attachment.get("data")
-        return urlsafe_b64decode(data)
+        try:
+            attachment = self.service.users().messages() \
+                .attachments().get(id=attachment_id, userId='me', messageId=message_id).execute()
+            data = attachment.get("data")
+            return urlsafe_b64decode(data)
+        except Exception as error:
+            print(f"An error occurred: {error}")
 
     def process_parts(self, parts):
         my_body = ""

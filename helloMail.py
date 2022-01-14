@@ -105,8 +105,9 @@ class HelloMail(QMainWindow):
         self.mailView.setSettings(self.settings)
         self.mailView.star_check_signal.connect(lambda ch: self.onMailViewStarChecked(ch))
         self.mailView.reply_check_signal.connect(lambda: self.onReplyMailViewClicked())
-        self.mailView.attachment_download_signal.connect(lambda msId, attId: self.onAttachmentDownloadSignal(msId, attId))
-
+        self.mailView.attachment_download_signal.connect(lambda msId, att: self.onAttachmentDownloadSignal(msId, att))
+        self.mailView.delete_signal.connect(lambda: self.onActionBarSignal(ACTION.TRASH_FLAG))
+        self.mailView.forward_signal.connect(lambda: self.onForwardButton())
 
         self.navigationList.setSettings(self.settings)
         self.navigationList.label_change_signal.connect(lambda button: self.onLabelChange(button))
@@ -312,7 +313,6 @@ class HelloMail(QMainWindow):
     def onReplyMailViewClicked(self):
         threadId = self.mailList.getSelected().mailData.get('threadId')
         messageId = self.mailList.getSelected().mailData.get('id')
-        print(threadId)
         newMessageDialog = NewMessageDialog(self.centralWidget)
         newMessageDialog.setSettings(self.settings)
         newMessageDialog.setSubject("Re: " + self.mailList.selectedMailItem.getEmailSubject())
@@ -359,16 +359,30 @@ class HelloMail(QMainWindow):
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
 
-    def onAttachmentDownloadSignal(self, message_id, attachment_id):
-        fileName = QFileDialog.getSaveFileName(self, "Save file", "--", "All Files (*)")
+    @QtCore.pyqtSlot()
+    def onAttachmentDownloadSignal(self, message_id, attachment):
+        fileName, _ = QFileDialog.getSaveFileName(self, "Save file", attachment["name"], "All Files (*)")
         if fileName:
-            print(fileName)
-            # f = QFile(fileName)
-            # if f.open(QIODevice.WriteOnly):
-            #     f.write()
-            #     f.close()
+            file = self.gmailApi.download_attachment(attachment['id'], message_id)
+            f = QFile(fileName)
+            if f.open(QIODevice.WriteOnly):
+                f.write(file)
+                f.close()
 
+    @QtCore.pyqtSlot()
+    def onForwardButton(self):
 
+        threadId = self.mailList.getSelected().mailData.get('threadId')
+        messageId = self.mailList.getSelected().mailData.get('id')
+        newMessageDialog = NewMessageDialog(self.centralWidget)
+        newMessageDialog.setSettings(self.settings)
+        newMessageDialog.setSubject("Forward: " + self.mailList.selectedMailItem.getEmailSubject())
+        newMessageDialog.richTextEdit.setText(self.mailList.selectedMailItem.mailData['body'])
+
+        newMessageDialog.finish_signal.connect(
+            lambda destination, subject, messageText, attachment:
+            self.onSendMessage(destination, subject, messageText, messageId, threadId, attachment))
+        newMessageDialog.show()
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
