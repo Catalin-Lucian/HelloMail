@@ -3,8 +3,8 @@ import os
 import sys
 
 from PyQt5.QtGui import QFont, QPixmap
-from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtCore import QSize, QPoint, QRect, Qt
+from PyQt5.QtWidgets import QPushButton, QFrame, QGraphicsBlurEffect
+from PyQt5.QtCore import QSize, QPoint, QRect, Qt, QRunnable, QThreadPool
 
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets, QtGui
@@ -64,6 +64,9 @@ class HelloMail(QMainWindow):
         self.logoImage.setPixmap(pixmap)
 
         self.setWindowIcon(QtGui.QIcon("customWidgets" + os.path.sep + "icons" + os.path.sep + "icon.png"))
+
+        self.loadingFrame = QFrame(self.centralWidget)
+        self.blur_effect = QGraphicsBlurEffect()
 
         self.setupUi()
         self.setupStyleSheets()
@@ -128,6 +131,11 @@ class HelloMail(QMainWindow):
         self.refreshButton.setSettings(self.settings)
         self.refreshButton.setGeometry(QRect(12, 850, 40, 40))
         self.refreshButton.click_signal.connect(lambda: self.onRefresh())
+
+        self.loadingFrame.setGeometry(QRect(16, 16, 1408, 868))
+        self.blur_effect.setBlurRadius(500)
+        self.loadingFrame.setGraphicsEffect(self.blur_effect)
+        self.loadingFrame.hide()
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
@@ -334,11 +342,14 @@ class HelloMail(QMainWindow):
         self.mailView.hideMail()
         self.mailList.clearMailList()
         mails = []
+
         if self.navigationList.last_label_id:
+            print('ok')
             self.customLabelList.deselect()
             mails = self.gmailApi.get_emails_by_tags([self.navigationList.last_label_id],
                                                      self.settings.getMessageNumber())
         if self.customLabelList.last_label_id:
+            print('ok')
             self.navigationList.deselect()
             mails = self.gmailApi.get_emails_by_tags([self.customLabelList.last_label_id],
                                                      self.settings.getMessageNumber())
@@ -366,7 +377,6 @@ class HelloMail(QMainWindow):
         super(HelloMail, self).resizeEvent(e)
 
     def notify(self):
-
         pass
 
 
