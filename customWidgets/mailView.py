@@ -4,7 +4,7 @@ import string
 from PyQt5 import QtCore
 from PyQt5.QtCore import QRect, QSize, Qt, QPoint, QUrl, pyqtSignal
 from PyQt5.QtGui import QFont, QDesktopServices
-from PyQt5.QtWidgets import QFrame, QLabel
+from PyQt5.QtWidgets import QFrame, QLabel, QScrollArea, QWidget, QVBoxLayout, QSpacerItem, QSizePolicy, QLayout
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
 from customWidgets.buttons.avatarIcon import AvatarIcon
@@ -38,6 +38,11 @@ class MailView(QFrame):
         self.starButton = IconCheckButton(self, "star_view_unselected.svg", "star_view_selected.svg",
                                           "star_view_hover.svg")
 
+        self.attachmentsScrollArea = QScrollArea(self)
+        self.scrollAreaWidgetContents = QWidget()
+        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
         self.setupUi()
 
     def setupUi(self):
@@ -46,7 +51,7 @@ class MailView(QFrame):
         self.setStyleSheet("background-color: rgb(59, 67, 80)")
 
         self.mailContentView.setObjectName("mailContentView")
-        self.mailContentView.setGeometry(QRect(20, 145, 705, 647))
+        self.mailContentView.setGeometry(QRect(20, 180, 705, 647))
         self.mailContentView.setMinimumSize(QSize(705, 647))
         self.mailContentView.setPage(self.customPage)
         self.mailContentView.setWindowFlag(Qt.WindowStaysOnBottomHint)
@@ -82,7 +87,7 @@ class MailView(QFrame):
         self.dateTimeLabel.setFont(font)
 
         self.subjectLabel.setObjectName("label")
-        self.subjectLabel.setGeometry(QRect(20, 100, 705, 35))
+        self.subjectLabel.setGeometry(QRect(20, 140, 705, 35))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(18)
@@ -98,7 +103,6 @@ class MailView(QFrame):
 
         self.forwardButton.setGeometry(QRect(8, 4, 30, 30))
 
-
         self.replyButton.setGeometry(QRect(52, 4, 30, 30))
         self.replyButton.click_signal.connect(lambda: self.onReplyClicked())
 
@@ -107,6 +111,30 @@ class MailView(QFrame):
         self.starButton.setGeometry(QRect(700, 30, 30, 30))
         self.starButton.hide()
         self.starButton.check_signal.connect(lambda ch: self.onStarClicked(ch))
+
+        self.attachmentsScrollArea.setEnabled(True)
+        self.attachmentsScrollArea.setGeometry(QtCore.QRect(20, 90, 705, 110))
+        sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.attachmentsScrollArea.setSizePolicy(sizePolicy)
+        self.attachmentsScrollArea.setMinimumSize(QtCore.QSize(705, 110))
+        self.attachmentsScrollArea.setMaximumSize(QtCore.QSize(705, 110))
+        self.attachmentsScrollArea.setFrameShape(QFrame.NoFrame)
+        self.attachmentsScrollArea.setLineWidth(0)
+        self.attachmentsScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.attachmentsScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.attachmentsScrollArea.setWidgetResizable(False)
+        self.attachmentsScrollArea.setAlignment(Qt.AlignCenter)
+
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 705, 110))
+
+        self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(5)
+
+        self.attachmentsScrollArea.setWidget(self.scrollAreaWidgetContents)
 
     def setSettings(self, settings):
         if settings:
@@ -142,6 +170,16 @@ class MailView(QFrame):
         self.subjectLabel.setText(mailData.get('subject'))
         self.buttonsContainer.show()
         self.starButton.show()
+
+        attachments = mailData.get("attachments")
+        if attachments:
+            for attachment in attachments:
+                attachmentItem = AttachmentButtonIcon(self.scrollAreaWidgetContents)
+                attachmentItem.setGeometry(QRect(0, 0, 5, 5))
+                attachmentItem.setSettings(self.settings)
+                attachmentItem.setAttachment(attachment)
+                self.verticalLayout.addWidget(attachmentItem)
+
         if "STARRED" in mailData.get('labelIds'):
             self.starButton.check()
         else:
@@ -194,3 +232,18 @@ class CustomWebPage(QWebEnginePage):
             QDesktopServices.openUrl(url)
             return False
         return True
+
+class AttachmentButtonIcon(IconClickButton):
+    def __init__(self, parent):
+        super(AttachmentButtonIcon, self).__init__(parent)
+        self.attachment = None
+
+    def setAttachment(self, attachment):
+        self.attachment = attachment
+        if attachment:
+            self.setText(attachment["name"])
+            self.resize(self.sizeHint().width(), self.sizeHint().height())
+
+
+
+
