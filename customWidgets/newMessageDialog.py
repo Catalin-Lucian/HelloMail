@@ -1,9 +1,12 @@
 import logging
+import os
 
 from PyQt5.QtCore import Qt, QRect, QSize, pyqtSignal
 from PyQt5.QtGui import QFont, QResizeEvent
-from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit
+from PyQt5.QtWidgets import QDialog, QLabel, QTextEdit, QFileDialog, QFrame, QLineEdit, QWidget, QVBoxLayout, \
+    QSpacerItem, QSizePolicy, QScrollArea, QLayout
 
+from customWidgets.buttons.iconCheckButton import IconCheckButton
 from customWidgets.buttons.iconClickButton import IconClickButton
 
 
@@ -16,6 +19,9 @@ class NewMessageDialog(QDialog):
         self.settings = None
         self.container = QFrame(self)
 
+        self.memoryCount = 0
+        self.memoryShow = QLabel(self.container)
+
         self.titleLabel = QLabel(self.container)
         self.toLabel = QLabel(self.container)
         self.subjectLabel = QLabel(self.container)
@@ -27,16 +33,17 @@ class NewMessageDialog(QDialog):
 
         self.pressed = False
         self.lastPos = None
-        self.hasFirstResize =False
+        self.hasFirstResize = False
         self.attachmentList = []
+        self.attachmentReffList = []
 
         self.exitIcon = IconClickButton(self.container, "exit_chat_unselected.svg",
                                         "exit_chat_selected.svg",
                                         "exit_chat_selected.svg")
 
         self.attachmentIco = IconClickButton(self.container, "attachment_popup_unselected.svg",
-                                            "attachment_popup_selected.svg",
-                                            "attachment_popup_selected.svg")
+                                             "attachment_popup_selected.svg",
+                                             "attachment_popup_selected.svg")
 
         self.trashIco = IconClickButton(self.container, "trash_popup_unselected.svg",
                                         "trash_popup_selected.svg",
@@ -46,10 +53,27 @@ class NewMessageDialog(QDialog):
                                        "send_popup_selected.svg",
                                        "send_popup_selected.svg")
 
+        self.attachmentScrollArea = QScrollArea(self)
+        self.scrollAreaWidgetContents = QWidget()
+        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
         self.setupUI()
         self.setWindowFlag(Qt.FramelessWindowHint)
 
     def setupUI(self):
+
+        font = QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(35)
+        self.memoryShow.setFont(font)
+        self.memoryShow.setText("")
+        self.memoryShow.setGeometry(QRect(0, 400, 601, 21))
+        self.memoryShow.setStyleSheet("color: #15F346")
+        self.memoryShow.setAlignment(Qt.AlignCenter)
+
         self.exitIcon.setObjectName("iconClickButton")
         self.attachmentIco.setObjectName("iconClickButton")
         self.trashIco.setObjectName("iconClickButton")
@@ -97,7 +121,7 @@ class NewMessageDialog(QDialog):
         self.subjectTextEdit.setGeometry(QRect(95, 86, 473, 25))
         self.subjectTextEdit.setObjectName("newMessageTextEdit")
 
-        self.richTextEdit.setGeometry(QRect(16, 125, 555, 262))
+        self.richTextEdit.setGeometry(QRect(16, 125, 555, 260))
         self.richTextEdit.setObjectName("newMessageTextEdit")
 
         self.exitIcon.setGeometry(QRect(574, 11, 14, 14))
@@ -120,6 +144,88 @@ class NewMessageDialog(QDialog):
         self.sendIco.setObjectName("textButton")
         self.sendIco.click_signal.connect(lambda: self.onSendSignal())
 
+        self.attachmentScrollArea.setObjectName("newMessageAttachmentArea")
+        self.attachmentScrollArea.setEnabled(True)
+        self.attachmentScrollArea.setGeometry(QRect(16, 345, 555, 50))
+        sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.attachmentScrollArea.setSizePolicy(sizePolicy)
+        self.attachmentScrollArea.setMinimumSize(QSize(555, 50))
+        self.attachmentScrollArea.setMaximumSize(QSize(555, 50))
+        self.attachmentScrollArea.setFrameShape(QFrame.NoFrame)
+        self.attachmentScrollArea.setLineWidth(0)
+        self.attachmentScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.attachmentScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.attachmentScrollArea.setWidgetResizable(False)
+
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 555, 50))
+
+        self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(5)
+
+        self.attachmentScrollArea.setWidget(self.scrollAreaWidgetContents)
+        # self.attachmentScrollArea.setStyleSheet("background-color: #FFFFFF;")
+
+    def addAttachment(self, path):
+        self.verticalLayout.removeItem(self.spacerItem)
+        # aici mai e o pb nu afiseaza continutul
+        elButton = AttachmentItem(
+            self.scrollAreaWidgetContents)  # ,"close_attachment.svg","close_attachment.svg","close_attachment.svg")
+        elButton.setObjectName("navigationButton")
+        elButton.setStyleSheet("background-color: #C4C4C4; border-radius: 10px")
+        elButton.setMinimumSize(25, 25)
+        elButton.setPath(path)
+        elButton.click_signal.connect(lambda: self.closeAttachment(elButton))
+        elButton.adjustSize()
+        self.verticalLayout.addWidget(elButton)
+
+        if self.memoryCount == 0:
+            self.richTextEdit.setGeometry(QRect(16, 125, 555, 210))
+
+        self.memoryCount += elButton.getMem()
+
+        if self.memoryCount < 1000:
+            self.memoryShow.setText(str(self.memoryCount) + " bytes")
+        elif self.memoryCount < 1000000:
+            self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000) + " KB")
+        elif self.memoryCount < 25000000:
+            self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000000) + " MB")
+        else:
+            self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000000) + " MB")
+            self.memoryShow.setStyleSheet("color: #F60D0D")
+            self.sendIco.setDisabled(True)
+
+        self.verticalLayout.addSpacerItem(self.spacerItem)
+
+    def closeAttachment(self, elButton):
+        self.attachmentList.remove(elButton.path)
+        self.memoryCount -= elButton.getMem()
+        elButton.setParent(None)
+        self.verticalLayout.removeWidget(elButton)
+
+        if self.memoryCount == 0:
+            self.memoryShow.setText("")
+            self.richTextEdit.setGeometry(QRect(16, 125, 555, 260))
+        if self.memoryCount > 0:
+            if self.memoryCount < 1000:
+                self.memoryShow.setText(str(self.memoryCount) + " bytes")
+                self.sendIco.setDisabled(False)
+                self.memoryShow.setStyleSheet("color: #15F346")
+            elif self.memoryCount < 1000000:
+                self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000) + " KB")
+                self.sendIco.setDisabled(False)
+                self.memoryShow.setStyleSheet("color: #15F346")
+            elif self.memoryCount < 25000000:
+                self.sendIco.setDisabled(False)
+                self.memoryShow.setStyleSheet("color: #15F346")
+                self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000000) + " MB")
+            else:
+                self.memoryShow.setText("{:.2f}".format(self.memoryCount / 1000000) + " MB")
+                self.memoryShow.setStyleSheet("color: #F60D0D")
+
     def onSendSignal(self):
         destination = self.toTextEdit.text()
         subject = self.subjectTextEdit.text()
@@ -141,6 +247,7 @@ class NewMessageDialog(QDialog):
                                                   "All Files (*);;Python Files (*.py)")
         if fileName:
             self.attachmentList.append(fileName)
+            self.addAttachment(fileName)
 
     def setSubject(self, subject):
         self.subjectTextEdit.setText(subject)
@@ -189,16 +296,6 @@ class NewMessageDialog(QDialog):
             self.applyStyleSheets()
             self.settings.subscribe(self)
 
-    def applyStyleSheet(self, state):
-        if self.settings:
-            style = self.settings.getStyleSheet(self.objectName(), state)
-            if style:
-                self.setStyleSheet(style)
-            else:
-                logging.warning(f"!! {self.objectName()} styleSheet:{state} did not load !!")
-        else:
-            logging.warning("-- settings value noneType")
-
     def applyStyleSheets(self):
         self.settings.applyStylesheet(self)
         self.settings.applyStylesheet(self.container)
@@ -208,6 +305,7 @@ class NewMessageDialog(QDialog):
         self.settings.applyStylesheet(self.toLabel)
         self.settings.applyStylesheet(self.subjectLabel)
         self.settings.applyStylesheet(self.richTextEdit)
+        self.settings.applyStylesheet(self.attachmentScrollArea)
 
     # def resizeEvent(self, e: QResizeEvent) -> None:
     #     if self.hasFirstResize:
@@ -220,3 +318,26 @@ class NewMessageDialog(QDialog):
 
     def notify(self):
         self.applyStyleSheets()
+
+
+class AttachmentItem(IconClickButton):
+    def __init__(self, parent, iconUnClicked=None, iconClicked=None, iconHover=None):
+        super(AttachmentItem, self).__init__(parent, iconUnClicked, iconClicked, iconHover)
+        self.name = None
+        self.path = None
+        self.memory = 0
+
+    def setPath(self, path):
+        self.name = path.split("/")[-1]
+        self.path = path
+        self.memory = os.path.getsize(path)
+
+        if self.memory < 1000:
+            self.setText(self.name + "(" + str(self.memory) + " bytes)")
+        elif self.memory < 1000000:
+            self.setText(self.name + "({:.2f}".format(self.memory / 1000) + " KB)")
+        else:
+            self.setText(self.name + "({:.2f}".format(self.memory / 1000000) + " MB)")
+
+    def getMem(self):
+        return self.memory
