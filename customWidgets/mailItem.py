@@ -54,7 +54,7 @@ class MailItem(QtWidgets.QFrame):
         self.subjectLabel.setFont(font)
 
         self.senderNameLabel.setObjectName("mailItemLabel")
-        self.senderNameLabel.setGeometry(QtCore.QRect(100, 50, 158, 20))
+        self.senderNameLabel.setGeometry(QtCore.QRect(100, 50, 150, 20))
         font = QtGui.QFont()
         font.setFamily("Calibri")
         font.setPointSize(12)

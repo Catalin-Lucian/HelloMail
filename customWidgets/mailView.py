@@ -16,6 +16,8 @@ from customWidgets.buttons.iconClickButton import IconClickButton
 class MailView(QFrame):
     star_check_signal = pyqtSignal(bool)
     reply_check_signal = pyqtSignal(bool)
+    delete_signal = pyqtSignal()
+    attachment_download_signal = pyqtSignal(str, str)
 
     def __init__(self, container):
         super(MailView, self).__init__(container)
@@ -42,9 +44,9 @@ class MailView(QFrame):
                                           "star_view_hover.svg")
 
         self.attachmentsScrollArea = QScrollArea(self)
-        self.scrollAreaWidgetContents = QWidget(self.attachmentsScrollArea)
-        self.verticalLayout = QHBoxLayout(self.scrollAreaWidgetContents)
-        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.scrollAreaWidgetContents = QWidget()
+        self.horizontalLayout = QHBoxLayout(self.scrollAreaWidgetContents)
+        self.spacerItem = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.setupUi()
 
@@ -83,7 +85,7 @@ class MailView(QFrame):
         self.senderEmailLabel.setFont(font)
 
         self.dateTimeLabel.setObjectName("label")
-        self.dateTimeLabel.setGeometry(QRect(403, 35, 135, 20))
+        self.dateTimeLabel.setGeometry(QRect(403, 35, 160, 20))
         font = QFont()
         font.setFamily("Calibri")
         font.setPointSize(10)
@@ -111,20 +113,20 @@ class MailView(QFrame):
         self.replyButton.click_signal.connect(lambda: self.onReplyClicked())
 
         self.trashButton.setGeometry(QRect(92, 4, 30, 30))
+        self.trashButton.click_signal.connect(lambda: self.delete_signal.emit())
 
         self.starButton.setGeometry(QRect(700, 30, 30, 30))
         self.starButton.hide()
         self.starButton.check_signal.connect(lambda ch: self.onStarClicked(ch))
 
         self.attachmentsScrollArea.setEnabled(True)
-        self.attachmentsScrollArea.setGeometry(QtCore.QRect(20, 87, 705, 40))
+        self.attachmentsScrollArea.setGeometry(QtCore.QRect(20, 90, 705, 40))
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.attachmentsScrollArea.setSizePolicy(sizePolicy)
         self.attachmentsScrollArea.setMinimumSize(QtCore.QSize(705, 40))
-        self.attachmentsScrollArea.setMaximumSize(QtCore.QSize(705, 40))
         self.attachmentsScrollArea.setFrameShape(QFrame.NoFrame)
         self.attachmentsScrollArea.setLineWidth(0)
         self.attachmentsScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -134,9 +136,9 @@ class MailView(QFrame):
 
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 705, 40))
 
-        self.verticalLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
-        self.verticalLayout.setContentsMargins(0, 0, 5, 5)
-        self.verticalLayout.setSpacing(5)
+        self.horizontalLayout.setSizeConstraint(QLayout.SetFixedSize)
+        self.horizontalLayout.setContentsMargins(0, 0, 5, 5)
+        self.horizontalLayout.setSpacing(5)
 
         self.attachmentsScrollArea.setWidget(self.scrollAreaWidgetContents)
 
@@ -145,8 +147,6 @@ class MailView(QFrame):
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.MouseMove:
-            print(event.pos().x())
-
             if self.last_time_move == 0:
                 self.last_time_move = event.pos().x()
 
@@ -195,14 +195,19 @@ class MailView(QFrame):
 
         attachments = mailData.get("attachments")
         if attachments:
+            self.horizontalLayout.removeItem(self.spacerItem)
             for attachment in attachments:
                 attachmentItem = AttachmentButtonIcon(self.scrollAreaWidgetContents)
-                attachmentItem.setGeometry(QRect(0, 0, 123, 30))
                 attachmentItem.setMinimumSize(123, 30)
                 attachmentItem.setObjectName("mailViewAttachment")
                 attachmentItem.setSettings(self.settings)
                 attachmentItem.setAttachment(attachment)
-                self.verticalLayout.addWidget(attachmentItem)
+                attachmentItem.adjustSize()
+                attachmentItem.click_signal.\
+                    connect(lambda: self.attachment_download_signal.emit(mailData["id"], attachment["id"]))
+
+                self.horizontalLayout.addWidget(attachmentItem)
+            self.horizontalLayout.addItem(self.spacerItem)
 
         if "STARRED" in mailData.get('labelIds'):
             self.starButton.check()
@@ -216,8 +221,14 @@ class MailView(QFrame):
         self.dateTimeLabel.move(QPoint(self.dateTimeLabel.pos().x() + e.width(), self.dateTimeLabel.pos().y()))
         self.subjectLabel.resize(QSize(self.subjectLabel.size().width() + e.width(), self.subjectLabel.size().height()))
 
-        self.buttonsContainer.move(QPoint(self.buttonsContainer.pos().x()+e.width(), self.buttonsContainer.pos().y()))
-        self.starButton.move(QPoint(self.starButton.pos().x()+e.width(), self.starButton.pos().y()))
+        self.buttonsContainer.move(QPoint(self.buttonsContainer.pos().x() + e.width(), self.buttonsContainer.pos().y()))
+        self.starButton.move(QPoint(self.starButton.pos().x() + e.width(), self.starButton.pos().y()))
+
+        self.attachmentsScrollArea.resize(self.attachmentsScrollArea.size().width() + e.width(),
+                                          self.attachmentsScrollArea.size().height())
+        self.scrollAreaWidgetContents.resize(self.scrollAreaWidgetContents.size().width() + e.width(),
+                                             self.scrollAreaWidgetContents.size().height())
+        self.senderNameLabel.resize(self.senderNameLabel.size().width()+e.width(), self.senderNameLabel.size().height())
 
     def notify(self):
         self.applyStyleSheets()
@@ -257,6 +268,7 @@ class CustomWebPage(QWebEnginePage):
             return False
         return True
 
+
 class AttachmentButtonIcon(IconClickButton):
     def __init__(self, parent):
         super(AttachmentButtonIcon, self).__init__(parent)
@@ -267,7 +279,3 @@ class AttachmentButtonIcon(IconClickButton):
         if attachment:
             self.setText(attachment["name"])
             self.resize(self.sizeHint().width(), self.sizeHint().height())
-
-
-
-

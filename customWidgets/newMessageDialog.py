@@ -137,8 +137,6 @@ class NewMessageDialog(QDialog):
         return super(NewMessageDialog, self).close()
 
     def openFileNameDialog(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(self, "Select a file", "",
                                                   "All Files (*);;Python Files (*.py)")
         if fileName:

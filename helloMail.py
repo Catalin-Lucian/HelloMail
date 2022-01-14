@@ -3,8 +3,8 @@ import os
 import sys
 
 from PyQt5.QtGui import QFont, QPixmap
-from PyQt5.QtWidgets import QPushButton, QFrame, QGraphicsBlurEffect
-from PyQt5.QtCore import QSize, QPoint, QRect, Qt, QRunnable, QThreadPool
+from PyQt5.QtWidgets import QPushButton, QFrame, QGraphicsBlurEffect, QFileDialog
+from PyQt5.QtCore import QSize, QPoint, QRect, Qt, QRunnable, QThreadPool, QFile, QIODevice
 
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets, QtGui
@@ -105,6 +105,8 @@ class HelloMail(QMainWindow):
         self.mailView.setSettings(self.settings)
         self.mailView.star_check_signal.connect(lambda ch: self.onMailViewStarChecked(ch))
         self.mailView.reply_check_signal.connect(lambda: self.onReplyMailViewClicked())
+        self.mailView.attachment_download_signal.connect(lambda msId, attId: self.onAttachmentDownloadSignal(msId, attId))
+
 
         self.navigationList.setSettings(self.settings)
         self.navigationList.label_change_signal.connect(lambda button: self.onLabelChange(button))
@@ -356,6 +358,17 @@ class HelloMail(QMainWindow):
         for mail_data in mails:
             mailItem = self.mailList.addMailItem(mail_data)
             mailItem.star_check_signal.connect(lambda ch, mI: self.onMailItemStarChecked(ch, mI))
+
+    def onAttachmentDownloadSignal(self, message_id, attachment_id):
+        fileName = QFileDialog.getSaveFileName(self, "Save file", "--", "All Files (*)")
+        if fileName:
+            print(fileName)
+            # f = QFile(fileName)
+            # if f.open(QIODevice.WriteOnly):
+            #     f.write()
+            #     f.close()
+
+
 
     def resizeEvent(self, e: QtGui.QResizeEvent) -> None:
         if self.hasFirstResize:
