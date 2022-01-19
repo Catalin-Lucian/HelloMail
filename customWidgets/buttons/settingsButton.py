@@ -18,10 +18,10 @@ class SettingsButton(QFrame):
         self.setupUi()
 
     def setupUi(self):
-        self.setGeometry(QRect(1405, 384, 188, 59))
+        self.setGeometry(QRect(1500, 384, 188, 59))
 
         self.settingsButton.setObjectName("settingButton")
-        self.settingsButton.setGeometry(QRect(0, 2, 188, 59))
+        self.settingsButton.setGeometry(QRect(4, 2, 188, 59))
         self.settingsButton.setText("Settings")
         self.settingsButton.click_signal.connect(lambda: self.onClick())
         font = QFont()

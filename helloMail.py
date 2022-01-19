@@ -405,7 +405,7 @@ class HelloMail(QMainWindow):
         super(HelloMail, self).resizeEvent(e)
 
     def notify(self):
-        pass
+        self.setupStyleSheets()
 
 
 if __name__ == '__main__':
