@@ -205,4 +205,4 @@ class MailItem(QtWidgets.QFrame):
         return self.mailData.get('from').get('email')
 
     def notify(self):
-        pass
+        self.applyStyleSheet('default')
